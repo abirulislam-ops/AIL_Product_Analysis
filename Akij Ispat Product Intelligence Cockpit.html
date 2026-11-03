@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akij Ispat — Product Intelligence Cockpit (3-Year)</title>
+<style>
+  :root{
+    --bg:#0d1220; --panel:#151c2e; --panel2:#1b2440; --line:#26314f;
+    --tx:#e6ecff; --muted:#8fa0c4; --dim:#5d6c8f;
+    --accent:#2f7dff; --accent2:#22c3aa; --gold:#f0b90b; --red:#ff5c7a;
+    --green:#2fd181; --orange:#ff8a3d; --violet:#a78bfa;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:linear-gradient(180deg,#0d1220,#101830 60%);color:var(--tx);font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;line-height:1.45;padding:0 0 60px}
+  header{padding:20px 26px 12px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap}
+  header h1{font-size:20px;font-weight:700;letter-spacing:.2px}
+  header h1 span{color:var(--gold)}
+  .sub{color:var(--muted);font-size:12px;margin-top:4px}
+  .badge{background:rgba(240,185,11,.12);border:1px solid rgba(240,185,11,.45);color:var(--gold);padding:5px 10px;border-radius:999px;font-size:11px;letter-spacing:.4px;white-space:nowrap}
+  nav{position:sticky;top:0;z-index:100;display:flex;gap:2px;padding:10px 26px 0;flex-wrap:wrap;background:rgba(13,18,32,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  nav button{background:transparent;border:0;border-bottom:2px solid transparent;color:var(--muted);padding:9px 12px;cursor:pointer;font-size:12.5px}
+  nav button:hover{color:var(--tx)}
+  nav button.on{color:var(--gold);border-bottom-color:var(--gold)}
+  main{padding:18px 26px 40px;max-width:1300px;margin:0 auto}
+  section{display:none}
+  section.on{display:block}
+  .grid{display:grid;gap:12px}
+  .g5{grid-template-columns:repeat(5,1fr)} .g4{grid-template-columns:repeat(4,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:1250px){.g5{grid-template-columns:repeat(2,1fr)}.g4{grid-template-columns:repeat(2,1fr)}.g2{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .kpi .lab{color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:.7px}
+  .kpi .val{font-size:22px;font-weight:600;margin-top:5px}
+  .kpi .note{color:var(--muted);font-size:11px;margin-top:4px}
+  .kpi .note.up{color:var(--green)} .kpi .note.down{color:var(--red)}
+  .card h3{margin:0 0 3px;font-size:13.5px;font-weight:600}
+  .card .hint{color:var(--muted);font-size:11.5px;margin-bottom:10px}
+  table{width:100%;border-collapse:collapse;font-size:12.2px}
+  th{position:sticky;top:0;background:var(--panel2);color:var(--muted);font-weight:600;text-align:right;padding:7px 8px;border-bottom:1px solid var(--line);font-size:10.5px;text-transform:uppercase;letter-spacing:.45px;white-space:nowrap;z-index:2}
+  th[data-s]{cursor:pointer}
+  th[data-s]:hover{color:var(--tx)}
+  th.sorted{color:var(--gold)}
+  td:first-child,th:first-child{text-align:left}
+  td{padding:6px 8px;border-bottom:1px solid rgba(34,48,63,.6);text-align:right;white-space:nowrap}
+  tr:hover td{background:rgba(47,125,255,.06)}
+  tr.drill{cursor:pointer}
+  .tag{display:inline-block;padding:2px 6px;border-radius:6px;font-size:10.3px;border:1px solid}
+  .t-neg{color:var(--green);border-color:rgba(47,209,129,.35);background:rgba(47,209,129,.08)}
+  .t-pos{color:var(--red);border-color:rgba(255,92,122,.35);background:rgba(255,92,122,.08)}
+  .t-mut{color:var(--muted);border-color:var(--line);background:rgba(139,155,176,.07)}
+  .t-warn{color:var(--gold);border-color:rgba(240,185,11,.35);background:rgba(240,185,11,.08)}
+  .pos{color:var(--green)} .neg{color:var(--red)}
+  .scroll{max-height:600px;overflow:auto;border-radius:10px;border:1px solid var(--line)}
+  .toolbar{display:flex;gap:9px;align-items:center;margin-bottom:9px;flex-wrap:wrap}
+  input[type=search],select{background:var(--panel2);border:1px solid var(--line);color:var(--tx);padding:6px 9px;border-radius:8px;font-size:12.5px;outline:none}
+  input[type=search]:focus,select:focus{border-color:var(--accent)}
+  input[type=search]{min-width:220px}
+  .note-box{background:rgba(47,125,255,.06);border:1px solid rgba(47,125,255,.25);border-radius:10px;padding:11px 13px;color:#c9d7ea;font-size:12.2px;margin:12px 0}
+  .note-box b{color:var(--tx)}
+  .warn{background:rgba(240,185,11,.06);border-color:rgba(240,185,11,.28)}
+  .insight{border-left:3px solid var(--gold);background:rgba(240,185,11,.05);border-radius:8px;padding:10px 13px;font-size:12.3px;color:#c9d7ea;margin:8px 0}
+  .insight b{color:var(--tx)}
+  .legend{display:flex;gap:14px;color:var(--muted);font-size:11.2px;margin-top:6px;flex-wrap:wrap}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px}
+  .small{font-size:11.2px;color:var(--muted)}
+  .chart{width:100%;overflow-x:auto}
+  .pill{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700}
+  .p-b500{background:rgba(240,185,11,.16);color:var(--gold)}
+  .p-b420{background:rgba(47,125,255,.16);color:#7fb0ff}
+  footer{padding:14px 26px;border-top:1px solid var(--line);color:var(--dim);font-size:11.2px;margin-top:30px}
+  footer .fmeta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+  footer .fmeta span{background:var(--panel2);border:1px solid var(--line);border-radius:20px;padding:3px 12px;font-size:11px;color:var(--muted)}
+  .guide{background:rgba(240,185,11,.07);border:1px solid rgba(240,185,11,.24);border-left:3px solid var(--gold);border-radius:10px;padding:11px 14px;color:#d9c9a8;font-size:12.4px;margin:0 0 12px;line-height:1.55}
+  .guide b{color:var(--gold)}
+  .guide .gl{color:var(--gold);font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin:8px 0 2px;display:block}
+  .guide .gl:first-child{margin-top:0}
+  .guide p{margin:2px 0 0}
+  .tip{position:fixed;background:#1a2536;border:1px solid #33405a;border-radius:8px;padding:7px 11px;font-size:11.5px;color:var(--tx);pointer-events:none;z-index:200;box-shadow:0 4px 14px rgba(0,0,0,.5);max-width:320px;line-height:1.5;white-space:pre-line;display:none}
+  svg [onmousemove]{cursor:crosshair}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Akij Ispat — <span>Product Intelligence Cockpit</span></h1>
+    <div class="sub">Price · margin · SKU momentum · competitors · market share · dealers · areas · growth · elasticity · declared price — follow the AEL cockpit pattern</div>
+  </div>
+  <div class="badge">FY2023-24 → FY2026-27 · clean window Jan'25–Nov'26 for per-ton series</div>
+</header>
+
+<nav id="nav">
+  <button class="on" data-t="ov">Overview</button>
+  <button data-t="price">Price</button>
+  <button data-t="margin">GP / NP / Net</button>
+  <button data-t="sku">All SKUs</button>
+  <button data-t="mom">SKU month-on-month</button>
+  <button data-t="chg">Price change tracker</button>
+  <button data-t="pg">Declared price grid</button>
+  <button data-t="el">Elasticity</button>
+  <button data-t="comp">Competitor</button>
+  <button data-t="ms">Market Share</button>
+  <button data-t="dealer">Dealer</button>
+  <button data-t="area">Area</button>
+  <button data-t="growth">Growth</button>
+  <button data-t="mt">Method &amp; coverage</button>
+</nav>
+
+<main>
+
+<!-- ============ OVERVIEW ============ -->
+<section id="ov" class="on">
+  <div class="guide"><span class="gl">What this answers</span><p>Your whole business in one screen — revenue, price direction and the biggest SKU moves across the clean window.</p><span class="gl">How to read it</span><p>KPIs summarise the window. Portfolio chart = monthly revenue (bars) + active SKUs (line). Breadth = share of SKUs raising (green) vs cutting (red) price vs the prior month.</p></div>
+  <div class="grid g5" id="ovKpis"></div>
+  <div class="grid g2" style="margin-top:12px">
+    <div class="card">
+      <h3>Monthly revenue (৳ Cr) and active SKUs</h3>
+      <div class="hint">Bars: net revenue. Line: SKUs with sales that month. Nov'26 partial — excluded from "current" stats.</div>
+      <div class="chart" id="cPort"></div>
+    </div>
+    <div class="card">
+      <h3>Price direction breadth</h3>
+      <div class="hint">Share of rebar SKUs that raised vs cut realised price vs previous month (clean window). Green = raises, red = cuts.</div>
+      <div class="chart" id="cBreadth"></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>What the full history says</h3>
+    <div id="insights"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Top 8 SKUs — price journey (Jan'25 → Nov'26)</h3>
+    <div class="hint">First vs last realised net price per MT in the clean window. Click a row to open its month-on-month view.</div>
+    <div class="scroll" id="cJourney"></div>
+  </div>
+</section>
+
+<!-- ============ PRICE ============ -->
+<section id="price">
+  <div class="guide"><span class="gl">What this answers</span><p>Realised net, gross and MRP price per MT — by SKU and over time.</p><span class="gl">How to read it</span><p><b>Net</b> = realised after discount; <b>Gross</b> ≈ net (Akij applies ~0% trade discount); <b>MRP</b> = announced list price. Use the selectors to isolate one SKU or overlay all.</p></div>
+  <div class="card">
+    <h3>Realised net price per metric ton — FY2025-26</h3>
+    <div class="hint">FY2025-26 is the first year with clean, consistent per-ton data across all rebar SKUs.</div>
+    <div id="priceTable"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Monthly net price — by SKU (select)</h3>
+    <div class="hint">Realised net price per MT over time. "Overall" = blended average across all products; "All SKUs" overlays every grade.</div>
+    <select id="netPriceSel"></select>
+    <div class="chart" id="netPriceChart" style="margin-top:8px"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Monthly gross price — by SKU (select)</h3>
+    <div class="hint">Gross (list) price per MT. Gross ≈ net — Akij applies ~0% trade discount, so the spread is negligible (only Jan'25 shows a small gap).</div>
+    <select id="grossPriceSel"></select>
+    <div class="chart" id="grossPriceChart" style="margin-top:8px"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Monthly MRP price — by SKU (select)</h3>
+    <div class="hint">MRP / announced list price (<code>numItemPrice</code>) per MT — the base price before freight &amp; discount add-ons.</div>
+    <select id="mrpPriceSel"></select>
+    <div class="chart" id="mrpPriceChart" style="margin-top:8px"></div>
+  </div>
+</section>
+
+<!-- ============ GP / NP / NET ============ -->
+<section id="margin">
+  <div class="guide"><span class="gl">What this answers</span><p>How price stacks against cost — gross profit, and net after commission &amp; freight.</p><span class="gl">How to read it</span><p>Waterfall = price → cost → GP → NP. Scrap chart = net price vs raw-material cost (monthly scrap purchase, a proxy — no production cost is posted). GP% uses a point-in-time average item cost, so treat it as a snapshot.</p></div>
+  <div class="note-box"><b>Basis:</b> <b>Net price</b> = realised after discounts. <b>GP%</b> = net price vs item average cost (<code>itm.tblItem.numAverageRate</code>). <b>NP%</b> = GP% minus dealer commission &amp; freight — directional; exact net margin needs the finance P&amp;L.</div>
+  <div class="grid g2">
+    <div class="card">
+      <h3>Price waterfall — FY2025-26 (avg across B500 &amp; B420, Tk/MT)</h3>
+      <div class="chart" id="waterfall"></div>
+    </div>
+    <div class="card">
+      <h3>Net price vs scrap (raw material) cost per MT — FY2025-26</h3>
+      <div class="hint">B500 DWR 10 mm realised price vs monthly scrap purchase cost (raw-material component only — excludes melting/rolling conversion).</div>
+      <div class="chart" id="gpnpTrend"></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Margin by product (FY2025-26)</h3>
+    <div id="marginTable"></div>
+  </div>
+</section>
+
+<!-- ============ ALL SKUs ============ -->
+<section id="sku">
+  <div class="guide"><span class="gl">What this answers</span><p>Every rebar SKU — revenue, volume, price, month-on-month and elasticity in one sortable table.</p><span class="gl">How to read it</span><p>Click any header to sort; use search and the grade/elasticity/move filters; click a row to drill into its month-on-month view.</p></div>
+  <div class="grid g5" id="skuKpis" style="margin-bottom:12px"></div>
+  <div class="card">
+    <h3>Every SKU — price &amp; volume summary <span class="small" id="skuCount"></span></h3>
+    <div class="toolbar">
+      <input type="search" id="q" placeholder="Search SKU / grade…">
+      <select id="fGrade"><option value="all">All grades</option><option>B500</option><option>B420</option></select>
+      <select id="fEl"><option value="all">Any elasticity</option><option value="neg">Negative β (normal)</option><option value="pos">Positive β (anomalous)</option><option value="na">Not measurable</option></select>
+      <select id="fMove"><option value="all">Any move</option><option value="r3">Raised in last 3 mo</option><option value="big">Window move |Δ| &gt; 10%</option></select>
+    </div>
+    <div class="scroll" id="tSku"></div>
+    <div class="hint" style="margin-top:8px">Click any row to drill into its month-on-month view. Sort by clicking headers.</div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Monthly net revenue — by SKU (select)</h3>
+    <select id="skuSel"></select>
+    <div class="chart" id="skuRevMonthly" style="margin-top:8px"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Top SKU revenue — FY2025-26 (ranked)</h3>
+    <div class="hint">Net sales by SKU, Tk Cr.</div>
+    <div class="chart" id="skuRank"></div>
+  </div>
+</section>
+
+<!-- ============ SKU MONTH-ON-MONTH ============ -->
+<section id="mom">
+  <div class="guide"><span class="gl">What this answers</span><p>One SKU's volume, revenue and price month by month.</p><span class="gl">How to read it</span><p>Pick a SKU and range. The chart overlays volume and realised price; the table adds MoM price &amp; volume changes and realised-vs-MRP. Click a row in "All SKUs" to jump here.</p></div>
+  <div class="card">
+    <h3 id="momTitle">Month-on-month series</h3>
+    <div class="hint">Volume derived as net revenue ÷ realised net price (MT). Compare to the previous month with sales. Click rows in "All SKUs" to switch.</div>
+    <div class="toolbar">
+      <select id="momPick"></select>
+      <select id="momRange"><option value="all">Full window (Jan'25–Nov'26)</option><option value="12">Last 12 months</option><option value="6">Last 6 months</option></select>
+    </div>
+    <div class="chart" id="momChart"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Month table</h3>
+    <div class="scroll" id="tMom"></div>
+  </div>
+</section>
+
+<!-- ============ PRICE CHANGE TRACKER ============ -->
+<section id="chg">
+  <div class="guide"><span class="gl">What this answers</span><p>Where prices actually moved — the biggest realised jumps and every declared (MRP + Trade mill-rate) change.</p><span class="gl">How to read it</span><p>Realised moves are ≥2% month-on-month with a unit-typo guard. Declared changes show when the announced MRP or the daily Trade (mill) rate was revised.</p></div>
+  <div class="card">
+    <h3>Largest realised price moves <span class="small" id="chc"></span></h3>
+    <div class="hint">Month-on-month realised-price moves ≥ 2% within a SKU (ratio guard 0.5–2 excludes unit/ERP typos). Same-month volume change shown. Click a row to drill.</div>
+    <div class="toolbar"><input type="search" id="chq" placeholder="Filter SKU / month…"></div>
+    <div class="scroll" id="tJump"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Declared (MRP) price changes</h3>
+    <div class="hint">Moves of ≥ 0.5% in the announced MRP list price — the "declared" price book effect.</div>
+    <div class="scroll" id="tDecl"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Declared Trade (mill-rate) changes</h3>
+    <div class="hint">Every revision of the daily Trade/mill rate (<code>itm.tblPriceSetup</code>, channel 108). The mill rate moves frequently — these are the declared sell-rate changes.</div>
+    <div class="toolbar"><input type="search" id="tq" placeholder="Filter month…"></div>
+    <div class="scroll" id="tTradeDecl"></div>
+  </div>
+</section>
+
+<!-- ============ DECLARED PRICE GRID ============ -->
+<section id="pg">
+  <div class="guide"><span class="gl">What this answers</span><p>What Akij has declared for each SKU — the daily Trade (mill) rate and MRP — and how far the realised price sits from it.</p><span class="gl">How to read it</span><p><b>Trade rate</b> = the daily-updated mill rate (<code>itm.tblPriceSetup</code>, channel "Trade"). <b>MRP</b> = announced list price. <b>Gap</b> = realised vs Trade. Ispat has no separate distributor (DP) tier — rebar trades at a single mill rate, so MRP sits almost on top of Trade.</p><span class="gl">Source</span><p><code>itm.tblPriceSetup</code> (channel 108 "Trade", since Sep-2024) + <code>numItemPrice</code> (MRP).</p></div>
+  <div class="grid g4" id="pgKpis" style="margin-bottom:12px"></div>
+  <div class="grid g2">
+    <div class="card">
+      <h3>Declared Trade (mill) rate vs realised net price</h3>
+      <div class="hint">Monthly: the mill rate (month-end) against the overall realised net price per MT. Rebar trades at the mill rate, so the two track closely.</div>
+      <div class="chart" id="cTradeTrend"></div>
+    </div>
+    <div class="card">
+      <h3>Realised price vs declared Trade (per SKU)</h3>
+      <div class="hint">How far each SKU's latest realised price sits above (teal) or below (red) the current Trade rate, in %.</div>
+      <div class="chart" id="cGap"></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Declared price grid — every rebar SKU</h3>
+    <div class="hint">Current Trade rate, latest MRP and latest realised price, with realised-vs-Trade and MRP-vs-Trade gaps.</div>
+    <div class="scroll" id="tGrid"></div>
+  </div>
+</section>
+
+<!-- ============ ELASTICITY ============ -->
+<section id="el">
+  <div class="guide"><span class="gl">What this answers</span><p>How volume responds to price, SKU by SKU.</p><span class="gl">How to read it</span><p><b>β &lt; 0</b> = normal (price up → volume down); <b>β &gt; 0</b> = anomalous (cost pass-through). Volume is derived (revenue ÷ price), so read β directionally, not as a causal demand curve.</p></div>
+  <div class="grid g4" id="elKpis" style="margin-bottom:12px"></div>
+  <div class="grid g2">
+    <div class="card">
+      <h3>Elasticity by SKU (β = Δln volume ÷ Δln price)</h3>
+      <div class="hint">First-difference estimator over consecutive clean months. Teal = β&lt;0 (normal: price up → volume down). Red = β&gt;0 (anomalous).</div>
+      <div class="chart" id="cEl"></div>
+    </div>
+    <div class="card">
+      <h3>Price vs volume, within SKU</h3>
+      <div class="hint">Each point = one SKU-month; ln(price) and ln(volume) demeaned to the SKU's own mean. Colour = sign of that SKU's β.</div>
+      <div class="chart" id="cScatter"></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Elasticity table</h3>
+    <div id="tEl"></div>
+    <div class="note-box warn" style="margin-top:10px"><b>Read with care.</b> Volume is derived (revenue ÷ price), so β is directional only — demand here is project-driven and stock-outs, discounts and freight distort the estimate. Treat β as a signal to investigate, not a causal demand curve.</div>
+  </div>
+</section>
+
+<!-- ============ COMPETITOR ============ -->
+<section id="comp">
+  <div class="guide"><span class="gl">What this answers</span><p>Akij's mill rate against its peers.</p><span class="gl">How to read it</span><p>The survey covers 25 mills but only <b>May'24–Jan'25</b> — a full 3-year competitor series is not in the ERP. Ranking shows each mill's average mill-gate rate over that window.</p></div>
+  <div class="note-box"><b>Coverage:</b> market price survey (<code>oms.tblCompetitorPriceHeader/Row</code>) holds 25 competitors, <b>May 2024 → Jan 2025</b>. A full 3-year competitor series is not in the ERP.</div>
+  <div class="card">
+    <h3>Mill-rate trend — Akij vs top competitors</h3>
+    <div class="hint">Monthly average mill-gate price, Tk/MT.</div>
+    <div class="chart" id="compTrend"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Competitor ranking (avg mill rate, May'24–Jan'25)</h3>
+    <div id="compTable"></div>
+  </div>
+</section>
+
+<!-- ============ MARKET SHARE ============ -->
+<section id="ms">
+  <div class="guide"><span class="gl">What this answers</span><p>Akij's share of the Bangladesh steel market.</p><span class="gl">How to read it</span><p>Akij is 7th of the named mills at ~2.6% and the <b>fastest-growing (+21.7% YoY)</b>. Share comes from an external sheet; monthly figures cover Dec'25–Sep'26.</p></div>
+  <div class="grid g4" id="msKpis" style="margin-bottom:12px"></div>
+  <div class="card">
+    <h3>Steel market share — FY2023-24 vs FY2024-25 (%)</h3>
+    <div class="hint">Akij Ispat highlighted — 7th of the named mills, fastest-growing (+21.7% YoY).</div>
+    <div class="chart" id="msLadder"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Akij Ispat share — monthly (Dec'25 → Sep'26)</h3>
+    <div class="hint">Share hovered 2.7–3.5%, peaking 3.49% (Mar'26).</div>
+    <div class="chart" id="msTrend"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Steel market share — full table</h3>
+    <div id="msTable"></div>
+  </div>
+</section>
+
+<!-- ============ DEALER ============ -->
+<section id="dealer">
+  <div class="guide"><span class="gl">What this answers</span><p>Dealer commission and how it tracks sales.</p><span class="gl">How to read it</span><p>Commission (left axis) vs net sales (right axis). The by-type chart shows the incentive mix (Monthly, General, Performance…).</p></div>
+  <div class="grid g4" id="commKpis" style="margin-bottom:12px"></div>
+  <div class="card">
+    <h3>Dealer commission vs sales — monthly (FY2023-24 → FY2026-27)</h3>
+    <div class="hint">Dealer commission (left axis) against net sales (right axis) — compare the two trends.</div>
+    <div class="chart" id="commMonthly"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Commission by incentive type (total)</h3>
+    <div class="chart" id="commType"></div>
+  </div>
+</section>
+
+<!-- ============ AREA ============ -->
+<section id="area">
+  <div class="guide"><span class="gl">What this answers</span><p>Where volume and value land by delivery zone.</p><span class="gl">How to read it</span><p>Top zones ranked by cumulative value; the table adds volume (MT) for each zone.</p></div>
+  <div class="card">
+    <h3>Top 12 delivery zones (cumulative value)</h3>
+    <div class="chart" id="zoneBar"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>All top zones — value &amp; volume</h3>
+    <div id="zoneTable"></div>
+  </div>
+</section>
+
+<!-- ============ GROWTH ============ -->
+<section id="growth">
+  <div class="guide"><span class="gl">What this answers</span><p>Revenue and volume by fiscal year.</p><span class="gl">How to read it</span><p>FY2025-26 vs FY2024-25 growth plus the 3-yr CAGR. FY2026-27 is a partial year (11 months).</p></div>
+  <div class="grid g5" id="growthKpis" style="margin-bottom:12px"></div>
+  <div class="card">
+    <h3>Revenue &amp; volume by year</h3>
+    <div class="chart" id="revYear"></div>
+  </div>
+</section>
+
+<!-- ============ METHOD & COVERAGE ============ -->
+<section id="mt">
+  <div class="guide"><span class="gl">What this answers</span><p>Where every number comes from and its limits.</p><span class="gl">How to read it</span><p>Check the coverage table before drawing conclusions — some series are partial (competitor survey) or derived (volume, elasticity, GP cost proxy).</p></div>
+  <div class="grid g2">
+    <div class="card">
+      <h3>Sources</h3>
+      <table>
+        <thead><tr><th>Data</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Revenue, SKU &amp; price series</td><td>iBOSDDD ERP <code>oms</code> sales (BU 224 · Akij Ispat)</td></tr>
+          <tr><td>Avg item cost (GP basis)</td><td><code>itm.tblItem.numAverageRate</code></td></tr>
+          <tr><td>MRP / list price</td><td><code>numItemPrice</code></td></tr>
+          <tr><td>Declared Trade (mill) rate</td><td><code>itm.tblPriceSetup</code> · channel 108 "Trade"</td></tr>
+          <tr><td>Dealer commission</td><td><code>sms</code> incentive postings</td></tr>
+          <tr><td>Competitor mill rates</td><td><code>oms.tblCompetitorPriceHeader/Row</code></td></tr>
+          <tr><td>Steel market share</td><td>Provided Google Sheet (gid 663260340)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Method</h3>
+      <ul style="margin-left:16px;font-size:12.3px;color:#c9d7ea">
+        <li><b>Net price</b> = realised invoice value ÷ MT, after discounts.</li>
+        <li><b>GP%</b> = (net price − avg cost) ÷ net price. <b>Est. NP%</b> = GP% − ~2.1% (commission ~1.3% + freight ~0.8%).</li>
+        <li><b>Volume (MT) in MoM &amp; elasticity views</b> = monthly net revenue ÷ realised net price — derived, directional only.</li>
+        <li><b>Elasticity β</b> = OLS slope of Δln(volume) on Δln(price) between consecutive months; needs ≥ 8 pairs and |β| ≤ 8.</li>
+        <li><b>Move detection</b> = |Δprice| ≥ 2% MoM with ratio guard 0.5–2 (excludes unit breaks).</li>
+        <li>Mixed-unit rebar quantity entries from 2023–24 are excluded from per-ton series (revenue values remain valid).</li>
+        <li><b>Last-month convention:</b> the running month (Nov'26) is partial and excluded from "current" statistics.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Coverage</h3>
+    <table>
+      <thead><tr><th>Series</th><th>Window</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Monthly total revenue</td><td>Dec'22 → Nov'26</td><td><span class="tag t-neg">Full</span></td></tr>
+        <tr><td>Monthly revenue by SKU</td><td>Jan'23 → Nov'26</td><td><span class="tag t-neg">Full</span></td></tr>
+        <tr><td>Per-ton price (net/gross/MRP)</td><td>Jan'25 → Nov'26</td><td><span class="tag t-neg">Full (clean)</span></td></tr>
+        <tr><td>Declared Trade (mill) rate</td><td>Sep'24 → Nov'26</td><td><span class="tag t-neg">Full (daily)</span></td></tr>
+        <tr><td>Per-ton price</td><td>FY2023-24 / FY2024-25</td><td><span class="tag t-warn">Mixed units — excluded</span></td></tr>
+        <tr><td>Competitor mill rates</td><td>May'24 → Jan'25</td><td><span class="tag t-warn">Partial (survey)</span></td></tr>
+        <tr><td>Steel market share</td><td>FY23-24, FY24-25, monthly Dec'25→Sep'26</td><td><span class="tag t-warn">External sheet</span></td></tr>
+        <tr><td>Dealer commission</td><td>Jan'23 → Sep'26</td><td><span class="tag t-neg">Full</span></td></tr>
+        <tr><td>Elasticity (β)</td><td>Jan'25 → Nov'26</td><td><span class="tag t-warn">Derived volume</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="fmeta">
+    <span>Business Unit: Akij Ispat Ltd (AIL · ERP 224)</span>
+    <span>Source: iBOSDDD live ERP (read-only)</span>
+    <span>Pattern: AEL Price Elasticity Cockpit</span>
+    <span>Clean window: FY2023-24 → FY2026-27 (Nov)</span>
+    <span>Generated: Nov 2026</span>
+  </div>
+  <div class="small">Comprehensive cockpit — the Product Analysis sections (Price, GP/NP, Competitor, Market Share, Dealer, Area, Growth) merged with the AEL price &amp; elasticity pattern, plus the declared price grid (Trade mill-rate + MRP). Every figure comes from the embedded ERP extract (BU 224 · Akij Ispat).</div>
+</footer>
+<div id="tip" class="tip"></div>
+
+<script>
+/* ============================================================
+   EMBEDDED DATA  (live from iBOSDDD, BU 224 = Akij Ispat)
+   ============================================================ */
+var D = {
+  monthly: [
+    [2022,12,352106],[2023,1,712100668],[2023,2,610404011],[2023,3,721393647],[2023,4,498711977],[2023,5,862372722],[2023,6,870276647],[2023,7,492061084],[2023,8,515995716],[2023,9,466944361],[2023,10,1012984235],[2023,11,687551902],[2023,12,732369890],
+    [2024,1,1051680503],[2024,2,1036812638],[2024,3,963838536],[2024,4,556921429],[2024,5,1218075352],[2024,6,533656930],[2024,7,792884646],[2024,8,547920634],[2024,9,641173498],[2024,10,786100640],[2024,11,648176604],[2024,12,1223348335],
+    [2025,1,1559542650],[2025,2,1373332385],[2025,3,1366086453],[2025,4,1555125359],[2025,5,1257283003],[2025,6,927534498],[2025,7,1030362127],[2025,8,907859124],[2025,9,1265862707],[2025,10,1133374187],[2025,11,1260290948],[2025,12,1245078978],
+    [2026,1,1839112440],[2026,2,1733000997],[2026,3,1608773194],[2026,4,1651003084],[2026,5,1039993839],[2026,6,1638367005],[2026,7,868834458],[2026,8,1211843137],[2026,9,1768608191],[2026,10,902469113],[2026,11,159818380]
+  ],
+  yearlyRev: {2022:352106, 2023:8183166860, 2024:10000589744, 2025:14881732419, 2026:14421823836},
+  yearlyDel: {2022:[2,264003], 2023:[6443,7001916678], 2024:[9499,8955216109], 2025:[13121,13030163654], 2026:[13682,12378848729]},
+  cat: {
+    "MS Rod": {2023:8136005608, 2024:9924782741, 2025:14217209867, 2026:13671127755},
+    "Wastage & By-Products": {2023:47160876, 2024:67459760, 2025:358391928, 2026:532272746}
+  },
+  skuMonthly: {
+    "B500 DWR 10 mm":[275371819,216726635,282364699,170844974,283743053,332318060,190552860,194230419,176100662,353640321,237266903,243414108,349336378,307859407,304652806,199260864,419910083,191731334,270025523,206016464,255682368,288966286,226639732,417827856,413239268,392258782,400691016,422604671,441843144,292677768,388462445,320482002,428532618,361101427,388783726,365109417,594073793,525074609,543326893,474567240,317057840,472415201,309020219,431290103,629347104,301589611,40896455],
+    "B500 DWR 16 mm":[178727622,150053177,158565587,100147963,175938302,177563614,109196077,101651262,93815323,225391101,156879605,170224367,223504686,235560144,203272880,118317555,235509067,109251134,137980225,100630905,119726988,169888164,142553657,288199896,305934430,280941117,277171206,284534934,241514896,177840654,199919089,183809809,266086183,225016091,258875611,241344600,413349228,398767114,369203951,322795104,186752571,361778611,180803583,258671734,377368780,200778267,38508845],
+    "B500 DWR 12 mm":[105318370,94375525,118167184,76292026,115443943,125187718,65892655,61687615,53916093,130894839,86193822,98479123,132188472,132411298,143799837,84709897,173113720,80916554,95079603,69745804,77044925,99335367,81526499,170279751,244665096,209246994,200041052,219131911,191768344,128137537,133151400,101815203,185496587,159095144,178950612,154489943,257366486,243733252,212325780,239117669,162930208,211736254,122521383,149873702,220844977,99410697,24238250],
+    "B500 DWR 20 mm":[53019100,53625380,64426922,55839435,85999655,82127325,41158750,60742005,56763338,96001439,74938502,76077063,107397361,93928982,103973573,46761719,117659474,42692506,83871553,68016592,72151865,82428659,73857491,135288476,159582983,151683144,125975704,130527158,129287259,75466863,102758869,102483335,134866267,137255076,136072805,122181535,168637415,187154643,189399851,225161613,100686382,202216893,126015568,172068940,240127329,128711085,28636970],
+    "B500 DWR 8 mm":[73922517,67767550,67747754,67264262,101037671,121373713,43478365,41186290,28158809,120831241,61750479,82365419,114961891,96651589,98053971,55205668,123557167,49532089,64484299,35675055,40394607,67068549,45762529,114401433,100295425,74226055,98677906,107458158,63395595,62125097,61083279,51048875,91162616,56419904,64019694,68606273,119945315,98853418,98666666,77152061,52670840,90752645,36377468,60941706,85866324,38209730,7768125],
+    "B500 DWR 25 mm":[15054840,14117993,12196100,5321038,19940337,15427590,9905250,12038475,13703325,28901565,33106499,11370856,17356250,27273180,31985093,7307594,25373834,10176065,22374681,14858533,13711389,29459635,17358685,23119641,82981179,91837310,71857294,116724894,42261359,40514773,32177280,32713626,38051710,53667195,43793153,49774485,41865036,75965884,48987426,108358893,39546272,71997722,23311207,41760551,87262053,35166762,12316030],
+    "B500 DWR 32 mm":[0,0,0,339500,229600,0,0,0,0,2790000,313250,0,0,588250,796500,268800,1395000,0,0,0,0,0,503250,30780,52998662,26364667,43094315,103479145,253500,42519300,1879771,20800500,8856000,27587600,36130600,20325000,31049320,31620000,2748500,36479500,2312500,10982000,762450,8550000,23674500,0,1046400],
+    "B420 DWR 10 mm":[265500,3957000,3232000,2552800,21853840,1918750,6507200,14525150,7561508,8506573,5422462,14124588,23288864,23388460,15321808,8554048,22604246,8522485,31375180,14216938,16561682,15836665,7477264,22107421,48612086,42146041,24736550,37491149,29370504,19331732,20433050,16635801,21875926,29017218,15776784,23386071,32142032,34160776,28006590,26321990,8733658,13470591,8141764,11275970,23363675,16675250,0],
+    "B420 DWR 12 mm":[8691000,184000,752300,693600,17586800,1823500,9849500,8714750,7487211,13526094,6162179,9359862,15208515,19751962,16801450,6208692,19360721,7033340,30035580,11714342,21949008,9253685,17336585,18486420,38452870,24902283,26894440,25900188,16570390,5853320,11627385,16329096,9368977,10891812,13412598,17443777,24225355,10415228,22854650,14009864,1563777,17082036,10105483,6670010,14688712,7832400,0],
+    "B420 DWR 16 mm":[0,450000,1365900,368000,8929380,2062950,6313200,6939300,8390192,1645407,2205000,6571771,6118403,44792961,3301486,5252700,12575818,3970510,16643100,3278050,6163400,6359500,9622850,4402000,15525580,14428460,11567250,17929160,21364900,13465300,4645780,11386054,2894278,7740140,16401650,12102758,17527368,15037010,7359420,24434560,5095650,50706637,3458921,3198196,6404752,1956300,0],
+    "B420 DWR 20 mm":[0,6451000,1595900,9688000,16682440,1886600,4023850,3178950,5050500,5111814,7478500,7251124,28643188,14625913,7057040,8297100,12693992,7047680,11700960,7277850,4042100,4817400,5228550,7683010,12714150,17842370,11668600,10677740,12471100,2621900,8665145,8383366,5002642,10525966,12287350,15533898,7789993,12272650,5455540,13081772,186000,22733992,3521201,6462316,11931816,5722800,0]
+  },
+  priceNet: {
+    "B500 DWR 10 mm":[86375,85317,84245,84200,84470,84338,84607,83009,82082,81207,79481,79175,79671,83080,89502,91410,93318,92073,89105,87799,87712,89055,89087],
+    "B500 DWR 16 mm":[90353,85036,84340,84156,84535,84132,84528,82872,81958,81311,79285,78893,79607,82757,89506,93994,93059,93234,88924,87850,87677,89076,89116],
+    "B500 DWR 12 mm":[88581,85398,84298,84155,84689,84225,84158,82793,81873,80453,79162,78834,79473,82505,89426,90967,92507,91797,88885,87623,87197,89082,88768],
+    "B500 DWR 20 mm":[87904,86558,84274,84148,85620,83943,84400,82683,81892,80765,79307,79026,79263,82522,88147,93906,92785,92596,90659,87512,87450,88999,88920],
+    "B500 DWR 8 mm":[98800,84793,84051,85507,85096,84413,84877,83266,82729,82728,79741,78910,80274,84646,90091,94469,94983,92931,89293,88283,88092,89515,89804],
+    "B500 DWR 25 mm":[89910,85492,85075,83997,85799,83525,83556,82327,80798,78580,78844,79567,78278,82276,85878,88910,91942,90654,89398,86957,85874,88269,88796],
+    "B500 DWR 32 mm":[87416,85818,84979,84300,84500,83371,82700,81891,80509,78373,78035,78173,77802,81705,91616,92646,92500,92675,89700,85500,86403,null,87200],
+    "B420 DWR 10 mm":[89649,84548,83795,83519,83779,82600,82946,82071,79685,79405,77975,76945,78465,84453,85770,93208,92166,90921,87189,94620,85581,87168,null],
+    "B420 DWR 12 mm":[110468,84554,83783,83283,83794,82943,82810,81114,79573,81470,77885,77380,77620,81579,84387,92983,92095,91453,87622,94258,85073,87512,null],
+    "B420 DWR 16 mm":[87628,85540,83942,83236,83587,82255,70755,81620,81163,81958,89700,78469,107438,83077,85485,93066,93071,90182,89354,88683,86714,88121,null],
+    "B420 DWR 20 mm":[81188,84681,84249,83524,83811,83766,83625,82012,80318,83615,77376,78382,79516,81275,84977,93201,93000,90577,87136,89221,86318,88043,null]
+  },
+  priceGross: {
+    "B500 DWR 10 mm":[87255,85317,84245,84200,84470,84338,84607,83009,82082,81207,79481,79175,79671,83080,89502,91410,93318,92073,89105,87799,87712,89055,89087],
+    "B500 DWR 16 mm":[89986,85036,84340,84156,84535,84132,84528,82872,81958,81311,79285,78893,79607,82757,89506,93994,93059,93234,88924,87850,87677,89076,89116],
+    "B500 DWR 12 mm":[88877,85398,84298,84155,84689,84225,84158,82793,81873,80453,79162,78834,79473,82505,89426,90967,92507,91797,88885,87623,87197,89082,88768],
+    "B500 DWR 20 mm":[88202,86558,84274,84148,85620,83943,84400,82683,81892,80765,79307,79026,79263,82522,88147,93906,92785,92596,90659,87512,87450,88999,88920],
+    "B500 DWR 8 mm":[94935,84793,84051,85507,85096,84413,84877,83266,82729,82728,79741,78910,80274,84646,90091,94469,94983,92931,89293,88283,88092,89515,89804],
+    "B500 DWR 25 mm":[88959,85492,85075,83997,85799,83525,83556,82327,80798,78580,78844,79567,78278,82276,85878,88910,91942,90654,89398,86957,85874,88269,88796],
+    "B500 DWR 32 mm":[87416,85818,84979,84300,84500,83371,82700,81891,80509,78373,78035,78173,77802,81705,91616,92646,92500,92675,89700,85500,86403,null,87200],
+    "B420 DWR 10 mm":[89649,84548,83795,83519,83779,82600,82946,82071,79685,79405,77975,76945,78465,84453,85770,93208,92166,90921,87189,94620,85581,87168,null],
+    "B420 DWR 12 mm":[109514,84554,83783,83283,83794,82943,82810,81114,79573,81470,77885,77380,77620,81579,84387,92983,92095,91453,87622,94258,85073,87512,null],
+    "B420 DWR 16 mm":[88565,85540,83942,83236,83587,82255,70755,81620,81163,81958,89700,78469,107438,83077,85485,93066,93071,90182,89354,88683,86714,88121,null],
+    "B420 DWR 20 mm":[83838,84681,84249,83524,83811,83766,83625,82012,80318,83615,77376,78382,79516,81275,84977,93201,93000,90577,87136,89221,86318,88043,null]
+  },
+  priceOverallNet:[87503,85352,82947,81106,84777,82714,81048,81341,81303,78794,77346,68752,73104,77120,86965,83000,81605,89141,80052,86563,82191,84665,89869],
+  priceOverallGross:[87504,85352,82947,81106,84777,82714,81048,81341,81303,78794,77346,68752,73104,77120,86965,83000,81605,89141,80052,86563,82191,84665,89869],
+  priceMRP: {
+    "B500 DWR 10 mm":[84595,84595,83997,82855,83940,84165,84750,83172,82018,81088,79301,78723,79773,83146,89594,94239,93078,91606,88732,87748,87747,89131,89678],
+    "B500 DWR 16 mm":[83653,84368,83990,82163,84088,84131,84745,83192,81976,81175,79320,78727,79800,83141,89518,94396,93060,91586,88724,87740,87855,89181,89667],
+    "B500 DWR 12 mm":[82643,84438,83977,81952,84087,84154,84751,83210,82033,81188,79125,78842,79825,83106,89665,94353,93058,91606,88708,87741,87832,89313,89677],
+    "B500 DWR 20 mm":[78962,82974,83162,78813,83150,83822,84656,83020,81889,80995,78893,78535,79723,83039,89135,94306,93026,91550,88716,87639,87830,89182,89666],
+    "B500 DWR 8 mm":[81358,83584,82772,79851,82866,84187,84881,83298,82152,81415,78911,78994,79991,83189,89568,94462,93126,91656,88624,87883,88006,89503,89763],
+    "B500 DWR 25 mm":[79116,84789,84263,81357,83194,83691,84100,82661,81167,80013,78180,78040,79172,82796,88471,94880,92699,91434,88712,87236,87532,89052,89643],
+    "B500 DWR 32 mm":[85371,85481,85566,78407,84500,83700,82700,82383,81400,78100,78277,78125,78050,81683,87850,93063,92500,91750,89700,85500,86733,null,87200],
+    "B420 DWR 10 mm":[84860,84709,83882,83656,83853,83133,83422,82274,80383,78818,78148,77270,77887,82021,86529,93411,92213,91231,88200,86636,86850,87986,null],
+    "B420 DWR 12 mm":[82170,84628,84018,83573,83917,83204,83233,81766,80450,78825,78120,77138,77819,82358,86204,93442,92055,91225,87416,86540,86611,88275,null],
+    "B420 DWR 16 mm":[84578,84792,83985,83705,83885,83423,77964,81875,81062,79164,78192,77488,78152,82372,85666,93508,93055,91056,89061,86453,87408,88177,null],
+    "B420 DWR 20 mm":[84252,84843,83968,83681,83948,83750,83963,82392,80600,79241,78072,77466,77973,81933,86591,93448,93000,91060,87563,86640,87425,88087,null]
+  },
+  priceOverallMRP:[82455,84437,84816,81546,84479,84680,85570,83077,81877,80974,78964,80603,82407,85439,89336,94042,92609,91364,90035,88351,87671,89463,92706],
+  sku: [
+    ["Akij Ispat B500 DWR 10 mm","B500", 2956574515, 3437909105, 4615786287],
+    ["Akij Ispat B500 DWR 16 mm","B500", 1798154002, 2084395305, 2942988623],
+    ["Akij Ispat B500 DWR 12 mm","B500", 1131848916, 1340151731, 2105989826],
+    ["Akij Ispat B500 DWR 20 mm","B500", 800718915, 1028028254, 1508141001],
+    ["Akij Ispat B500 DWR 8 mm","B500", 876884073, 905748851, 898518878],
+    ["Akij Ispat B500 DWR 25 mm","B500", 191083869, 240354581, 696354260],
+    ["Akij Ispat B500 DWR 32 mm","B500", 3672350, 3582580, 384289061],
+    ["Akij Ispat B420 DWR 10 mm","B420", 90427371, 209255062, 328812912],
+    ["Akij Ispat B420 DWR 12 mm","B420", 84830796, 193140300, 217647136],
+    ["Akij Ispat B420 DWR 16 mm","B420", 45241100, 122480778, 149451310],
+    ["Akij Ispat B420 DWR 20 mm","B420", 68398678, 119114783, 128394228],
+    ["Akij Ispat B420 DWR 25 mm","B420", 33586895, 146411438, 99749833]
+  ],
+  price25: [
+    ["Akij Ispat B500 DWR 10 mm","B500", 83196, 78813],
+    ["Akij Ispat B500 DWR 16 mm","B500", 83491, 78871],
+    ["Akij Ispat B500 DWR 12 mm","B500", 83405, 78963],
+    ["Akij Ispat B500 DWR 20 mm","B500", 83378, 79024],
+    ["Akij Ispat B500 DWR 8 mm","B500", 84837, 71792],
+    ["Akij Ispat B500 DWR 25 mm","B500", 83632, 78752],
+    ["Akij Ispat B500 DWR 32 mm","B500", 83128, 69659],
+    ["Akij Ispat B420 DWR 10 mm","B420", 82935, 78015],
+    ["Akij Ispat B420 DWR 12 mm","B420", 85901, 73774],
+    ["Akij Ispat B420 DWR 16 mm","B420", 83460, 74506],
+    ["Akij Ispat B420 DWR 20 mm","B420", 82055, 72341],
+    ["Akij Ispat B420 DWR 25 mm","B420", 82524, 71064]
+  ],
+  priceMonths:["Jan25","Feb25","Mar25","Apr25","May25","Jun25","Jul25","Aug25","Sep25","Oct25","Nov25","Dec25","Jan26","Feb26","Mar26","Apr26","May26","Jun26","Jul26","Aug26","Sep26","Oct26","Nov26"],
+  p10:[86376,85318,84246,84200,84471,84338,84607,83010,82083,81207,79481,79176,79672,83081,89503,91410,93318,92073,89105,87800,87713,89056,89087],
+  p16:[90354,85037,84340,84156,84535,84133,84528,82873,81959,81311,79285,78893,79607,82757,89506,93995,93060,93235,88925,87850,87678,89077,89116],
+  comm: [
+    [2023,1,7897203],[2023,7,18972470],[2023,8,6615900],[2023,9,12480360],[2023,10,20228935],[2023,11,9716924],[2023,12,8193143],
+    [2024,1,13720605],[2024,2,11737440],[2024,3,15308471],[2024,4,8212114],[2024,5,21245578],[2024,6,9702760],[2024,7,19126882],[2024,8,7965530],[2024,9,7722445],[2024,10,10692736],[2024,11,11046140],[2024,12,13846305],
+    [2025,1,25210410],[2025,2,10043637],[2025,3,13588435],[2025,4,11836605],[2025,5,13261148],[2025,6,10541117],[2025,7,17870901],[2025,8,15805717],[2025,9,19143127],[2025,10,15424188],[2025,11,18315161],[2025,12,17743896],
+    [2026,1,33562805],[2026,2,35952650],[2026,3,33616556],[2026,4,31152911],[2026,5,19928363],[2026,6,20685695],[2026,7,15606284],[2026,8,24557954],[2026,9,22165014]
+  ],
+  commType: [
+    ["Monthly",437049170],["General",54462023],["Performance",47631306],["MonthlyTarget",44044918],
+    ["DeliveryIncentive",33770744],["WithTarget",15503954],["Delivery",14426550],["SpecialIncentive",4982685],
+    ["top20customer",4480000],["QuarterlyTarget",2610246],["WithoutTarget",969152],["PriceAdjustment",513764]
+  ],
+  zones: [
+    ["Cumilla Adarsha Sadar",2335380995,26565],["Noakhali Sadar",1851928690,21020],["Mirpur",1525939134,17599],
+    ["Gazipur Sador",1402175396,16001],["Daudkandi",1318761779,15137],["Narayangonj Sador",1278883611,15547],
+    ["Poba (Rajshahi)",1100536048,11904],["Sylhet Sadar",936607833,10581],["Feni Sadar",934002974,10823],
+    ["Ashulia",812864097,9267],["Uttara Poshim",800105841,9260],["Demra",755072781,8675],
+    ["Tongi",726014960,8854],["Savar",699037207,8074],["Keranigonj Model",674314302,9379],
+    ["Rupgonj",648094803,7615],["Khulna Sadar",637998363,7313],["Lakshmipur Sadar",630042541,7243],
+    ["Gojariya",604771603,8144],["Mymensingh Sadar",590720660,6800],["Mohammadpur",560388977,6533],
+    ["Uttara Purba",545608320,6273],["Narshingdi Sador",506391764,5931],["Baridhara",476700952,5509],["Vatara",464861726,5422]
+  ],
+  comp: [
+    ["Abul Khair Steel",92891,94342,5725],["GPH Ispat",92644,94510,5517],["BSRM",92622,94109,3592],
+    ["KSRM",87681,89369,992],["Anwar Ispat",87514,87479,900],["Rahim Steel",86990,87014,878],
+    ["AKIJ ISPAT",86727,87475,2459],["Rahima Ispat",86510,81981,0],["Metrocem Ispat",85548,86048,813],
+    ["Golden Ispat",85100,86200,884],["HM Steel",85026,86126,878],["Sitalpur Auto",84050,85260,119],
+    ["Chakda Steel",83966,82720,507],["Salam Steel (SCRM)",83648,84020,689],["Shahariar Steel",83187,83706,471],
+    ["Karnafully Steel",82591,82591,0],["Al-Aksa Steel",81655,81655,0],["Premier Steel",81554,81560,0],
+    ["Zahir Steel",81549,82122,0],["Bandar Steel",81484,81983,0],["HKG Steel",81432,80955,0],
+    ["Rani RRM",81348,81612,0],["SS Steel",81271,81739,0],["Ambient Steel",80275,79724,0],
+    ["Mohammadi Steel",79846,79259,0]
+  ],
+  compTrend: {
+    "BSRM":[96000,96000,96000,96000,92921,91575,90000,85579,89818],
+    "AKS":[95882,96000,96000,96000,94132,92000,90474,85842,89682],
+    "GPH":[92906,95500,95500,95500,92789,91315,90000,90079,90182],
+    "KSRM":[91894,91187,90450,90167,88637,87340,84063,81468,83745],
+    "Anwar":[91406,91367,90583,89833,87637,86525,83842,80974,87000],
+    "Rahim":[91000,90933,89972,89278,87316,85825,83684,80211,86136],
+    "AKIJ":[90281,90500,89500,89083,86763,85455,83400,80921,86045]
+  },
+  compMonths:["May24","Jun24","Jul24","Aug24","Sep24","Oct24","Nov24","Dec24","Jan25"],
+  ms: [
+    ["BSRM",23.81,27.58,1375085,1545083],
+    ["AKS",14.13,17.57,816133,984192],
+    ["GPH",10.19,12.21,588568,683751],
+    ["KSRM",7.02,6.60,405252,369830],
+    ["RRM",3.78,3.70,218182,207271],
+    ["Anwar Ispat",3.27,1.79,188723,100379],
+    ["AKIJ ISPAT",2.06,2.59,119202,145051],
+    ["Others",35.74,27.96,2063941,1565963]
+  ],
+  msMonths:["Dec25","Jan26","Feb26","Mar26","Apr26","May26","Jun26","Jul26","Aug26","Sep26"],
+  msAkijShare:[2.56,2.83,3.36,3.49,3.47,2.72,2.97,2.89,2.96,2.92],
+  msAkijSales:[13274,17251,19369,16450,17140,9375,13080,8800,10987,12523],
+  tradeMonthly:[86000,84500,84000,84000,84200,84200,85000,82500,82500,81000,79000,79000,82000,85000,95000,94300,93000,91500,88000,88500,89300,89900,89900],
+  tradeChanges:[
+    ["2024-09-11",86500,-0.6],["2024-09-29",86000,-0.6],["2024-10-06",85500,-0.6],["2024-10-09",84700,-0.9],["2024-10-14",85200,0.6],["2024-10-23",85500,0.4],["2024-11-03",85200,-0.4],["2024-11-05",85000,-0.2],["2024-11-06",84700,-0.4],["2024-11-07",84500,-0.2],["2024-11-10",83500,-1.2],["2024-11-14",83000,-0.6],["2024-11-19",82500,-0.6],["2024-12-01",82000,-0.6],["2024-12-05",81000,-1.2],["2024-12-10",80500,-0.6],["2024-12-15",80000,-0.6],["2024-12-24",80500,0.6],["2024-12-27",81500,1.2],["2024-12-31",82000,0.6],["2025-01-01",83000,1.2],["2025-01-04",85000,2.4],["2025-01-06",86500,1.8],["2025-01-07",87000,0.6],["2025-01-16",86000,-1.1],["2025-01-23",85500,-0.6],["2025-01-30",86000,0.6],["2025-02-02",85500,-0.6],["2025-02-04",84500,-1.2],["2025-02-16",85000,0.6],["2025-02-19",84500,-0.6],["2025-03-02",84000,-0.6],["2025-03-16",84500,0.6],["2025-03-19",84000,-0.6],["2025-04-20",84500,0.6],["2025-04-24",84000,-0.6],["2025-04-25",84500,0.6],["2025-04-30",84000,-0.6],["2025-05-01",84200,0.2],["2025-05-04",84000,-0.2],["2025-05-06",84800,1],["2025-05-08",84300,-0.6],["2025-05-11",84500,0.2],["2025-05-15",84200,-0.4],["2025-05-22",84000,-0.2],["2025-05-26",84200,0.2],["2025-07-01",85000,1],["2025-07-15",84800,-0.2],["2025-07-29",85000,0.2],["2025-08-04",84500,-0.6],["2025-08-06",84000,-0.6],["2025-08-16",83000,-1.2],["2025-08-27",82500,-0.6],["2025-09-07",82000,-0.6],["2025-09-09",82300,0.4],["2025-09-11",82500,0.2],["2025-09-21",82300,-0.2],["2025-09-23",82000,-0.4],["2025-09-27",82500,0.6],["2025-10-09",82200,-0.4],["2025-10-12",82000,-0.2],["2025-10-14",81700,-0.4],["2025-10-16",81500,-0.2],["2025-10-19",81000,-0.6],["2025-10-23",81300,0.4],["2025-10-29",81000,-0.4],["2025-11-06",80500,-0.6],["2025-11-09",80000,-0.6],["2025-11-11",79500,-0.6],["2025-11-16",79000,-0.6],["2025-12-01",79500,0.6],["2025-12-04",79000,-0.6],["2026-01-10",79200,0.3],["2026-01-12",79500,0.4],["2026-01-17",79800,0.4],["2026-01-19",80000,0.3],["2026-01-21",80500,0.6],["2026-01-24",81000,0.6],["2026-01-27",81500,0.6],["2026-01-28",82000,0.6],["2026-02-03",82500,0.6],["2026-02-10",83500,1.2],["2026-02-16",84000,0.6],["2026-02-18",84200,0.2],["2026-02-22",84500,0.4],["2026-02-24",84700,0.2],["2026-02-28",85000,0.4],["2026-03-03",85500,0.6],["2026-03-04",86500,1.2],["2026-03-05",88500,2.3],["2026-03-06",89000,0.6],["2026-03-07",91500,2.8],["2026-03-08",93000,1.6],["2026-03-09",94000,1.1],["2026-03-30",94700,0.7],["2026-03-31",95000,0.3],["2026-04-19",94000,-1.1],["2026-04-20",95000,1.1],["2026-04-22",94000,-1.1],["2026-04-25",95000,1.1],["2026-04-26",94300,-0.7],["2026-05-06",93300,-1.1],["2026-05-07",93000,-0.3],["2026-06-01",89000,-4.3],["2026-06-02",92000,3.4],["2026-06-03",91500,-0.5],["2026-06-06",92000,0.5],["2026-06-22",91500,-0.5],["2026-07-02",91000,-0.5],["2026-07-05",90500,-0.5],["2026-07-08",89500,-1.1],["2026-07-14",89000,-0.6],["2026-07-20",88000,-1.1],["2026-08-17",88500,0.6],["2026-09-01",87700,-0.9],["2026-09-03",88000,0.3],["2026-09-15",88200,0.2],["2026-09-20",88500,0.3],["2026-09-22",88700,0.2],["2026-09-23",89000,0.3],["2026-09-28",89300,0.3],["2026-10-06",89800,0.6],["2026-10-28",89900,0.1]
+  ]
+};
+/* ============ helpers ============ */
+function cr(v){ if(v==null||isNaN(v))return "—"; var c=v/1e7; if(c>=100)return "৳ "+Math.round(c).toLocaleString("en-US")+" Cr"; if(c>=10)return "৳ "+c.toFixed(0)+" Cr"; return "৳ "+c.toFixed(1)+" Cr"; }
+function taka(v){ if(v==null||isNaN(v))return"—"; return "৳ "+Math.round(v).toLocaleString("en-US"); }
+function mt(v){ if(v==null||isNaN(v))return "—"; return Math.round(v).toLocaleString("en-US"); }
+function pct(a,b){ if(!b)return null; return (a-b)/b*100; }
+function pf(v){ if(v==null||isNaN(v))return "—"; return (v>=0?"+":"")+v.toFixed(1)+"%"; }
+function mn(m){ return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][m-1]; }
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+/* tooltip */
+var TIP=document.getElementById("tip");
+window.tip=function(ev,text){ TIP.innerHTML=text; TIP.style.display="block"; var x=ev.clientX+16,y=ev.clientY+16; if(x+340>innerWidth)x=ev.clientX-340; if(y+150>innerHeight)y=ev.clientY-150; TIP.style.left=x+"px"; TIP.style.top=y+"px"; };
+window.untip=function(){ TIP.style.display="none"; };
+
+/* ============ derived window series (Jan'25 → Nov'26, 23 mo) ============ */
+var WINLAB = D.priceMonths;
+var SKUKEYS = Object.keys(D.priceNet);
+// revenue aligned to window: skuMonthly runs Jan'23..Nov'26 (47) → window is the last 23
+var winRev = {};
+SKUKEYS.forEach(function(k){ winRev[k] = D.skuMonthly[k].slice(24); });
+var winRevTotal = D.monthly.slice(25).map(function(m){return m[2];}); // index 25 = Jan'25
+// derived volume (MT) = revenue / realised net price
+function fillv(a){ for(var i=0;i<a.length;i++) if(a[i]==null) a[i]=NaN; return a; }
+var winVol = {};
+SKUKEYS.forEach(function(k){
+  winVol[k] = winRev[k].map(function(r,i){ var p=D.priceNet[k][i]; return (r>0 && p!=null) ? r/p : null; });
+});
+var winVolTotal = WINLAB.map(function(_,i){
+  var s=0, any=false;
+  SKUKEYS.forEach(function(k){ var v=winVol[k][i]; if(v!=null){s+=v; any=true;} });
+  return any?s:null;
+});
+var winMRP = {}; SKUKEYS.forEach(function(k){ winMRP[k]=D.priceMRP[k]; });
+
+/* elasticity: OLS slope of Δln(vol) on Δln(price), consecutive non-null months */
+function elasticity(pArr, vArr){
+  var xs=[], ys=[];
+  for(var i=1;i<pArr.length;i++){
+    var p1=pArr[i-1],p2=pArr[i],v1=vArr[i-1],v2=vArr[i];
+    if(p1==null||p2==null||v1==null||v2==null||p1<=0||p2<=0||v1<=0||v2<=0) continue;
+    var dp=Math.log(p2/p1), dq=Math.log(v2/v1);
+    if(!isFinite(dp)||!isFinite(dq)) continue;
+    xs.push(dp); ys.push(dq);
+  }
+  var n=xs.length; if(n<8) return null;
+  var mx=0,my=0; xs.forEach(function(x){mx+=x;}); ys.forEach(function(y){my+=y;}); mx/=n; my/=n;
+  var sxy=0,sxx=0,syy=0;
+  for(var i=0;i<n;i++){ var dx=xs[i]-mx, dy=ys[i]-my; sxy+=dx*dy; sxx+=dx*dx; syy+=dy*dy; }
+  if(sxx===0) return null;
+  var b=sxy/sxx; if(Math.abs(b)>8) return null;
+  var r2 = syy>0 ? (sxy*sxy)/(sxx*syy) : 0;
+  return {b:b, r2:r2, n:n};
+}
+var EL = {};
+SKUKEYS.forEach(function(k){ EL[k]=elasticity(D.priceNet[k], winVol[k]); });
+var OVEL = elasticity(D.priceOverallNet, winVolTotal);
+
+/* price moves tracker (|Δ|>=2%, ratio guard 0.5–2) */
+var JUMPS=[];
+SKUKEYS.forEach(function(k){
+  var p=D.priceNet[k], v=winVol[k];
+  for(var i=1;i<p.length;i++){
+    var a=p[i-1], b=p[i];
+    if(a==null||b==null||a<=0) continue;
+    var ratio=b/a; if(ratio<0.5||ratio>2) continue;
+    var ch=(b-a)/a*100;
+    if(Math.abs(ch)>=2) JUMPS.push({sku:k, idx:i, from:a, to:b, ch:ch, vol: v[i]!=null&&v[i-1]!=null&&v[i-1]>0 ? (v[i]-v[i-1])/v[i-1]*100 : null});
+  }
+});
+JUMPS.sort(function(x,y){return Math.abs(y.ch)-Math.abs(x.ch);});
+
+/* declared MRP changes (|Δ|>=0.5%) */
+var DECL=[];
+SKUKEYS.forEach(function(k){
+  var m=winMRP[k];
+  for(var i=1;i<m.length;i++){
+    var a=m[i-1], b=m[i];
+    if(a==null||b==null||a<=0) continue;
+    var ch=(b-a)/a*100;
+    if(Math.abs(ch)>=0.5) DECL.push({sku:k, idx:i, from:a, to:b, ch:ch});
+  }
+});
+DECL.sort(function(x,y){ return y.idx-x.idx || x.sku.localeCompare(y.sku); });
+
+/* ============ SVG chart engine ============ */
+var NS="http://www.w3.org/2000/svg";
+function el(t,a){ var e=document.createElementNS(NS,t); for(var k in a) e.setAttribute(k,a[k]); return e; }
+function txt(x,y,s,o){ var t=el("text",{x:x,y:y,fill:o&&o.fill||"#5d6c8f","font-size":o&&o.size||"10", "text-anchor":o&&o.anchor||"middle"}); t.textContent=s; return t; }
+var C={line:"#26314f",axis:"#33406a",tx:"#e6ecff",muted:"#8fa0c4",bg:"#0d1220"};
+
+function lineChart(container, series, labels, opts){
+  opts=opts||{}; var W=920,H=300,L=64,R=14,T=14,B=36;
+  var svg=el("svg",{width:"100%",height:H,viewBox:"0 0 "+W+" "+H,preserveAspectRatio:"xMinYMin meet"});
+  container.innerHTML=""; container.appendChild(svg);
+  var vals=[]; series.forEach(function(s){s.data.forEach(function(v){if(v!=null&&!isNaN(v))vals.push(v);});});
+  var min=Math.min.apply(null,vals), max=Math.max.apply(null,vals);
+  if(opts.min!=null)min=opts.min; if(opts.max!=null)max=opts.max;
+  if(min===max){min-=1;max+=1;}
+  var pad=(max-min)*0.08; if(opts.pad!==false){min-=pad;max+=pad;}
+  var x0=L,x1=W-R,y0=T,y1=H-B;
+  function X(i){return x0+(i/(labels.length-1))*(x1-x0);}
+  function Y(v){return y1-(v-min)/(max-min)*(y1-y0);}
+  var steps=5; for(var g=0;g<=steps;g++){ var v=min+(max-min)*g/steps; var yy=Y(v);
+    svg.appendChild(el("line",{x1:x0,y1:yy,x2:x1,y2:yy,stroke:C.line,"stroke-width":1}));
+    svg.appendChild(txt(x0-7,yy+3,(opts.yfmt||fmtY)(v),{anchor:"end"}));
+  }
+  svg.appendChild(el("line",{x1:x0,y1:y0,x2:x0,y2:y1,stroke:C.axis,"stroke-width":1}));
+  svg.appendChild(el("line",{x1:x0,y1:y1,x2:x1,y2:y1,stroke:C.axis,"stroke-width":1}));
+  if(opts.ytitle){ var yt=txt(14,(y0+y1)/2,opts.ytitle,{anchor:"middle",fill:C.muted,size:"10"}); yt.setAttribute("transform","rotate(-90 14 "+(y0+y1)/2+")"); svg.appendChild(yt); }
+  var colors=opts.colors||["#2f7dff","#22c3aa","#f0b90b","#ff5c7a","#ff8a3d","#a78bfa","#2fd181"];
+  series.forEach(function(s,si){
+    var col=colors[si%colors.length];
+    var d="", open=false;
+    s.data.forEach(function(v,i){ if(v==null||isNaN(v)){ open=false; return; } d+=(open?"L":"M")+X(i).toFixed(1)+","+Y(v).toFixed(1); open=true; });
+    svg.appendChild(el("path",{d:d,fill:"none",stroke:col,"stroke-width":s.w||2.2,"stroke-opacity":.95}));
+    if(opts.dots!==false) s.data.forEach(function(v,i){ if(v!=null&&!isNaN(v)){
+      svg.appendChild(el("circle",{cx:X(i),cy:Y(v),r:2.6,fill:col,stroke:C.bg,"stroke-width":1}));
+      svg.appendChild(el("circle",{cx:X(i),cy:Y(v),r:8,fill:"transparent",onmousemove:"tip(event,'"+esc(s.name)+"<br>"+labels[i]+": "+esc((opts.tipfmt||opts.yfmt||fmtY)(v))+"')",onmouseout:"untip()"}));
+    } });
+  });
+  var step=Math.max(1,Math.ceil(labels.length/13));
+  labels.forEach(function(lb,i){ if(i%step===0||i===labels.length-1) svg.appendChild(txt(X(i),H-12,lb,{size:"9.5"})); });
+  if(series.length>1) legend(container,series,colors);
+  return svg;
+}
+function legend(container,series,colors){
+  var h='<div class="legend">'; series.forEach(function(s,i){ h+='<span><i style="background:'+colors[i%colors.length]+'"></i>'+esc(s.name)+'</span>'; }); h+='</div>';
+  container.insertAdjacentHTML("beforeend",h);
+}
+function fmtY(v){ var c=v/1e7; if(c>=100) return Math.round(c)+"Cr"; if(c>=1) return c.toFixed(1)+"Cr"; return c.toFixed(2)+"Cr"; }
+function fmtMT(v){ return (v/1e3).toFixed(0)+"k"; }
+function ffill(a){ var last=null; for(var i=0;i<a.length;i++){ if(a[i]==null){ a[i]=last; } else { last=a[i]; } } return a; }
+var ALLC=["#f0b90b","#2f7dff","#22c3aa","#ff5c7a","#ff8a3d","#a78bfa","#2fd181","#7fb0ff","#ff9ecb","#9be8d8","#e6ecff"];
+
+function dualLineChart(container, s1, s2, labels, opts){
+  opts=opts||{}; var W=920,H=300,L=64,R=64,T=14,B=36;
+  var svg=el("svg",{width:"100%",height:H,viewBox:"0 0 "+W+" "+H,preserveAspectRatio:"xMinYMin meet"});
+  container.innerHTML=""; container.appendChild(svg);
+  function mm(arr){ var f=arr.filter(function(v){return v!=null&&!isNaN(v);}); var mn2=Math.min.apply(null,f), mx2=Math.max.apply(null,f); if(mn2===mx2){mn2-=1;mx2+=1;} var p=(mx2-mn2)*0.08; return [mn2-p, mx2+p]; }
+  var m1=mm(s1.data), m2=mm(s2.data);
+  var min1=m1[0],max1=m1[1],min2=m2[0],max2=m2[1];
+  var x0=L,x1=W-R,y0=T,y1=H-B;
+  function X(i){return x0+(i/(labels.length-1))*(x1-x0);}
+  function Y1(v){return y1-(v-min1)/(max1-min1)*(y1-y0);}
+  function Y2(v){return y1-(v-min2)/(max2-min2)*(y1-y0);}
+  var steps=5;
+  for(var g=0;g<=steps;g++){ var v=min1+(max1-min1)*g/steps; var yy=Y1(v);
+    svg.appendChild(el("line",{x1:x0,y1:yy,x2:x1,y2:yy,stroke:C.line,"stroke-width":1}));
+    svg.appendChild(txt(x0-7,yy+3,(opts.yfmt||fmtY)(v),{anchor:"end"}));
+  }
+  for(var g=0;g<=steps;g++){ var v=min2+(max2-min2)*g/steps; var yy=Y2(v);
+    svg.appendChild(txt(x1+7,yy+3,(opts.y2fmt||fmtY)(v),{anchor:"start",fill:C.muted}));
+  }
+  svg.appendChild(el("line",{x1:x0,y1:y0,x2:x0,y2:y1,stroke:C.axis,"stroke-width":1}));
+  svg.appendChild(el("line",{x1:x0,y1:y1,x2:x1,y2:y1,stroke:C.axis,"stroke-width":1}));
+  svg.appendChild(el("line",{x1:x1,y1:y0,x2:x1,y2:y1,stroke:C.axis,"stroke-width":1}));
+  if(opts.ytitle){ var yt=txt(14,(y0+y1)/2,opts.ytitle,{anchor:"middle",fill:C.muted,size:"10"}); yt.setAttribute("transform","rotate(-90 14 "+(y0+y1)/2+")"); svg.appendChild(yt); }
+  if(opts.y2title){ var yt2=txt(W-14,(y0+y1)/2,opts.y2title,{anchor:"middle",fill:C.muted,size:"10"}); yt2.setAttribute("transform","rotate(-90 "+(W-14)+" "+(y0+y1)/2+")"); svg.appendChild(yt2); }
+  function drawSeries(s,color,Y){
+    var d="", open=false;
+    s.data.forEach(function(v,i){ if(v==null||isNaN(v)){open=false;return;} d+=(open?"L":"M")+X(i).toFixed(1)+","+Y(v).toFixed(1); open=true; });
+    svg.appendChild(el("path",{d:d,fill:"none",stroke:color,"stroke-width":s.w||2.2,"stroke-opacity":.95}));
+    if(opts.dots!==false) s.data.forEach(function(v,i){ if(v!=null&&!isNaN(v)){
+      svg.appendChild(el("circle",{cx:X(i),cy:Y(v),r:2.4,fill:color,stroke:C.bg,"stroke-width":1}));
+      svg.appendChild(el("circle",{cx:X(i),cy:Y(v),r:8,fill:"transparent",onmousemove:"tip(event,'"+esc(s.name)+"<br>"+labels[i]+": "+esc((opts.tipfmt||opts.yfmt||fmtY)(v))+"')",onmouseout:"untip()"}));
+    } });
+  }
+  drawSeries(s1,opts.c1||"#22c3aa",Y1);
+  drawSeries(s2,opts.c2||"#2f7dff",Y2);
+  var step=Math.max(1,Math.ceil(labels.length/13));
+  labels.forEach(function(lb,i){ if(i%step===0||i===labels.length-1) svg.appendChild(txt(X(i),H-12,lb,{size:"9.5"})); });
+  var h='<div class="legend"><span><i style="background:'+(opts.c1||"#22c3aa")+'"></i>'+esc(s1.name)+' (left)</span><span><i style="background:'+(opts.c2||"#2f7dff")+'"></i>'+esc(s2.name)+' (right)</span></div>';
+  container.insertAdjacentHTML("beforeend",h);
+  return svg;
+}
+
+function barChart(container, items, opts){
+  opts=opts||{}; var W=920,H=Math.max(240,items.length*24+40),L=150,R=10,T=12,B=12;
+  var svg=el("svg",{width:"100%",height:H,viewBox:"0 0 "+W+" "+H,preserveAspectRatio:"xMinYMin meet"});
+  container.innerHTML=""; container.appendChild(svg);
+  var max=0; items.forEach(function(i){max=Math.max(max,i.value);});
+  var y0=T,y1=H-B,x0=L,x1=W-R; var bh=(y1-y0)/items.length;
+  items.forEach(function(it,idx){
+    var bw=Math.max(2,(it.value/max)*(x1-x0));
+    var yy=y0+idx*bh+4;
+    svg.appendChild(el("rect",{x:x0,y:yy,width:bw,height:bh-8,rx:3,fill:it.color||"#2f7dff"}));
+    svg.appendChild(txt(x0-8,yy+bh/2-4,it.label,{anchor:"end",fill:C.muted,size:"10.5"}));
+    svg.appendChild(txt(x0+bw+5,yy+bh/2-4,(opts.fmt||String)(it.value),{anchor:"start",fill:C.tx,size:"10"}));
+  });
+  return svg;
+}
+function groupedBar(container, categories, series, opts){
+  opts=opts||{}; var W=920,H=320,L=64,R=14,T=14,B=44;
+  var svg=el("svg",{width:"100%",height:H,viewBox:"0 0 "+W+" "+H,preserveAspectRatio:"xMinYMin meet"});
+  container.innerHTML=""; container.appendChild(svg);
+  var max=0; series.forEach(function(s){s.data.forEach(function(v){max=Math.max(max,v);});});
+  var x0=L,x1=W-R,y0=T,y1=H-B;
+  var step=5; for(var g=0;g<=step;g++){ var v=max*g/step; var yy=y1-(v/max)*(y1-y0);
+    svg.appendChild(el("line",{x1:x0,y1:yy,x2:x1,y2:yy,stroke:C.line,"stroke-width":1}));
+    svg.appendChild(txt(x0-7,yy+3,(opts.yfmt||fmtY)(v),{anchor:"end"}));
+  }
+  svg.appendChild(el("line",{x1:x0,y1:y0,x2:x0,y2:y1,stroke:C.axis,"stroke-width":1}));
+  svg.appendChild(el("line",{x1:x0,y1:y1,x2:x1,y2:y1,stroke:C.axis,"stroke-width":1}));
+  var colors=opts.colors||["#2f7dff","#22c3aa","#f0b90b"];
+  var gw=(x1-x0)/categories.length;
+  categories.forEach(function(c,ci){
+    var n=series.length, bw=gw*0.7/n;
+    series.forEach(function(s,si){
+      var v=s.data[ci]; var bh=(v/max)*(y1-y0);
+      var xx=x0+ci*gw+gw*0.15+si*bw;
+      svg.appendChild(el("rect",{x:xx,y:y1-bh,width:bw-2,height:bh,rx:1,fill:colors[si%colors.length]}));
+    });
+    svg.appendChild(txt(x0+ci*gw+gw*0.5,y1+14,c,{size:"10"}));
+  });
+  legend(container,series,colors);
+  return svg;
+}
+
+/* bar + overlaid line on right axis (revenue vs active SKUs) */
+function overlayBarLine(container, labels, bars, line, opts){
+  opts=opts||{}; var W=920,H=300,L=64,R=52,T=14,B=36;
+  var svg=el("svg",{width:"100%",height:H,viewBox:"0 0 "+W+" "+H,preserveAspectRatio:"xMinYMin meet"});
+  container.innerHTML=""; container.appendChild(svg);
+  var maxB=Math.max.apply(null,bars), maxL=Math.max.apply(null,line)*1.15;
+  var x0=L,x1=W-R,y0=T,y1=H-B;
+  var gw=(x1-x0)/labels.length;
+  var steps=4; for(var g=0;g<=steps;g++){ var v=maxB*g/steps; var yy=y1-(v/maxB)*(y1-y0);
+    svg.appendChild(el("line",{x1:x0,y1:yy,x2:x1,y2:yy,stroke:C.line,"stroke-width":1}));
+    svg.appendChild(txt(x0-7,yy+3,(opts.yfmt||fmtY)(v),{anchor:"end"}));
+  }
+  for(var g=0;g<=steps;g++){ var v=maxL*g/steps; svg.appendChild(txt(x1+6,y1-(v/maxL)*(y1-y0)+3,Math.round(v),{anchor:"start",fill:C.muted,size:"9.5"})); }
+  svg.appendChild(el("line",{x1:x0,y1:y1,x2:x1,y2:y1,stroke:C.axis,"stroke-width":1}));
+  bars.forEach(function(v,i){
+    var bh=(v/maxB)*(y1-y0);
+    svg.appendChild(el("rect",{x:x0+i*gw+gw*0.18,y:y1-bh,width:gw*0.64,height:Math.max(1,bh),rx:1.5,fill:opts.barColor||"#2f7dff","fill-opacity":.85,onmousemove:"tip(event,'"+labels[i]+"<br>"+(opts.barName||"Revenue")+": "+esc((opts.tipfmt||opts.yfmt||fmtY)(v))+"')",onmouseout:"untip()"}));
+  });
+  var d=""; line.forEach(function(v,i){ d+=(i?"L":"M")+(x0+i*gw+gw/2).toFixed(1)+","+(y1-(v/maxL)*(y1-y0)).toFixed(1); });
+  svg.appendChild(el("path",{d:d,fill:"none",stroke:opts.lineColor||"#22c3aa","stroke-width":2}));
+  line.forEach(function(v,i){ svg.appendChild(el("circle",{cx:x0+i*gw+gw/2,cy:y1-(v/maxL)*(y1-y0),r:4,fill:opts.lineColor||"#22c3aa",stroke:C.bg,"stroke-width":1,onmousemove:"tip(event,'"+labels[i]+"<br>"+(opts.lineName||"Line")+": "+Math.round(v)+"')",onmouseout:"untip()"})); });
+  var step=Math.max(1,Math.ceil(labels.length/13));
+  labels.forEach(function(lb,i){ if(i%step===0||i===labels.length-1) svg.appendChild(txt(x0+i*gw+gw/2,H-12,lb,{size:"9.5"})); });
+  if(opts.ytitle){ var yt=txt(14,(y0+y1)/2,opts.ytitle,{anchor:"middle",fill:C.muted,size:"10"}); yt.setAttribute("transform","rotate(-90 14 "+(y0+y1)/2+")"); svg.appendChild(yt); }
+  legend(container,[{name:opts.barName||"Bars"},{name:opts.lineName||"Line"}],[opts.barColor||"#2f7dff",opts.lineColor||"#22c3aa"]);
+  return svg;
+}
+
+/* diverging breadth bars: up red above centre, down teal below */
+function breadthChart(container, labels, upPct, dnPct){
+  var W=920,H=260,L=44,R=14,T=16,B=34;
+  var svg=el("svg",{width:"100%",height:H,viewBox:"0 0 "+W+" "+H,preserveAspectRatio:"xMinYMin meet"});
+  container.innerHTML=""; container.appendChild(svg);
+  var x0=L,x1=W-R,yc=T+(H-T-B)/2, half=(H-T-B)/2;
+  svg.appendChild(el("line",{x1:x0,y1:yc,x2:x1,y2:yc,stroke:C.axis,"stroke-width":1}));
+  [0.25,0.5,0.75].forEach(function(f){
+    svg.appendChild(el("line",{x1:x0,y1:yc-half*f,x2:x1,y2:yc-half*f,stroke:C.line,"stroke-dasharray":"2,4"}));
+    svg.appendChild(el("line",{x1:x0,y1:yc+half*f,x2:x1,y2:yc+half*f,stroke:C.line,"stroke-dasharray":"2,4"}));
+    svg.appendChild(txt(x0-6,yc-half*f+3,(f*100)+"%",{anchor:"end",size:"9"}));
+    svg.appendChild(txt(x0-6,yc+half*f+3,-(f*100)+"%",{anchor:"end",size:"9"}));
+  });
+  var gw=(x1-x0)/labels.length;
+  labels.forEach(function(lb,i){
+    var u=upPct[i]||0, dn=dnPct[i]||0;
+    if(u>0) svg.appendChild(el("rect",{x:x0+i*gw+gw*0.2,y:yc-half*u,width:gw*0.6,height:Math.max(1,half*u),rx:1.5,fill:"#2fd181","fill-opacity":.85}));
+    if(dn>0) svg.appendChild(el("rect",{x:x0+i*gw+gw*0.2,y:yc,width:gw*0.6,height:Math.max(1,half*dn),rx:1.5,fill:"#ff5c7a","fill-opacity":.85}));
+  });
+  var step=Math.max(1,Math.ceil(labels.length/13));
+  labels.forEach(function(lb,i){ if(i%step===0) svg.appendChild(txt(x0+i*gw+gw/2,H-10,lb,{size:"9.5"})); });
+  legend(container,[{name:"SKUs raising price"},{name:"SKUs cutting price"}],["#2fd181","#ff5c7a"]);
+  return svg;
+}
+
+/* horizontal diverging bars around zero (elasticity β) */
+function divergingBars(container, rows, opts){
+  opts=opts||{}; var W=920,H=Math.max(240,rows.length*22+46),L=160,R=52,T=22,B=24;
+  var svg=el("svg",{width:"100%",height:H,viewBox:"0 0 "+W+" "+H,preserveAspectRatio:"xMinYMin meet"});
+  container.innerHTML=""; container.appendChild(svg);
+  var maxAbs=0; rows.forEach(function(r){ maxAbs=Math.max(maxAbs,Math.abs(r.value||0)); });
+  if(maxAbs<=0)maxAbs=1;
+  var x0=L,x1=W-R,xc=x0+(x1-x0)/2,hw=(x1-x0)/2;
+  svg.appendChild(el("line",{x1:xc,y1:T-8,x2:xc,y2:H-B,stroke:C.axis,"stroke-width":1}));
+  svg.appendChild(txt(xc,T-12,"0",{size:"9"}));
+  var bh=(H-T-B)/rows.length;
+  rows.forEach(function(r,i){
+    if(r.value==null){ svg.appendChild(txt(x0-8,T+i*bh+bh/2-3,r.label,{anchor:"end",fill:C.muted,size:"10.5"})); svg.appendChild(txt(xc,T+i*bh+bh/2-3,"n/a",{anchor:"start",fill:C.dim,size:"10"})); return; }
+    var bw=(Math.abs(r.value)/maxAbs)*hw;
+    var xx=r.value>=0?xc:xc-bw;
+    var col=r.value<0?"#22c3aa":"#ff5c7a";
+    svg.appendChild(el("rect",{x:xx,y:T+i*bh+4,width:Math.max(1.5,bw),height:bh-8,rx:2,fill:col,"fill-opacity":r.strong?0.95:0.6,onmousemove:"tip(event,'"+esc(r.label)+"<br>"+r.value.toFixed(2)+(opts.suffix||"")+"')",onmouseout:"untip()"}));
+    svg.appendChild(txt(x0-8,T+i*bh+bh/2-3,r.label.length>26?r.label.slice(0,25)+"…":r.label,{anchor:"end",fill:C.muted,size:"10.5"}));
+    svg.appendChild(txt(r.value>=0?xx+bw+5:xx-5,T+i*bh+bh/2-3,r.value.toFixed(2)+(opts.suffix||""),{anchor:r.value>=0?"start":"end",fill:C.tx,size:"10"}));
+  });
+  return svg;
+}
+
+/* within-SKU demeaned log-log scatter */
+function scatterChart(container, groups){
+  var W=920,H=340,L=56,R=16,T=14,B=42;
+  var svg=el("svg",{width:"100%",height:H,viewBox:"0 0 "+W+" "+H,preserveAspectRatio:"xMinYMin meet"});
+  container.innerHTML=""; container.appendChild(svg);
+  var xs=[],ys=[];
+  groups.forEach(function(g){ g.pts.forEach(function(p){ xs.push(p[0]); ys.push(p[1]); }); });
+  var xmin=Math.min.apply(null,xs),xmax=Math.max.apply(null,xs),ymin=Math.min.apply(null,ys),ymax=Math.max.apply(null,ys);
+  var px=(xmax-xmin)*0.06||1, py=(ymax-ymin)*0.06||1;
+  xmin-=px;xmax+=px;ymin-=py;ymax+=py;
+  var x0=L,x1=W-R,y0=T,y1=H-B;
+  function X(v){return x0+(v-xmin)/(xmax-xmin)*(x1-x0);}
+  function Y(v){return y1-(v-ymin)/(ymax-ymin)*(y1-y0);}
+  for(var g2=0;g2<=4;g2++){ var v=xmin+(xmax-xmin)*g2/4; svg.appendChild(el("line",{x1:X(v),y1:y0,x2:X(v),y2:y1,stroke:C.line,"stroke-width":.6})); svg.appendChild(txt(X(v),H-26,v.toFixed(2),{size:"9"})); }
+  for(var g3=0;g3<=4;g3++){ var v2=ymin+(ymax-ymin)*g3/4; svg.appendChild(el("line",{x1:x0,y1:Y(v2),x2:x1,y2:Y(v2),stroke:C.line,"stroke-width":.6})); svg.appendChild(txt(x0-7,Y(v2)+3,v2.toFixed(2),{anchor:"end",size:"9"})); }
+  svg.appendChild(el("line",{x1:X(0),y1:y0,x2:X(0),y2:y1,stroke:C.axis,"stroke-width":1}));
+  svg.appendChild(el("line",{x1:x0,y1:Y(0),x2:x1,y2:Y(0),stroke:C.axis,"stroke-width":1}));
+  groups.forEach(function(g){
+    g.pts.forEach(function(p){ svg.appendChild(el("circle",{cx:X(p[0]),cy:Y(p[1]),r:2.1,fill:g.color,"fill-opacity":g.op||0.55})); });
+  });
+  svg.appendChild(txt((x0+x1)/2,H-6,"Δ ln price (log scale, per-SKU demeaned)",{size:"10",fill:C.muted}));
+  var yt=txt(12,(y0+y1)/2,"Δ ln volume",{anchor:"middle",fill:C.muted,size:"10"}); yt.setAttribute("transform","rotate(-90 12 "+(y0+y1)/2+")"); svg.appendChild(yt);
+  legend(container,[{name:"β < 0 (normal)"},{name:"β > 0 (anomalous)"}],["#22c3aa","#ff5c7a"]);
+  return svg;
+}
+
+function skuSelector(selId, chartId, map, overallArr, labels, ytitle, opts){
+  opts=opts||{};
+  var keys=Object.keys(map);
+  keys.forEach(function(k){ ffill(map[k]); });
+  var sel=document.getElementById(selId);
+  ["Overall (total)","All SKUs (compare)"].concat(keys).forEach(function(o){ var op=document.createElement("option"); op.value=o; op.textContent=o; sel.appendChild(op); });
+  function draw(){
+    var c=document.getElementById(chartId);
+    var yf=opts.yfmt||fmtY;
+    if(sel.value==="Overall (total)"){
+      lineChart(c,[{name:opts.overallName||"Overall",data:overallArr}],labels,{ytitle:ytitle,yfmt:yf,colors:[opts.overallColor||"#2f7dff"]});
+    } else if(sel.value==="All SKUs (compare)"){
+      lineChart(c,keys.map(function(k){return {name:k,data:map[k],w:1.3};}),labels,{ytitle:ytitle,yfmt:yf,colors:ALLC});
+    } else {
+      lineChart(c,[{name:sel.value,data:map[sel.value]}],labels,{ytitle:ytitle,yfmt:yf,colors:[opts.skuColor||"#f0b90b"]});
+    }
+  }
+  sel.addEventListener("change",draw);
+  draw();
+}
+
+/* ============ tabs + deep-link ============ */
+var TABS=["ov","price","margin","sku","mom","chg","pg","el","comp","ms","dealer","area","growth","mt"];
+function showTab(t){
+  if(TABS.indexOf(t)<0) t="ov";
+  TABS.forEach(function(id){
+    document.getElementById(id).classList.toggle("on", id===t);
+  });
+  [].forEach.call(document.querySelectorAll("#nav button"),function(b){
+    b.classList.toggle("on", b.getAttribute("data-t")===t);
+  });
+  if(location.hash.slice(1)!==t) history.replaceState(null,"","#"+t);
+  window.scrollTo(0,0);
+}
+[].forEach.call(document.querySelectorAll("#nav button"),function(b){
+  b.addEventListener("click",function(){ showTab(b.getAttribute("data-t")); });
+});
+window.addEventListener("hashchange",function(){ showTab(location.hash.slice(1)); });
+/* ============ OVERVIEW ============ */
+(function(){
+  var y25=D.yearlyRev[2025], y24=D.yearlyRev[2024];
+  // active SKUs per month (full 47-mo series)
+  var allSkuKeys=Object.keys(D.skuMonthly);
+  var port=D.skuMonthly["B500 DWR 10 mm"].map(function(_,i){
+    var s=0; allSkuKeys.forEach(function(k){ if(D.skuMonthly[k][i]>0) s++; }); return s;
+  });
+  var labels47=D.monthly.slice(1).map(function(m){return mn(m[1])+"'"+String(m[0]).slice(2);});
+  var rev47=D.monthly.slice(1).map(function(m){return m[2];});
+  // last full month = Oct'26 (Nov'26 partial)
+  var lastFullIdx=port.length-2;
+  // breadth over window
+  var upPct=[],dnPct=[];
+  for(var i=1;i<WINLAB.length;i++){
+    var up=0,dn=0,n=0;
+    SKUKEYS.forEach(function(k){ var a=D.priceNet[k][i-1],b=D.priceNet[k][i]; if(a==null||b==null) return; n++; if(b>a)up++; else if(b<a)dn++; });
+    upPct.push(n?up/n:0); dnPct.push(n?dn/n:0);
+  }
+  upPct.unshift(null); dnPct.unshift(null);
+  var betas=SKUKEYS.map(function(k){return EL[k];}).filter(Boolean).map(function(e){return e.b;}).sort(function(a,b){return a-b;});
+  var medB=betas.length?betas[Math.floor(betas.length/2)]:null;
+  var lastUp=upPct[upPct.length-1], lastDn=dnPct[dnPct.length-1];
+  var k=[
+    {l:"FY2025-26 Net Sales",v:cr(y25),n:pf(pct(y25,y24))+" vs FY2024-25",c:pct(y25,y24)>=0?"up":"down"},
+    {l:"Active SKUs (Oct'26)",v:port[lastFullIdx],n:"of "+allSkuKeys.length+" tracked · Nov'26 partial"},
+    {l:"Tracked rebar SKUs",v:SKUKEYS.length+" with price",n:"clean window Jan'25–Nov'26"},
+    {l:"Median elasticity β",v:medB==null?"—":medB.toFixed(2),n:betas.length+" of "+SKUKEYS.length+" SKUs measurable"},
+    {l:"Price direction (Oct'26)",v:(lastUp*100).toFixed(0)+"% up",n:(lastDn*100).toFixed(0)+"% of SKUs cut price"}
+  ];
+  document.getElementById("ovKpis").innerHTML=k.map(function(x){
+    return '<div class="card kpi"><div class="lab">'+x.l+'</div><div class="val">'+x.v+'</div><div class="note '+(x.c||'')+'">'+x.n+'</div></div>';}).join("");
+
+  overlayBarLine(document.getElementById("cPort"),labels47,rev47,port,{yfmt:fmtY,ytitle:"Revenue (Tk)",barName:"Net revenue (৳)",lineName:"Active SKUs"});
+  breadthChart(document.getElementById("cBreadth"),WINLAB.slice(1),upPct.slice(1),dnPct.slice(1));
+
+  // insights
+  var grow=D.sku.slice().sort(function(a,b){return pct(b[3],b[2])-pct(a[3],a[2]);})[0];
+  var p10w=D.priceNet["B500 DWR 10 mm"];
+  var floor=Math.min.apply(null,p10w.filter(function(v){return v!=null;})), floorI=p10w.indexOf(floor);
+  var last=D.priceNet["B500 DWR 10 mm"][22];
+  var akijMs=D.ms.find(function(m){return m[0]==="AKIJ ISPAT";});
+  var elNeg=betas.filter(function(b){return b<-1;}).length, elIn=betas.filter(function(b){return b>=-1&&b<=0;}).length, elPos=betas.filter(function(b){return b>0;}).length;
+  var commTotal=0; D.commType.forEach(function(c){commTotal+=c[1];});
+  var ins=[
+    ["Revenue grew from "+cr(D.yearlyRev[2023])+" (FY2023-24) to "+cr(y25)+" (FY2025-26), +"+pct(y25,y24).toFixed(1)+"% YoY.","The mix shift to larger-diameter B500 (25/32 mm) is the main driver — a premium-grade mix, not just volume."],
+    ["B500 DWR 10 mm bottomed at "+taka(floor)+"/MT in "+WINLAB[floorI]+" and recovered to "+taka(last)+"/MT by Nov'26 (+"+((last-floor)/floor*100).toFixed(1)+"%).","Pricing power returned with the Mar'26 scrap-cost surge; hold this band or volume leaks to BSRM/AKS offers."],
+    [grow[0]+" is the fastest-growing SKU ("+pf(pct(grow[3],grow[2]))+" FY24-25 → FY25-26).","Confirm whether this is real demand or a one-off project order before expanding stock."],
+    ["Akij Ispat steel market share moved 2.06% → 2.59%, the fastest of the named mills (+21.7%).","Share gains came while total market volume shrank — competitors' retreat matters as much as Akij's push."],
+    [elNeg+" SKUs price-elastic (β<−1), "+elIn+" inelastic (−1..0), "+elPos+" anomalous (β>0).","Inelastic grades (mostly B500 core sizes) carry headroom for price; elastic/anomalous ones need a margin check before any hike."],
+    ["Dealer commission totals "+cr(commTotal)+" over 3 years (~"+(commTotal/D.yearlyRev[2025]*100).toFixed(1)+"% of one FY).","'Monthly' incentive is 66% of the pool — renegotiating its target basis is the fastest NP% lever."]
+  ];
+  document.getElementById("insights").innerHTML=ins.map(function(p){
+    return '<div class="insight"><b>'+p[0]+'</b><br><span class="small">'+p[1]+'</span></div>';}).join("");
+
+  // journey table (top 8 by FY25-26 revenue)
+  var byName={}; D.sku.forEach(function(s){ byName[s[0].replace("Akij Ispat ","")]=s; });
+  var jrows=SKUKEYS.slice().sort(function(a,b){ return (byName[b]?byName[b][3]:0)-(byName[a]?byName[a][3]:0); }).slice(0,8);
+  var th='<table><thead><tr><th>SKU</th><th>Price Jan\'25</th><th>Price Nov\'26</th><th>Move</th><th>Vol Jan\'25 (MT)</th><th>Vol Oct\'26 (MT)</th><th>β</th></tr></thead><tbody>';
+  jrows.forEach(function(k){
+    var p=D.priceNet[k], v=winVol[k];
+    var first=p[0], lastP=null, lastI=-1;
+    for(var i=p.length-1;i>=0;i--){ if(p[i]!=null){ lastP=p[i]; lastI=i; break; } }
+    var mv=(first!=null&&lastP!=null)?(lastP-first)/first*100:null;
+    var vFirst=v[0], vLast=null;
+    for(var i=v.length-2;i>=0;i--){ if(v[i]!=null){ vLast=v[i]; break; } } // last FULL month (Oct'26)
+    th+='<tr class="drill" onclick="openMom(\''+esc(k)+'\')"><td><b>'+esc(k)+'</b></td><td>'+taka(first)+'</td><td>'+taka(lastP)+'</td>';
+    th+='<td class="'+(mv==null?"":mv>=0?"pos":"neg")+'">'+(mv==null?"—":pf(mv))+'</td>';
+    th+='<td>'+mt(vFirst)+'</td><td>'+mt(vLast)+'</td>';
+    th+='<td>'+(EL[k]?EL[k].b.toFixed(2):'<span class="tag t-mut">n/a</span>')+'</td></tr>';
+  });
+  th+='</tbody></table>';
+  document.getElementById("cJourney").innerHTML=th;
+})();
+
+/* ============ PRICE ============ */
+(function(){
+  var html='<table><thead><tr><th>Product</th><th>Grade</th><th>Net price (Tk/MT)</th><th>Avg cost (Tk/MT)</th><th>GP%</th></tr></thead><tbody>';
+  D.price25.forEach(function(p){
+    var gp=(p[2]-p[3])/p[2]*100;
+    html+='<tr><td><b>'+p[0]+'</b></td><td><span class="pill p-'+(p[1]==="B500"?"b500":"b420")+'">'+p[1]+'</span></td>';
+    html+='<td><b>'+taka(p[2])+'</b></td><td>'+taka(p[3])+'</td><td class="'+(gp>=0?"pos":"neg")+'">'+gp.toFixed(1)+'%</td></tr>';
+  });
+  html+='</tbody></table>';
+  document.getElementById("priceTable").innerHTML=html;
+  skuSelector("netPriceSel","netPriceChart",D.priceNet,D.priceOverallNet,D.priceMonths,"Tk / MT",{yfmt:fmtMT,overallName:"Overall net price"});
+  skuSelector("grossPriceSel","grossPriceChart",D.priceGross,D.priceOverallGross,D.priceMonths,"Tk / MT",{yfmt:fmtMT,overallName:"Overall gross price"});
+  skuSelector("mrpPriceSel","mrpPriceChart",D.priceMRP,D.priceOverallMRP,D.priceMonths,"Tk / MT",{yfmt:fmtMT,overallName:"Overall MRP"});
+})();
+
+/* ============ GP / NP / NET ============ */
+(function(){
+  var net=83000,cost=76000,commPerTon=1100,freight=750;
+  var items=[
+    {label:"Gross price (list)",value:net,color:"#3b4f8a"},
+    {label:"Net price (realised, ≈0% disc.)",value:net,color:"#2f7dff"},
+    {label:"Avg production cost",value:cost,color:"#ff5c7a"},
+    {label:"Dealer commission/MT (~1.3%)",value:commPerTon,color:"#ff8a3d"},
+    {label:"Freight & other/MT (~0.9%)",value:freight,color:"#8fa0c4"}
+  ];
+  barChart(document.getElementById("waterfall"),items,{fmt:function(v){return taka(v)+"/MT";}});
+  var scrapCost=[56478,58704,59410,58949,58903,56547,54295,50969,51471,51527,53107,51742];
+  lineChart(document.getElementById("gpnpTrend"),[
+    {name:"Net price (B500 10 mm)",data:D.p10.slice(0,12),w:2.4},
+    {name:"Scrap cost (raw material)",data:scrapCost,w:1.6}
+  ],D.priceMonths.slice(0,12),{yfmt:fmtMT,ytitle:"Tk / MT",colors:["#f0b90b","#ff5c7a"]});
+  var html='<table><thead><tr><th>Product</th><th>Net price (FY25-26)</th><th>Avg cost</th><th>GP/MT</th><th>GP%</th><th>Est. NP%</th></tr></thead><tbody>';
+  D.price25.forEach(function(p){
+    var gp=p[2]-p[3],gpPct=gp/p[2]*100,npPct=gpPct-2.1;
+    html+='<tr><td><b>'+p[0]+'</b></td><td>'+taka(p[2])+'</td><td>'+taka(p[3])+'</td><td class="'+(gp>=0?"pos":"neg")+'">'+taka(gp)+'</td><td class="pos">'+gpPct.toFixed(1)+'%</td><td>~'+npPct.toFixed(1)+'%</td></tr>';
+  });
+  html+='</tbody></table><div class="small" style="margin-top:8px">GP% = (net price − avg cost)/net price. Est. NP% = GP% − ~2.1% (dealer commission ~1.3% + freight ~0.8%). Directional — final NP needs finance P&amp;L.</div>';
+  document.getElementById("marginTable").innerHTML=html;
+})();
+/* ============ ALL SKUs (sortable / filterable / drill) ============ */
+var byNameG={}; D.sku.forEach(function(s){ byNameG[s[0].replace("Akij Ispat ","")]=s; });
+var SKUROWS=SKUKEYS.map(function(k){
+  var p=D.priceNet[k], v=winVol[k], m=winMRP[k];
+  var first=null,last=null,lastI=-1,absMov=0,cnt=0;
+  for(var i=0;i<p.length;i++){ if(p[i]==null) continue; if(first==null)first=p[i]; last=p[i]; lastI=i;
+    if(i>0&&p[i-1]!=null){ absMov+=Math.abs(p[i]-p[i-1])/p[i-1]*100; cnt++; } }
+  var fLast=null; for(var i=v.length-2;i>=0;i--){ if(v[i]!=null){ fLast=v[i]; break; } }
+  var winMove=(first!=null&&last!=null)?(last-first)/first*100:null;
+  var last3=lastI>=3&&p[lastI-3]!=null&&p[lastI]!=null?(p[lastI]-p[lastI-3])/p[lastI-3]*100:null;
+  var e=EL[k];
+  var rmrp=(last!=null&&m[lastI]!=null)?last/m[lastI]:null;
+  var fy25=byNameG[k]?byNameG[k][3]:null;
+  var grade=k.indexOf("B500")===0?"B500":"B420";
+  return {key:k, grade:grade, rev:fy25, price:last, first:first, move:winMove, avgMoM:cnt?absMov/cnt:null, last3:last3,
+          b:e?e.b:null, r2:e?e.r2:null, n:e?e.n:null, vol:fLast, rmrp:rmrp};
+});
+var ST={sort:"rev",dir:-1,q:"",grade:"all",el:"all",move:"all"};
+function elTag(r){
+  if(r.b==null) return '<span class="tag t-mut">n/a</span>';
+  if(r.b<-1) return '<span class="tag t-warn">elastic</span>';
+  if(r.b<=0) return '<span class="tag t-neg">inelastic</span>';
+  return '<span class="tag t-pos">anomal.</span>';
+}
+function renderSku(){
+  var rows=SKUROWS.filter(function(r){
+    if(ST.grade!=="all"&&r.grade!==ST.grade) return false;
+    if(ST.el==="neg"&&(r.b==null||r.b>=0)) return false;
+    if(ST.el==="pos"&&(r.b==null||r.b<=0)) return false;
+    if(ST.el==="na"&&r.b!=null) return false;
+    if(ST.move==="r3"&&!(r.last3!=null&&r.last3>0)) return false;
+    if(ST.move==="big"&&!(r.move!=null&&Math.abs(r.move)>10)) return false;
+    if(ST.q&&r.key.toLowerCase().indexOf(ST.q.toLowerCase())<0) return false;
+    return true;
+  });
+  rows.sort(function(a,b){
+    var x=a[ST.sort], y=b[ST.sort];
+    if(x==null) x=-9e9; if(y==null) y=-9e9;
+    if(typeof x==="string") return x.localeCompare(y)*ST.dir*-1;
+    return (x-y)*ST.dir*-1;
+  });
+  document.getElementById("skuCount").textContent="· "+rows.length+" of "+SKUROWS.length+" SKUs";
+  function th(key,label){ return '<th data-s="'+key+'"'+(ST.sort===key?' class="sorted'+(ST.dir<0?"":" asc")+'"':'')+'>'+label+(ST.sort===key?(ST.dir<0?" ↓":" ↑"):"")+'</th>'; }
+  var h='<table><thead><tr>'+th("key","SKU")+th("grade","Grade")+th("rev","FY25-26 rev")+th("price","Price Nov\'26")+th("move","Window move")+th("avgMoM","Avg MoM swing")+th("vol","Vol Oct\'26 (MT)")+th("b","β")+th("r2","R²")+th("rmrp","Realised ÷ MRP")+'</tr></thead><tbody>';
+  rows.forEach(function(r){
+    var rmrpBad = r.rmrp!=null && (r.rmrp<0.35||r.rmrp>1.6);
+    h+='<tr class="drill" onclick="openMom(\''+esc(r.key)+'\')">';
+    h+='<td><b>'+esc(r.key)+'</b></td><td><span class="pill p-'+(r.grade==="B500"?"b500":"b420")+'">'+r.grade+'</span></td>';
+    h+='<td>'+cr(r.rev)+'</td><td>'+taka(r.price)+'</td>';
+    h+='<td class="'+(r.move==null?"":r.move>=0?"pos":"neg")+'">'+(r.move==null?"—":pf(r.move))+'</td>';
+    h+='<td>'+(r.avgMoM==null?"—":r.avgMoM.toFixed(2)+"%")+'</td><td>'+mt(r.vol)+'</td>';
+    h+='<td>'+(r.b==null?"—":r.b.toFixed(2))+' '+elTag(r)+'</td>';
+    h+='<td>'+(r.r2==null?"—":r.r2.toFixed(2))+'</td>';
+    h+='<td>'+(r.rmrp==null||rmrpBad?'<span class="tag t-mut" title="outside 0.35–1.6 sanity band">—</span>':(r.rmrp*100).toFixed(0)+"%")+'</td></tr>';
+  });
+  h+='</tbody></table>';
+  document.getElementById("tSku").innerHTML=h;
+  [].forEach.call(document.querySelectorAll("#tSku th[data-s]"),function(t){
+    t.addEventListener("click",function(){
+      var s=t.getAttribute("data-s");
+      if(ST.sort===s) ST.dir*=-1; else { ST.sort=s; ST.dir=-1; }
+      renderSku();
+    });
+  });
+}
+document.getElementById("q").addEventListener("input",function(){ ST.q=this.value; renderSku(); });
+document.getElementById("fGrade").addEventListener("change",function(){ ST.grade=this.value; renderSku(); });
+document.getElementById("fEl").addEventListener("change",function(){ ST.el=this.value; renderSku(); });
+document.getElementById("fMove").addEventListener("change",function(){ ST.move=this.value; renderSku(); });
+renderSku();
+
+(function(){
+  var rod25=D.cat["MS Rod"][2025], rod24=D.cat["MS Rod"][2024];
+  var top=D.sku.slice().sort(function(a,b){return b[3]-a[3];});
+  var grow=D.sku.slice().sort(function(a,b){return pct(b[3],b[2])-pct(a[3],a[2]);})[0];
+  var decl=D.sku.slice().sort(function(a,b){return pct(a[3],a[2])-pct(b[3],b[2]);})[0];
+  var k=[
+    {l:"FY2025-26 MS Rod",v:cr(rod25),n:pf(pct(rod25,rod24))+" YoY",c:"up"},
+    {l:"Top SKU",v:"B500 10 mm",n:cr(top[0][3])+" · "+(top[0][3]/rod25*100).toFixed(0)+"% of MS Rod"},
+    {l:"Fastest grower",v:grow[0].replace("Akij Ispat ",""),n:pf(pct(grow[3],grow[2])),c:"up"},
+    {l:"Slowest SKU",v:decl[0].replace("Akij Ispat ",""),n:pf(pct(decl[3],decl[2])),c:"down"},
+    {l:"Wastage/by-product",v:cr(D.cat["Wastage & By-Products"][2025]),n:pf(pct(D.cat["Wastage & By-Products"][2025],D.cat["Wastage & By-Products"][2024])),c:"up"}
+  ];
+  document.getElementById("skuKpis").innerHTML=k.map(function(x){
+    return '<div class="card kpi"><div class="lab">'+x.l+'</div><div class="val">'+x.v+'</div><div class="note '+(x.c||"")+'">'+x.n+'</div></div>';}).join("");
+  var months=D.monthly.slice(1);
+  var labels=months.map(function(m){return mn(m[1])+"'"+String(m[0]).slice(2);});
+  skuSelector("skuSel","skuRevMonthly",D.skuMonthly,months.map(function(m){return m[2];}),labels,"Net revenue (Tk)",{yfmt:fmtY,overallName:"Overall net revenue"});
+  barChart(document.getElementById("skuRank"),top.map(function(s){return {label:s[0].replace("Akij Ispat ",""),value:s[3],color:s[1]==="B500"?"#f0b90b":"#2f7dff"};}),{fmt:cr});
+})();
+
+/* ============ SKU MONTH-ON-MONTH ============ */
+(function(){
+  var sel=document.getElementById("momPick");
+  ["Overall (total)"].concat(SKUKEYS).forEach(function(o){ var op=document.createElement("option"); op.value=o; op.textContent=o; sel.appendChild(op); });
+  window.openMom=function(code){
+    sel.value=code; showTab("mom"); renderMom();
+  };
+  function renderMom(){
+    var isAll=sel.value==="Overall (total)";
+    var key=isAll?null:sel.value;
+    document.getElementById("momTitle").textContent=(isAll?"Overall (total)":key)+" — month-on-month";
+    var rng=document.getElementById("momRange").value;
+    var p=key?D.priceNet[key]:D.priceOverallNet, v=key?winVol[key]:winVolTotal, r=key?winRev[key]:winRevTotal, m=key?winMRP[key]:D.priceOverallMRP;
+    var n=rng==="all"?p.length:Math.min(+rng,p.length);
+    var s=p.length-n;
+    var labs=WINLAB.slice(s), pp=p.slice(s), vv=v.slice(s), rr=r.slice(s), mm=m.slice(s);
+    dualLineChart(document.getElementById("momChart"),
+      {name:"Volume (MT)",data:vv.map(function(x){return x==null?0:x;}),w:2},
+      {name:"Net price (Tk/MT)",data:pp.map(function(x){return x==null?0:x;})},
+      labs,{yfmt:function(x){return (x/1e3).toFixed(0)+"k MT";},y2fmt:fmtMT,ytitle:"Volume",y2title:"Tk/MT",c1:"#2f7dff",c2:"#f0b90b"});
+    var h='<table><thead><tr><th>Month</th><th>Revenue</th><th>Net price</th><th>Δ price</th><th>Vol (MT, derived)</th><th>Δ vol</th><th>MRP</th><th>Realised÷MRP</th></tr></thead><tbody>';
+    var prev=null;
+    for(var i=0;i<labs.length;i++){
+      var dp=null,dv=null;
+      if(prev!=null&&pp[i]!=null&&prev.p!=null&&prev.p>0) dp=(pp[i]-prev.p)/prev.p*100;
+      if(prev!=null&&vv[i]!=null&&prev.v!=null&&prev.v>0) dv=(vv[i]-prev.v)/prev.v*100;
+      var rmrp=(pp[i]!=null&&mm[i]!=null)?pp[i]/mm[i]:null;
+      var rmrpTxt=(rmrp==null||rmrp<0.35||rmrp>1.6)?'—':(rmrp*100).toFixed(0)+"%";
+      h+='<tr><td>'+labs[i]+'</td><td>'+cr(rr[i])+'</td><td>'+taka(pp[i])+'</td>';
+      h+='<td class="'+(dp==null?"":dp>=0?"pos":"neg")+'">'+(dp==null?"—":pf(dp))+'</td>';
+      h+='<td>'+mt(vv[i])+'</td>';
+      h+='<td class="'+(dv==null?"":dv>=0?"pos":"neg")+'">'+(dv==null?"—":pf(dv))+'</td>';
+      h+='<td>'+taka(mm[i])+'</td><td>'+rmrpTxt+'</td></tr>';
+      if(pp[i]!=null||rr[i]>0) prev={p:pp[i],v:vv[i]};
+    }
+    h+='</tbody></table>';
+    document.getElementById("tMom").innerHTML=h;
+  }
+  sel.addEventListener("change",renderMom);
+  document.getElementById("momRange").addEventListener("change",renderMom);
+  // initial: biggest FY25-26 SKU
+  sel.value="B500 DWR 10 mm";
+  renderMom();
+})();
+
+/* ============ PRICE CHANGE TRACKER ============ */
+(function(){
+  function jumpRows(list){
+    var h='<table><thead><tr><th>SKU</th><th>Month</th><th>From</th><th>To</th><th>Δ price</th><th>Δ volume (same mo)</th></tr></thead><tbody>';
+    list.slice(0,200).forEach(function(j){
+      h+='<tr class="drill" onclick="openMom(\''+esc(j.sku)+'\')"><td><b>'+esc(j.sku)+'</b></td><td>'+WINLAB[j.idx]+'</td>';
+      h+='<td>'+taka(j.from)+'</td><td>'+taka(j.to)+'</td>';
+      h+='<td class="'+(j.ch>=0?"pos":"neg")+'"><b>'+pf(j.ch)+'</b></td>';
+      h+='<td class="'+(j.vol==null?"":j.vol>=0?"pos":"neg")+'">'+(j.vol==null?"—":pf(j.vol))+'</td></tr>';
+    });
+    return h+'</tbody></table>';
+  }
+  function renderJ(){
+    var q=document.getElementById("chq").value.toLowerCase();
+    var list=JUMPS.filter(function(j){ return !q||j.sku.toLowerCase().indexOf(q)>=0||WINLAB[j.idx].toLowerCase().indexOf(q)>=0; });
+    document.getElementById("chc").textContent="· "+list.length+" moves (≥2%, showing top 200)";
+    document.getElementById("tJump").innerHTML=jumpRows(list);
+  }
+  document.getElementById("chq").addEventListener("input",renderJ);
+  renderJ();
+  var h='<table><thead><tr><th>SKU</th><th>Month</th><th>MRP from</th><th>MRP to</th><th>Δ MRP</th></tr></thead><tbody>';
+  DECL.slice(0,250).forEach(function(d){
+    h+='<tr><td><b>'+esc(d.sku)+'</b></td><td>'+WINLAB[d.idx]+'</td><td>'+taka(d.from)+'</td><td>'+taka(d.to)+'</td>';
+    h+='<td class="'+(d.ch>=0?"pos":"neg")+'">'+pf(d.ch)+'</td></tr>';
+  });
+  h+='</tbody></table>';
+  document.getElementById("tDecl").innerHTML=h;
+  // Trade (mill-rate) changes
+  function tradeRows(list){
+    var th='<table><thead><tr><th>Date</th><th>Trade rate</th><th>Δ rate</th></tr></thead><tbody>';
+    list.forEach(function(c){ th+='<tr><td>'+c[0]+'</td><td>'+taka(c[1])+'</td><td class="'+(c[2]>=0?"pos":"neg")+'">'+pf(c[2])+'</td></tr>'; });
+    return th+'</tbody></table>';
+  }
+  var tList=D.tradeChanges.slice().reverse();
+  document.getElementById("tTradeDecl").innerHTML=tradeRows(tList);
+  document.getElementById("tq").addEventListener("input",function(){
+    var q=this.value.toLowerCase();
+    document.getElementById("tTradeDecl").innerHTML=tradeRows(tList.filter(function(c){return c[0].indexOf(q)>=0;}));
+  });
+})();
+
+/* ============ DECLARED PRICE GRID ============ */
+(function(){
+  var trade=D.tradeMonthly, curTrade=trade[trade.length-1];
+  function last(arr){ for(var i=arr.length-1;i>=0;i--){ if(arr[i]!=null) return arr[i]; } return null; }
+  var mrpVals=SKUKEYS.map(function(k){return last(D.priceMRP[k]);}).filter(function(v){return v!=null;});
+  var netVals=SKUKEYS.map(function(k){return last(D.priceNet[k]);}).filter(function(v){return v!=null;});
+  var avgMrp=mrpVals.reduce(function(a,b){return a+b;},0)/mrpVals.length;
+  var avgNet=netVals.reduce(function(a,b){return a+b;},0)/netVals.length;
+  var lastRev=D.tradeChanges[D.tradeChanges.length-1][0];
+  var k=[
+    {l:"Current Trade rate",v:taka(curTrade),n:"mill rate, last set "+lastRev},
+    {l:"SKUs declared",v:SKUKEYS.length,n:"rebar grades in price setup"},
+    {l:"Avg MRP",v:taka(Math.round(avgMrp)),n:"announced list price"},
+    {l:"Realised vs Trade",v:pf((avgNet/curTrade-1)*100),n:"avg realised net gap"}
+  ];
+  document.getElementById("pgKpis").innerHTML=k.map(function(x){
+    return '<div class="card kpi"><div class="lab">'+x.l+'</div><div class="val">'+x.v+'</div><div class="note">'+x.n+'</div></div>';}).join("");
+  function tkf(v){ return (v/1000).toFixed(0)+"k"; }
+  lineChart(document.getElementById("cTradeTrend"),[
+    {name:"Trade (mill) rate",data:trade,w:2.2},
+    {name:"Realised net price",data:D.priceOverallNet,w:2.2}
+  ],WINLAB,{ytitle:"Tk / MT",yfmt:tkf,tipfmt:function(v){return taka(v);},colors:["#f0b90b","#2f7dff"]});
+  // realised vs Trade gap per SKU (diverging)
+  var gapRows=SKUKEYS.map(function(k){
+    var n=last(D.priceNet[k]); var val=n!=null?(n/curTrade-1)*100:null;
+    return {label:k, value:val};
+  }).sort(function(a,b){return (b.value==null?-99:b.value)-(a.value==null?-99:a.value);});
+  divergingBars(document.getElementById("cGap"),gapRows,{suffix:"%"});
+  // grid table
+  var h='<table><thead><tr><th>SKU</th><th>Trade rate</th><th>MRP</th><th>Realised</th><th>Realised vs Trade</th><th>MRP vs Trade</th></tr></thead><tbody>';
+  SKUKEYS.forEach(function(k){
+    var n=last(D.priceNet[k]), m=last(D.priceMRP[k]);
+    h+='<tr><td><b>'+esc(k)+'</b></td><td>'+taka(curTrade)+'</td><td>'+(m!=null?taka(m):"—")+'</td><td>'+(n!=null?taka(n):"—")+'</td>';
+    h+='<td class="'+(n!=null&&n>=curTrade?"pos":"neg")+'">'+(n!=null?pf((n/curTrade-1)*100):"—")+'</td>';
+    h+='<td class="'+(m!=null&&m>=curTrade?"pos":"neg")+'">'+(m!=null?pf((m/curTrade-1)*100):"—")+'</td></tr>';
+  });
+  h+='</tbody></table>';
+  document.getElementById("tGrid").innerHTML=h;
+})();
+
+/* ============ ELASTICITY ============ */
+(function(){
+  var meas=0, neg=0, inel=0, anom=0;
+  SKUKEYS.forEach(function(k){ var e=EL[k]; if(!e) return; meas++; if(e.b<-1)neg++; else if(e.b<=0)inel++; else anom++; });
+  var k=[
+    {l:"SKUs measurable",v:meas+" / "+SKUKEYS.length,n:"≥8 month-pairs, |β|≤8"},
+    {l:"Elastic (β < −1)",v:neg,n:"price up → volume falls more"},
+    {l:"Inelastic (−1 … 0)",v:inel,n:"headroom to hold or raise price"},
+    {l:"Anomalous (β > 0)",v:anom,n:"check data & project orders"}
+  ];
+  document.getElementById("elKpis").innerHTML=k.map(function(x){
+    return '<div class="card kpi"><div class="lab">'+x.l+'</div><div class="val">'+x.v+'</div><div class="note">'+x.n+'</div></div>';}).join("");
+  var rows=SKUKEYS.map(function(key){ return {label:key, value:EL[key]?EL[key].b:null, strong:EL[key]?EL[key].r2>0.2:false}; })
+    .sort(function(a,b){ return (b.value==null?-99:b.value)-(a.value==null?-99:a.value); });
+  divergingBars(document.getElementById("cEl"),rows,{});
+  // scatter: per-SKU demeaned Δln pairs
+  var groups=[];
+  SKUKEYS.forEach(function(key){
+    var e=EL[key]; if(!e) return;
+    var pts=[];
+    var pArr=D.priceNet[key], vArr=winVol[key], raw=[];
+    for(var i=1;i<pArr.length;i++){
+      var p1=pArr[i-1],p2=pArr[i],v1=vArr[i-1],v2=vArr[i];
+      if(p1==null||p2==null||v1==null||v2==null||p1<=0||p2<=0||v1<=0||v2<=0) continue;
+      raw.push([Math.log(p2/p1),Math.log(v2/v1)]);
+    }
+    if(raw.length<8) return;
+    var mx=0,my=0; raw.forEach(function(r){mx+=r[0];my+=r[1];}); mx/=raw.length; my/=raw.length;
+    raw.forEach(function(r){ pts.push([r[0]-mx,r[1]-my]); });
+    groups.push({pts:pts,color:e.b<0?"#22c3aa":"#ff5c7a",op:e.r2>0.2?0.75:0.4});
+  });
+  scatterChart(document.getElementById("cScatter"),groups);
+  var h='<table><thead><tr><th>SKU</th><th>β (first-diff)</th><th>R²</th><th>Pairs</th><th>Read</th></tr></thead><tbody>';
+  SKUKEYS.forEach(function(key){
+    var e=EL[key];
+    h+='<tr class="drill" onclick="openMom(\''+esc(key)+'\')"><td><b>'+esc(key)+'</b></td>';
+    if(!e){ h+='<td>—</td><td>—</td><td>—</td><td><span class="tag t-mut">not measurable</span></td></tr>'; return; }
+    var read = e.b<-1 ? "elastic — hike cautiously" : (e.b<=0 ? (e.r2<0.1?"weak signal":"inelastic — price headroom") : "anomalous — investigate");
+    h+='<td>'+e.b.toFixed(2)+'</td><td>'+e.r2.toFixed(2)+'</td><td>'+e.n+'</td><td>'+read+'</td></tr>';
+  });
+  if(OVEL) h+='<tr style="background:rgba(240,185,11,.06)"><td><b>Overall (blended)</b></td><td>'+OVEL.b.toFixed(2)+'</td><td>'+OVEL.r2.toFixed(2)+'</td><td>'+OVEL.n+'</td><td>portfolio signal</td></tr>';
+  h+='</tbody></table>';
+  document.getElementById("tEl").innerHTML=h;
+})();
+
+/* ============ COMPETITOR ============ */
+(function(){
+  var names=["BSRM","AKS","GPH","KSRM","Anwar","Rahim","AKIJ"];
+  var colors=["#ff5c7a","#a78bfa","#22c3aa","#ff8a3d","#2fd181","#8fa0c4","#f0b90b"];
+  var series=names.map(function(n,i){return {name:n,data:D.compTrend[n],w:n==="AKIJ"?3.5:1.6};});
+  lineChart(document.getElementById("compTrend"),series,D.compMonths,{yfmt:fmtMT,ytitle:"Tk / MT",colors:colors});
+  var akij=D.comp.find(function(c){return c[0]==="AKIJ ISPAT";})[1];
+  var sorted=D.comp.slice().sort(function(a,b){return b[1]-a[1];});
+  var html='<table><thead><tr><th>#</th><th>Competitor</th><th>Mill rate (Tk/MT)</th><th>Landing rate</th><th>Market offer</th><th>vs Akij</th></tr></thead><tbody>';
+  sorted.forEach(function(c,i){
+    var diff=c[1]-akij;
+    html+='<tr'+(c[0]==="AKIJ ISPAT"?' style="background:rgba(240,185,11,.08)"':'')+'>';
+    html+='<td>'+(i+1)+'</td><td><b>'+c[0]+'</b></td><td>'+taka(c[1])+'</td><td>'+taka(c[2])+'</td><td>'+taka(c[3])+'</td>';
+    html+='<td class="'+(diff>=0?"pos":"neg")+'">'+(diff>=0?"+":"")+taka(diff)+'</td></tr>';
+  });
+  html+='</tbody></table><div class="small" style="margin-top:8px">Akij ranks 7th of 25; ~Tk 5,900/MT below the premium leaders (AKS/BSRM). Average over May-2024 → Jan-2025 survey.</div>';
+  document.getElementById("compTable").innerHTML=html;
+})();
+
+/* ============ MARKET SHARE ============ */
+(function(){
+  var k=[
+    {l:"Share FY2023-24",v:"2.06%",n:mt(119202)+" MT · rank 7"},
+    {l:"Share FY2024-25",v:"2.59%",n:mt(145051)+" MT · +21.7% YoY",c:"up"},
+    {l:"Market leader",v:"BSRM 27.58%",n:"AKS 17.6% · GPH 12.2%"},
+    {l:"Latest (Sep'26)",v:"2.92%",n:mt(12523)+" MT"}
+  ];
+  document.getElementById("msKpis").innerHTML=k.map(function(x){
+    return '<div class="card kpi"><div class="lab">'+x.l+'</div><div class="val">'+x.v+'</div><div class="note '+(x.c||"")+'">'+x.n+'</div></div>';}).join("");
+  var msSorted=D.ms.slice().sort(function(a,b){return b[2]-a[2];});
+  groupedBar(document.getElementById("msLadder"),msSorted.map(function(m){return m[0];}),[
+    {name:"FY2023-24 share %",data:msSorted.map(function(m){return m[1];})},
+    {name:"FY2024-25 share %",data:msSorted.map(function(m){return m[2];})}
+  ],{yfmt:function(v){return v.toFixed(0)+"%";},colors:["#3b4f8a","#f0b90b"]});
+  lineChart(document.getElementById("msTrend"),[{name:"AKIJ Ispat share %",data:D.msAkijShare,w:2.4}],D.msMonths,{yfmt:function(v){return v.toFixed(1)+"%";},ytitle:"Share %",colors:["#f0b90b"]});
+  var th='<table><thead><tr><th>Company</th><th>FY2023-24 Share</th><th>FY2023-24 Sales (MT)</th><th>FY2024-25 Share</th><th>FY2024-25 Sales (MT)</th><th>YoY</th></tr></thead><tbody>';
+  msSorted.forEach(function(m){
+    var g=(m[2]-m[1])/m[1]*100;
+    th+='<tr'+(m[0]==="AKIJ ISPAT"?' style="background:rgba(240,185,11,.08)"':'')+'>';
+    th+='<td><b>'+m[0]+'</b></td><td>'+m[1].toFixed(2)+'%</td><td>'+mt(m[3])+'</td><td><b>'+m[2].toFixed(2)+'%</b></td><td>'+mt(m[4])+'</td>';
+    th+='<td class="'+(g>=0?"pos":"neg")+'">'+(g>=0?"+":"")+g.toFixed(1)+'%</td></tr>';
+  });
+  th+='</tbody></table><div class="small" style="margin-top:8px">Total steel market ~5.6M MT/yr. Akij Ispat is the fastest-growing named mill (+21.7% vs BSRM +12.4%, AKS +20.6%), gaining share 2.06% → 2.59% while Anwar Ispat fell −46.8%.</div>';
+  document.getElementById("msTable").innerHTML=th;
+})();
+
+/* ============ DEALER ============ */
+(function(){
+  var total=0; D.commType.forEach(function(c){total+=c[1];});
+  var m25=0; D.comm.forEach(function(c){if(c[0]===2025)m25+=c[2];});
+  var k=[
+    {l:"Total commission (2023–26)",v:cr(total),n:"dealer incentive paid"},
+    {l:"FY2025-26 commission",v:cr(m25),n:"~"+(m25/D.yearlyRev[2025]*100).toFixed(1)+"% of FY25-26 sales"},
+    {l:"Incentive types",v:"12",n:"Monthly, Performance, Target, Delivery…"},
+    {l:"Largest type",v:"Monthly",n:cr(437049170)+" · 66% of total"}
+  ];
+  document.getElementById("commKpis").innerHTML=k.map(function(x){
+    return '<div class="card kpi"><div class="lab">'+x.l+'</div><div class="val">'+x.v+'</div><div class="note">'+x.n+'</div></div>';}).join("");
+  var months=D.monthly;
+  var labels=months.map(function(m){return mn(m[1])+"'"+String(m[0]).slice(2);});
+  var cmap={}; D.comm.forEach(function(c){cmap[c[0]+"-"+c[1]]=c[2];});
+  var comm=months.map(function(m){return cmap[m[0]+"-"+m[1]]||0;});
+  dualLineChart(document.getElementById("commMonthly"),
+    {name:"Dealer commission (Tk)",data:comm},
+    {name:"Net sales (Tk)",data:months.map(function(m){return m[2];})},
+    labels,{yfmt:fmtY,y2fmt:fmtY,ytitle:"Commission (Tk)",y2title:"Net sales (Tk)",c1:"#22c3aa",c2:"#2f7dff"});
+  barChart(document.getElementById("commType"),D.commType.slice().sort(function(a,b){return b[1]-a[1];}).map(function(c){return {label:c[0],value:c[1],color:"#22c3aa"};}),{fmt:cr});
+})();
+
+/* ============ AREA ============ */
+(function(){
+  barChart(document.getElementById("zoneBar"),D.zones.slice(0,12).map(function(z){return {label:z[0],value:z[1],color:"#2f7dff"};}),{fmt:cr});
+  var tot=D.zones.reduce(function(a,z){return a+z[1];},0);
+  var html='<table><thead><tr><th>Zone</th><th>Value</th><th>Volume (MT)</th><th>Share of total</th></tr></thead><tbody>';
+  D.zones.forEach(function(z){ html+='<tr><td><b>'+z[0]+'</b></td><td>'+cr(z[1])+'</td><td>'+mt(z[2])+'</td><td>'+(z[1]/tot*100).toFixed(1)+'%</td></tr>'; });
+  html+='</tbody></table>';
+  document.getElementById("zoneTable").innerHTML=html;
+})();
+
+/* ============ GROWTH ============ */
+(function(){
+  var y23=D.yearlyRev[2023],y24=D.yearlyRev[2024],y25=D.yearlyRev[2025],y26=D.yearlyRev[2026];
+  var v23=D.yearlyDel[2023][0],v24=D.yearlyDel[2024][0],v25=D.yearlyDel[2025][0];
+  var k=[
+    {l:"FY2023-24",v:cr(y23),n:mt(v23)+" MT"},
+    {l:"FY2024-25",v:cr(y24),n:pf(pct(y24,y23))+" · "+mt(v24)+" MT",c:pct(y24,y23)>=0?"up":"down"},
+    {l:"FY2025-26",v:cr(y25),n:pf(pct(y25,y24))+" · "+mt(v25)+" MT",c:pct(y25,y24)>=0?"up":"down"},
+    {l:"FY2026-27 (11 mo)",v:cr(y26),n:pf(pct(y26,y25))+" partial year",c:pct(y26,y25)>=0?"up":"down"},
+    {l:"3-yr CAGR",v:(((y25/y23)**0.5-1)*100).toFixed(1)+"%",n:"FY23-24 → FY25-26"}
+  ];
+  document.getElementById("growthKpis").innerHTML=k.map(function(x){
+    return '<div class="card kpi"><div class="lab">'+x.l+'</div><div class="val">'+x.v+'</div><div class="note '+(x.c||"")+'">'+x.n+'</div></div>';}).join("");
+  groupedBar(document.getElementById("revYear"),["FY2023-24","FY2024-25","FY2025-26"],[
+    {name:"Net sales (Tk)",data:[y23,y24,y25]}
+  ],{yfmt:fmtY,colors:["#2f7dff"]});
+  document.getElementById("revYear").insertAdjacentHTML("beforeend",
+    '<div class="small" style="margin-top:6px">Volume: FY23-24 '+mt(v23)+' MT → FY24-25 '+mt(v24)+' MT → FY25-26 '+mt(v25)+' MT ('+pf(pct(v25,v24))+').</div>');
+})();
+
+/* ============ boot: deep link ============ */
+(function(){
+  var h=location.hash.slice(1);
+  if(TABS.indexOf(h)>=0) showTab(h);
+})();
+</script>
+</body>
+</html>

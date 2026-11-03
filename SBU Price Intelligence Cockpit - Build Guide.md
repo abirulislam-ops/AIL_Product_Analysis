@@ -27,6 +27,7 @@ A reusable runbook for building a **"Price & Volume History Cockpit"** — a sel
 | **Gross price** | derived | `numOrderValue ÷ numOrderQuantity` |
 | **MRP / list price** | `oms.tblSalesOrderRow` | `numItemPrice` |
 | Declared DP / TP / MRP | `rtm.tblRetailPrice` + `rtm.tblRetailPriceLog` | `numDPRate`, `numTPRate`, `numMrpRate` |
+| **Declared Trade / mill rate** | `itm.tblPriceSetup` | `intConditionReffId` (channel), `numPrice`, `dteStartDate`, `dteEndDate` |
 | SKU master / UOM | `itm.tblItem` | `strItemName`, `strItemCategoryName`, `strItemTypeName` |
 | Sales date | `oms.tblSalesOrderHeader` | `dteSalesOrderDate` |
 
@@ -75,6 +76,18 @@ FROM rtm.tblRetailPrice WHERE intBusinessUnitId=<BU>
 ```
 Log of historical changes: `rtm.tblRetailPriceLog` (`dteLogEntryDate`).
 
+**3f. Declared Trade / mill rate (for mills — e.g. rebar/steel):**
+```sql
+SELECT dc.strDistributionChannelName ch, CAST(ps.dteStartDate AS DATE) d, MIN(ps.numPrice) p
+FROM itm.tblPriceSetup ps
+JOIN itm.tblItem i ON i.intItemId = ps.intItemId
+LEFT JOIN oms.tblDistributionChannel dc ON dc.intDistributionChannelId = ps.intConditionReffId
+WHERE ps.intBusinessUnitId=<BU> AND i.strItemCategoryName='<category>'
+GROUP BY dc.strDistributionChannelName, CAST(ps.dteStartDate AS DATE)
+ORDER BY d
+```
+`itm.tblPriceSetup` is a **daily-updated** rate history — collapse it to change-events (price differs from the previous row) for the "declared changes" tracker, and to month-end for the trend chart.
+
 ---
 
 ## 4. Computation
@@ -95,9 +108,12 @@ Log of historical changes: `rtm.tblRetailPriceLog` (`dteLogEntryDate`).
 
 ## 5. File structure (tabs)
 
-`Overview` (KPIs → portfolio chart → breadth → insights → journey) · `All SKUs` (sortable/searchable table) · `SKU month-on-month` (picker + dual-axis chart + table) · `Elasticity` (KPIs + bar + scatter + table) · `Method & coverage`.
+Two tiers of tabs are combined in the full cockpit:
 
-All charts are hand-rolled SVG (no library) with a shared tooltip for hover values.
+- **Price & elasticity core** (follows the AEL reference): `Overview` (KPIs → portfolio → breadth → insights → journey) · `All SKUs` (sortable/searchable table) · `SKU month-on-month` (picker + dual-axis chart + table) · `Price change tracker` (realised moves + declared changes) · `Declared price grid` (declared rate trend + realised-vs-declared gap + grid) · `Elasticity` (KPIs + bar + scatter + table) · `Method & coverage`.
+- **Business analysis sections** (the SBU-unique add-ons): `Price` (net/gross/MRP by SKU) · `GP/NP/Net` (waterfall + raw-material proxy) · `Competitor` (survey) · `Market Share` · `Dealer` (commission) · `Area` (delivery zones) · `Growth` (yearly revenue/volume).
+
+Every section opens with a `.guide` box ("What this answers" / "How to read it") so a first-time reader can navigate. All charts are hand-rolled SVG (no library) with a shared hover tooltip; tables are sortable/searchable with click-to-drill.
 
 ---
 
@@ -113,7 +129,7 @@ All charts are hand-rolled SVG (no library) with a shared tooltip for hover valu
 
 ## 7. Coverage / gotchas
 
-- **DP / TP / MRP** — only populated in `rtm.tblRetailPrice` for consumer BUs (cement 4, essentials 144, light-eng 237, telecom 241, building-solutions 220). **Not tracked for Akij Ispat (224)** — rebar sells on a mill/realised rate, so only MRP (`numItemPrice`) is available.
+- **DP / TP / MRP** — the retail DP/TP/MRP ladder (`rtm.tblRetailPrice`) is only populated for consumer BUs (cement 4, essentials 144, light-eng 237, telecom 241, building-solutions 220). **Mills (e.g. Akij Ispat 224) use a Trade/mill rate instead** — look in `itm.tblPriceSetup` (for Ispat: channel 108 "Trade", 109 "Sister Concern"). Rebar has no separate distributor (DP) tier, so the "ladder" collapses to **Trade → MRP**, and MRP sits almost on top of Trade.
 - **COGS / production cost** — often not posted monthly (empty `numCogs`, empty `mes` cost sheet, GL has only revenue). Use `itm.tblItem.numAverageRate` as a point-in-time proxy, or scrap purchase cost as a monthly raw-material proxy.
 - **Mixed-unit quantity** — check per-ton price stability; early years often have kg/MT mix (e.g. Ispat 2023–24). Start the "clean window" from when per-ton price is consistent.
 - **500-row gateway cap** — aggregate/pivot in SQL; never pull raw rows.
