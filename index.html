@@ -77,6 +77,15 @@
   .guide p{margin:2px 0 0}
   .tip{position:fixed;background:#1a2536;border:1px solid #33405a;border-radius:8px;padding:7px 11px;font-size:11.5px;color:var(--tx);pointer-events:none;z-index:200;box-shadow:0 4px 14px rgba(0,0,0,.5);max-width:320px;line-height:1.5;white-space:pre-line;display:none}
   svg [onmousemove]{cursor:crosshair}
+  .dda-title{font-size:15px;font-weight:700;color:var(--tx);margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+  .dda-title .num{background:rgba(240,185,11,.15);color:var(--gold);border:1px solid rgba(240,185,11,.4);border-radius:6px;padding:1px 8px;font-size:11px;letter-spacing:.3px}
+  .dda-expl{background:rgba(47,125,255,.05);border:1px solid rgba(47,125,255,.2);border-left:3px solid var(--accent);border-radius:10px;padding:12px 14px;color:#c9d7ea;font-size:12.6px;line-height:1.6;margin-bottom:12px}
+  .dda-expl b{color:var(--tx)}
+  .dda-expl ul{margin:6px 0 0;padding-left:18px}
+  .dda-expl li{margin:3px 0}
+  table .pri-hi{color:var(--red);font-weight:700}
+  table .pri-md{color:var(--gold);font-weight:600}
+  table .pri-lo{color:var(--muted)}
 </style>
 </head>
 <body>
@@ -102,6 +111,7 @@
   <button data-t="dealer">Dealer</button>
   <button data-t="area">Area</button>
   <button data-t="growth">Growth</button>
+  <button data-t="dda">Direction · Decision · Action</button>
   <button data-t="mt">Method &amp; coverage</button>
 </nav>
 
@@ -371,6 +381,35 @@
   <div class="card">
     <h3>Revenue &amp; volume by year</h3>
     <div class="chart" id="revYear"></div>
+  </div>
+</section>
+
+<!-- ============ DIRECTION · DECISION · ACTION ============ -->
+<section id="dda">
+  <div class="guide"><span class="gl">What this is</span><p>A management read-out — where Akij Ispat is heading, what to decide, and what to do — each grounded in the data shown across the other tabs.</p><span class="gl">How to read it</span><p>Three blocks: <b>Direction</b> (the trend), <b>Decision</b> (the choices) and <b>Action</b> (the next moves). Each pairs a plain-language explanation with a <b>proof table</b> and a <b>chart</b>.</p></div>
+
+  <!-- 1 · DIRECTION -->
+  <div class="dda-title"><span class="num">1</span>Direction — where the business is heading</div>
+  <div class="dda-expl" id="ddaDirExpl"></div>
+  <div class="grid g2">
+    <div class="card"><h3>Chart — revenue trajectory</h3><div class="hint">Monthly net revenue, Dec'22 → Nov'26.</div><div class="chart" id="ddaDirChart"></div></div>
+    <div class="card"><h3>Proof</h3><div class="scroll" id="ddaDirTable"></div></div>
+  </div>
+
+  <!-- 2 · DECISION -->
+  <div class="dda-title"><span class="num">2</span>Decision — what to decide</div>
+  <div class="dda-expl" id="ddaDecExpl"></div>
+  <div class="grid g2">
+    <div class="card"><h3>Chart — where the money &amp; margin are</h3><div class="hint">Top SKUs by FY25-26 net revenue; colour = gross-margin tier (blue &lt;6%, teal 6–9%, gold ≥10%).</div><div class="chart" id="ddaDecChart"></div></div>
+    <div class="card"><h3>Proof</h3><div class="scroll" id="ddaDecTable"></div></div>
+  </div>
+
+  <!-- 3 · ACTION -->
+  <div class="dda-title"><span class="num">3</span>Action — what to do now</div>
+  <div class="dda-expl" id="ddaActExpl"></div>
+  <div class="grid g2">
+    <div class="card"><h3>Chart — share momentum &amp; target</h3><div class="hint">Monthly steel-market share with a 3.5% target line (the Mar'26 peak).</div><div class="chart" id="ddaActChart"></div></div>
+    <div class="card"><h3>Proof</h3><div class="scroll" id="ddaActTable"></div></div>
   </div>
 </section>
 
@@ -958,7 +997,7 @@ function skuSelector(selId, chartId, map, overallArr, labels, ytitle, opts){
 }
 
 /* ============ tabs + deep-link ============ */
-var TABS=["ov","price","margin","sku","mom","chg","pg","el","comp","ms","dealer","area","growth","mt"];
+var TABS=["ov","price","margin","sku","mom","chg","pg","el","comp","ms","dealer","area","growth","dda","mt"];
 function showTab(t){
   if(TABS.indexOf(t)<0) t="ov";
   TABS.forEach(function(id){
@@ -1011,7 +1050,7 @@ window.addEventListener("hashchange",function(){ showTab(location.hash.slice(1))
   breadthChart(document.getElementById("cBreadth"),WINLAB.slice(1),upPct.slice(1),dnPct.slice(1));
 
   // insights
-  var grow=D.sku.slice().sort(function(a,b){return pct(b[3],b[2])-pct(a[3],a[2]);})[0];
+  var grow=D.sku.slice().sort(function(a,b){return pct(b[4],b[3])-pct(a[4],a[3]);})[0];
   var p10w=D.priceNet["B500 DWR 10 mm"];
   var floor=Math.min.apply(null,p10w.filter(function(v){return v!=null;})), floorI=p10w.indexOf(floor);
   var last=D.priceNet["B500 DWR 10 mm"][22];
@@ -1021,7 +1060,7 @@ window.addEventListener("hashchange",function(){ showTab(location.hash.slice(1))
   var ins=[
     ["Revenue grew from "+cr(D.yearlyRev[2023])+" (FY2023-24) to "+cr(y25)+" (FY2025-26), +"+pct(y25,y24).toFixed(1)+"% YoY.","The mix shift to larger-diameter B500 (25/32 mm) is the main driver — a premium-grade mix, not just volume."],
     ["B500 DWR 10 mm bottomed at "+taka(floor)+"/MT in "+WINLAB[floorI]+" and recovered to "+taka(last)+"/MT by Nov'26 (+"+((last-floor)/floor*100).toFixed(1)+"%).","Pricing power returned with the Mar'26 scrap-cost surge; hold this band or volume leaks to BSRM/AKS offers."],
-    [grow[0]+" is the fastest-growing SKU ("+pf(pct(grow[3],grow[2]))+" FY24-25 → FY25-26).","Confirm whether this is real demand or a one-off project order before expanding stock."],
+    [grow[0]+" is the fastest-growing SKU ("+pf(pct(grow[4],grow[3]))+" FY24-25 → FY25-26).","Confirm whether this is real demand or a one-off project order before expanding stock."],
     ["Akij Ispat steel market share moved 2.06% → 2.59%, the fastest of the named mills (+21.7%).","Share gains came while total market volume shrank — competitors' retreat matters as much as Akij's push."],
     [elNeg+" SKUs price-elastic (β<−1), "+elIn+" inelastic (−1..0), "+elPos+" anomalous (β>0).","Inelastic grades (mostly B500 core sizes) carry headroom for price; elastic/anomalous ones need a margin check before any hike."],
     ["Dealer commission totals "+cr(commTotal)+" over 3 years (~"+(commTotal/D.yearlyRev[2025]*100).toFixed(1)+"% of one FY).","'Monthly' incentive is 66% of the pool — renegotiating its target basis is the fastest NP% lever."]
@@ -1031,7 +1070,7 @@ window.addEventListener("hashchange",function(){ showTab(location.hash.slice(1))
 
   // journey table (top 8 by FY25-26 revenue)
   var byName={}; D.sku.forEach(function(s){ byName[s[0].replace("Akij Ispat ","")]=s; });
-  var jrows=SKUKEYS.slice().sort(function(a,b){ return (byName[b]?byName[b][3]:0)-(byName[a]?byName[a][3]:0); }).slice(0,8);
+  var jrows=SKUKEYS.slice().sort(function(a,b){ return (byName[b]?byName[b][4]:0)-(byName[a]?byName[a][4]:0); }).slice(0,8);
   var th='<table><thead><tr><th>SKU</th><th>Price Jan\'25</th><th>Price Nov\'26</th><th>Move</th><th>Vol Jan\'25 (MT)</th><th>Vol Oct\'26 (MT)</th><th>β</th></tr></thead><tbody>';
   jrows.forEach(function(k){
     var p=D.priceNet[k], v=winVol[k];
@@ -1105,7 +1144,7 @@ var SKUROWS=SKUKEYS.map(function(k){
   var last3=lastI>=3&&p[lastI-3]!=null&&p[lastI]!=null?(p[lastI]-p[lastI-3])/p[lastI-3]*100:null;
   var e=EL[k];
   var rmrp=(last!=null&&m[lastI]!=null)?last/m[lastI]:null;
-  var fy25=byNameG[k]?byNameG[k][3]:null;
+  var fy25=byNameG[k]?byNameG[k][4]:null;
   var grade=k.indexOf("B500")===0?"B500":"B420";
   return {key:k, grade:grade, rev:fy25, price:last, first:first, move:winMove, avgMoM:cnt?absMov/cnt:null, last3:last3,
           b:e?e.b:null, r2:e?e.r2:null, n:e?e.n:null, vol:fLast, rmrp:rmrp};
@@ -1131,8 +1170,8 @@ function renderSku(){
   rows.sort(function(a,b){
     var x=a[ST.sort], y=b[ST.sort];
     if(x==null) x=-9e9; if(y==null) y=-9e9;
-    if(typeof x==="string") return x.localeCompare(y)*ST.dir*-1;
-    return (x-y)*ST.dir*-1;
+    if(typeof x==="string") return x.localeCompare(y)*ST.dir;
+    return (x-y)*ST.dir;
   });
   document.getElementById("skuCount").textContent="· "+rows.length+" of "+SKUROWS.length+" SKUs";
   function th(key,label){ return '<th data-s="'+key+'"'+(ST.sort===key?' class="sorted'+(ST.dir<0?"":" asc")+'"':'')+'>'+label+(ST.sort===key?(ST.dir<0?" ↓":" ↑"):"")+'</th>'; }
@@ -1166,14 +1205,14 @@ renderSku();
 
 (function(){
   var rod25=D.cat["MS Rod"][2025], rod24=D.cat["MS Rod"][2024];
-  var top=D.sku.slice().sort(function(a,b){return b[3]-a[3];});
-  var grow=D.sku.slice().sort(function(a,b){return pct(b[3],b[2])-pct(a[3],a[2]);})[0];
-  var decl=D.sku.slice().sort(function(a,b){return pct(a[3],a[2])-pct(b[3],b[2]);})[0];
+  var top=D.sku.slice().sort(function(a,b){return b[4]-a[4];});
+  var grow=D.sku.slice().sort(function(a,b){return pct(b[4],b[3])-pct(a[4],a[3]);})[0];
+  var decl=D.sku.slice().sort(function(a,b){return pct(a[4],a[3])-pct(b[4],b[3]);})[0];
   var k=[
     {l:"FY2025-26 MS Rod",v:cr(rod25),n:pf(pct(rod25,rod24))+" YoY",c:"up"},
-    {l:"Top SKU",v:"B500 10 mm",n:cr(top[0][3])+" · "+(top[0][3]/rod25*100).toFixed(0)+"% of MS Rod"},
-    {l:"Fastest grower",v:grow[0].replace("Akij Ispat ",""),n:pf(pct(grow[3],grow[2])),c:"up"},
-    {l:"Slowest SKU",v:decl[0].replace("Akij Ispat ",""),n:pf(pct(decl[3],decl[2])),c:"down"},
+    {l:"Top SKU",v:"B500 10 mm",n:cr(top[0][4])+" · "+(top[0][4]/rod25*100).toFixed(0)+"% of MS Rod"},
+    {l:"Fastest grower",v:grow[0].replace("Akij Ispat ",""),n:pf(pct(grow[4],grow[3])),c:"up"},
+    {l:"Slowest SKU",v:decl[0].replace("Akij Ispat ",""),n:pf(pct(decl[4],decl[3])),c:"down"},
     {l:"Wastage/by-product",v:cr(D.cat["Wastage & By-Products"][2025]),n:pf(pct(D.cat["Wastage & By-Products"][2025],D.cat["Wastage & By-Products"][2024])),c:"up"}
   ];
   document.getElementById("skuKpis").innerHTML=k.map(function(x){
@@ -1181,7 +1220,7 @@ renderSku();
   var months=D.monthly.slice(1);
   var labels=months.map(function(m){return mn(m[1])+"'"+String(m[0]).slice(2);});
   skuSelector("skuSel","skuRevMonthly",D.skuMonthly,months.map(function(m){return m[2];}),labels,"Net revenue (Tk)",{yfmt:fmtY,overallName:"Overall net revenue"});
-  barChart(document.getElementById("skuRank"),top.map(function(s){return {label:s[0].replace("Akij Ispat ",""),value:s[3],color:s[1]==="B500"?"#f0b90b":"#2f7dff"};}),{fmt:cr});
+  barChart(document.getElementById("skuRank"),top.map(function(s){return {label:s[0].replace("Akij Ispat ",""),value:s[4],color:s[1]==="B500"?"#f0b90b":"#2f7dff"};}),{fmt:cr});
 })();
 
 /* ============ SKU MONTH-ON-MONTH ============ */
@@ -1483,6 +1522,79 @@ renderSku();
   ],{yfmt:fmtY,colors:["#2f7dff"]});
   document.getElementById("revYear").insertAdjacentHTML("beforeend",
     '<div class="small" style="margin-top:6px">Volume: FY23-24 '+mt(v23)+' MT → FY24-25 '+mt(v24)+' MT → FY25-26 '+mt(v25)+' MT ('+pf(pct(v25,v24))+').</div>');
+})();
+
+/* ============ DIRECTION · DECISION · ACTION ============ */
+(function(){
+  var y23=D.yearlyRev[2023],y24=D.yearlyRev[2024],y25=D.yearlyRev[2025],y26=D.yearlyRev[2026];
+  var akijMs=D.ms.filter(function(m){return m[0]==="AKIJ ISPAT";})[0];
+  var share23=akijMs[1], share24=akijMs[2];
+  var lastShare=D.msAkijShare[D.msAkijShare.length-1], peakShare=Math.max.apply(null,D.msAkijShare);
+  function readB(b){ return b==null?"not measurable":(b>0?"anomalous":(b<-1?"elastic":"inelastic")); }
+
+  /* ---- 1. DIRECTION ---- */
+  document.getElementById("ddaDirExpl").innerHTML=
+    'Akij Ispat is in a clear growth phase. Net revenue rose <b>৳818 Cr → ৳1,488 Cr</b> from FY23-24 to FY25-26 — a <b>+49%</b> jump last year — and FY26-27 already stands at <b>৳1,442 Cr</b> after 11 months, on track to overtake FY25-26. Steel market share climbed <b>2.06% → 2.59%</b> (+0.5 percentage points), making Akij the fastest-rising of the named mills, and monthly share touched <b>3.49%</b> in March 2026. The direction is up — on volume and share, at a stable mill rate.';
+  var dirHtml='<table><thead><tr><th>FY</th><th>Net revenue</th><th>YoY</th><th>Steel share</th><th>Note</th></tr></thead><tbody>';
+  dirHtml+='<tr><td>FY2023-24</td><td>'+cr(y23)+'</td><td>—</td><td>'+share23.toFixed(2)+'%</td><td>baseline</td></tr>';
+  dirHtml+='<tr><td>FY2024-25</td><td>'+cr(y24)+'</td><td class="pos">'+pf(pct(y24,y23))+'</td><td>'+share24.toFixed(2)+'%</td><td>share +0.5 pp</td></tr>';
+  dirHtml+='<tr><td>FY2025-26</td><td>'+cr(y25)+'</td><td class="pos">'+pf(pct(y25,y24))+'</td><td>—</td><td>fastest growth</td></tr>';
+  dirHtml+='<tr><td>FY2026-27 (11 mo)</td><td>'+cr(y26)+'</td><td>on track</td><td>'+lastShare.toFixed(2)+'% (Sep 26)</td><td>partial year</td></tr>';
+  dirHtml+='</tbody></table>';
+  document.getElementById("ddaDirTable").innerHTML=dirHtml;
+  var mlab=D.monthly.map(function(m){return mn(m[1])+String(m[0]).slice(2);});
+  var mrev=D.monthly.map(function(m){return m[2];});
+  lineChart(document.getElementById("ddaDirChart"),[{name:"Monthly net revenue",data:mrev,w:2.2}],mlab,{yfmt:fmtY,ytitle:"Net revenue",tipfmt:cr,colors:["#2f7dff"]});
+
+  /* ---- 2. DECISION ---- */
+  document.getElementById("ddaDecExpl").innerHTML=
+    'Three choices follow from the data. <ul>'+
+    '<li><b>Price with the mill rate, not against it.</b> The mainstream B500 10/12/16/20 mm carry only ~5% gross margin and several read elastic, so cost-plus discipline matters more than headline price.</li>'+
+    '<li><b>Concentrate the portfolio.</b> B500 grades are ~93% of revenue and the top four SKUs (10/16/12/20 mm) are ~79% — focus planning, inventory and sales effort there.</li>'+
+    '<li><b>Protect the margin-rich niche.</b> 8 mm, 32 mm and the B420 grades earn 10–16% gross margin on small volume — grow them selectively rather than letting them drift.</li></ul>';
+  var skuMeta={}; D.sku.forEach(function(s){ skuMeta[s[0].replace("Akij Ispat ","")]={fy25:s[4],grade:s[1]}; });
+  var skuGp={}; D.price25.forEach(function(p){ skuGp[p[0].replace("Akij Ispat ","")]={gp:(p[2]-p[3])/p[2]*100}; });
+  var top8=SKUKEYS.map(function(k){ return {k:k, rev:skuMeta[k]?skuMeta[k].fy25:0, gp:skuGp[k]?skuGp[k].gp:0, b:EL[k]?EL[k].b:null}; })
+    .sort(function(a,b){return b.rev-a.rev;}).slice(0,8);
+  var decHtml='<table><thead><tr><th>SKU</th><th>FY25-26 rev</th><th>GP%</th><th>β</th><th>Read</th></tr></thead><tbody>';
+  top8.forEach(function(s){
+    decHtml+='<tr><td><b>'+esc(s.k)+'</b></td><td>'+cr(s.rev)+'</td><td class="'+(s.gp>=10?"pos":"")+'">'+s.gp.toFixed(1)+'%</td><td>'+(s.b==null?"—":s.b.toFixed(2))+'</td><td>'+readB(s.b)+'</td></tr>';
+  });
+  decHtml+='</tbody></table>';
+  document.getElementById("ddaDecTable").innerHTML=decHtml;
+  var decItems=top8.map(function(s){
+    var col=s.gp>=10?"#f0b90b":(s.gp>=6?"#22c3aa":"#2f7dff");
+    return {label:s.k,value:s.rev,color:col};
+  });
+  barChart(document.getElementById("ddaDecChart"),decItems,{fmt:cr});
+
+  /* ---- 3. ACTION ---- */
+  document.getElementById("ddaActExpl").innerHTML=
+    'Five concrete moves, each tied to a number. <ul>'+
+    '<li><b>Defend the top four SKUs and top five zones</b> — they drive most of the revenue.</li>'+
+    '<li><b>Hold the mill rate</b> (now ৳89,900) and pass scrap-cost changes through selectively, since the portfolio is inelastic on balance.</li>'+
+    '<li><b>Revalidate the GP cost basis</b> — gross margin rests on a point-in-time average cost.</li>'+
+    '<li><b>Target 3.5% monthly share</b> — already hit once (March 2026) — as the next threshold.</li>'+
+    '<li><b>Review the B420 tail</b> (~7% of revenue) for consolidation or re-pricing.</li></ul>';
+  var actRows=[
+    [1,"Defend top 4 SKUs (10/16/12/20 mm)","79% of revenue (৳1,117 Cr)","High","Secures core volume"],
+    [2,"Hold mill rate, pass scrap through selectively","portfolio inelastic on balance · rate ৳89,900","High","Revenue without volume loss"],
+    [3,"Grow top 5 zones","Cumilla, Noakhali, Mirpur, Gazipur, Daudkandi","High","Deepens fastest regions"],
+    [4,"Revalidate GP cost basis","GP% rests on point-in-time avg cost","Medium","Accurate margin view"],
+    [5,"Target 3.5% monthly share","peaked 3.49% in March 2026","Medium","Next share milestone"],
+    [6,"Review B420 tail","~7% of revenue, mixed margin","Low","Simpler portfolio"]
+  ];
+  var actHtml='<table><thead><tr><th>#</th><th>Action</th><th>Basis (data)</th><th>Priority</th><th>Impact</th></tr></thead><tbody>';
+  actRows.forEach(function(r){
+    var pc=r[3]==="High"?"pri-hi":(r[3]==="Medium"?"pri-md":"pri-lo");
+    actHtml+='<tr><td>'+r[0]+'</td><td><b>'+r[1]+'</b></td><td>'+r[2]+'</td><td class="'+pc+'">'+r[3]+'</td><td>'+r[4]+'</td></tr>';
+  });
+  actHtml+='</tbody></table>';
+  document.getElementById("ddaActTable").innerHTML=actHtml;
+  lineChart(document.getElementById("ddaActChart"),[
+    {name:"AKIJ monthly share",data:D.msAkijShare,w:2.4},
+    {name:"3.5% target",data:D.msAkijShare.map(function(){return 3.5;}),w:1.4,dash:"6,5"}
+  ],D.msMonths,{yfmt:function(v){return v.toFixed(1)+"%";},ytitle:"Share %",colors:["#f0b90b","#ff5c7a"],tipfmt:function(v){return v.toFixed(2)+"%";}});
 })();
 
 /* ============ boot: deep link ============ */
