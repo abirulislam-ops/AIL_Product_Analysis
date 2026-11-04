@@ -94,7 +94,7 @@
     <h1>Akij Ispat — <span>Product Intelligence Cockpit</span></h1>
     <div class="sub">Price · margin · SKU momentum · competitors · market share · dealers · areas · growth · elasticity · declared price — follow the AEL cockpit pattern</div>
   </div>
-  <div class="badge">FY2023-24 → FY2026-27 · clean window Jan'25–Nov'26 for per-ton series</div>
+  <div class="badge">FY2023-24 → FY2026-27 (July–June) · per-ton clean window Jan'25–Nov'26</div>
 </header>
 
 <nav id="nav">
@@ -112,7 +112,7 @@
   <button data-t="area">Area</button>
   <button data-t="growth">Growth</button>
   <button data-t="dda">Direction · Decision · Action</button>
-  <button data-t="mt">Method &amp; coverage</button>
+   <!-- <button data-t="mt">Method &amp; coverage</button>  -->
 </nav>
 
 <main>
@@ -376,7 +376,7 @@
 
 <!-- ============ GROWTH ============ -->
 <section id="growth">
-  <div class="guide"><span class="gl">What this answers</span><p>Revenue and volume by fiscal year.</p><span class="gl">How to read it</span><p>FY2025-26 vs FY2024-25 growth plus the 3-yr CAGR. FY2026-27 is a partial year (11 months).</p></div>
+  <div class="guide"><span class="gl">What this answers</span><p>Net revenue by fiscal year (July–June), with delivery counts as an activity proxy.</p><span class="gl">How to read it</span><p>FY2025-26 vs FY2024-25 growth plus the 2-yr CAGR. FY2026-27 is a partial year (5 months, July–November).</p></div>
   <div class="grid g5" id="growthKpis" style="margin-bottom:12px"></div>
   <div class="card">
     <h3>Revenue &amp; volume by year</h3>
@@ -471,7 +471,7 @@
     <span>Business Unit: Akij Ispat Ltd (AIL · ERP 224)</span>
     <span>Source: iBOSDDD live ERP (read-only)</span>
     <span>Pattern: AEL Price Elasticity Cockpit</span>
-    <span>Clean window: FY2023-24 → FY2026-27 (Nov)</span>
+    <span>Fiscal years: July–June · FY2023-24 → FY2026-27 (5 mo)</span>
     <span>Generated: Nov 2026</span>
   </div>
   <div class="small">Comprehensive cockpit — the Product Analysis sections (Price, GP/NP, Competitor, Market Share, Dealer, Area, Growth) merged with the AEL price &amp; elasticity pattern, plus the declared price grid (Trade mill-rate + MRP). Every figure comes from the embedded ERP extract (BU 224 · Akij Ispat).</div>
@@ -484,10 +484,10 @@
    ============================================================ */
 var D = {
   monthly: [
-    [2022,12,352106],[2023,1,712100668],[2023,2,610404011],[2023,3,721393647],[2023,4,498711977],[2023,5,862372722],[2023,6,870276647],[2023,7,492061084],[2023,8,515995716],[2023,9,466944361],[2023,10,1012984235],[2023,11,687551902],[2023,12,732369890],
-    [2024,1,1051680503],[2024,2,1036812638],[2024,3,963838536],[2024,4,556921429],[2024,5,1218075352],[2024,6,533656930],[2024,7,792884646],[2024,8,547920634],[2024,9,641173498],[2024,10,786100640],[2024,11,648176604],[2024,12,1223348335],
-    [2025,1,1559542650],[2025,2,1373332385],[2025,3,1366086453],[2025,4,1555125359],[2025,5,1257283003],[2025,6,927534498],[2025,7,1030362127],[2025,8,907859124],[2025,9,1265862707],[2025,10,1133374187],[2025,11,1260290948],[2025,12,1245078978],
-    [2026,1,1839112440],[2026,2,1733000997],[2026,3,1608773194],[2026,4,1651003084],[2026,5,1039993839],[2026,6,1638367005],[2026,7,868834458],[2026,8,1211843137],[2026,9,1768608191],[2026,10,902469113],[2026,11,159818380]
+    [2022,12,352106],[2023,1,712100668],[2023,2,610404011],[2023,3,721393646],[2023,4,498711977],[2023,5,862372722],[2023,6,870276646],[2023,7,492060707],[2023,8,515995716],[2023,9,466944361],[2023,10,1012984235],[2023,11,687551902],[2023,12,732369890],
+    [2024,1,1051680503],[2024,2,1036812637],[2024,3,963838536],[2024,4,556921429],[2024,5,1218075351],[2024,6,533656929],[2024,7,792483195],[2024,8,543395634],[2024,9,637833204],[2024,10,786100640],[2024,11,648176603],[2024,12,1223267834],
+    [2025,1,1531269650],[2025,2,1364061884],[2025,3,1347239493],[2025,4,1531901249],[2025,5,1233397233],[2025,6,886689907],[2025,7,1009754887],[2025,8,880204494],[2025,9,1231704507],[2025,10,1103609758],[2025,11,1222315403],[2025,12,1233453328],
+    [2026,1,1820215538],[2026,2,1696763256],[2026,3,1573142608],[2026,4,1642725273],[2026,5,1001277118],[2026,6,1626815829],[2026,7,854020758],[2026,8,1185923062],[2026,9,1767378272],[2026,10,875202603],[2026,11,201848880]
   ],
   yearlyRev: {2022:352106, 2023:8183166860, 2024:10000589744, 2025:14881732419, 2026:14421823836},
   yearlyDel: {2022:[2,264003], 2023:[6443,7001916678], 2024:[9499,8955216109], 2025:[13121,13030163654], 2026:[13682,12378848729]},
@@ -641,6 +641,33 @@ var D = {
     ["2024-09-11",86500,-0.6],["2024-09-29",86000,-0.6],["2024-10-06",85500,-0.6],["2024-10-09",84700,-0.9],["2024-10-14",85200,0.6],["2024-10-23",85500,0.4],["2024-11-03",85200,-0.4],["2024-11-05",85000,-0.2],["2024-11-06",84700,-0.4],["2024-11-07",84500,-0.2],["2024-11-10",83500,-1.2],["2024-11-14",83000,-0.6],["2024-11-19",82500,-0.6],["2024-12-01",82000,-0.6],["2024-12-05",81000,-1.2],["2024-12-10",80500,-0.6],["2024-12-15",80000,-0.6],["2024-12-24",80500,0.6],["2024-12-27",81500,1.2],["2024-12-31",82000,0.6],["2025-01-01",83000,1.2],["2025-01-04",85000,2.4],["2025-01-06",86500,1.8],["2025-01-07",87000,0.6],["2025-01-16",86000,-1.1],["2025-01-23",85500,-0.6],["2025-01-30",86000,0.6],["2025-02-02",85500,-0.6],["2025-02-04",84500,-1.2],["2025-02-16",85000,0.6],["2025-02-19",84500,-0.6],["2025-03-02",84000,-0.6],["2025-03-16",84500,0.6],["2025-03-19",84000,-0.6],["2025-04-20",84500,0.6],["2025-04-24",84000,-0.6],["2025-04-25",84500,0.6],["2025-04-30",84000,-0.6],["2025-05-01",84200,0.2],["2025-05-04",84000,-0.2],["2025-05-06",84800,1],["2025-05-08",84300,-0.6],["2025-05-11",84500,0.2],["2025-05-15",84200,-0.4],["2025-05-22",84000,-0.2],["2025-05-26",84200,0.2],["2025-07-01",85000,1],["2025-07-15",84800,-0.2],["2025-07-29",85000,0.2],["2025-08-04",84500,-0.6],["2025-08-06",84000,-0.6],["2025-08-16",83000,-1.2],["2025-08-27",82500,-0.6],["2025-09-07",82000,-0.6],["2025-09-09",82300,0.4],["2025-09-11",82500,0.2],["2025-09-21",82300,-0.2],["2025-09-23",82000,-0.4],["2025-09-27",82500,0.6],["2025-10-09",82200,-0.4],["2025-10-12",82000,-0.2],["2025-10-14",81700,-0.4],["2025-10-16",81500,-0.2],["2025-10-19",81000,-0.6],["2025-10-23",81300,0.4],["2025-10-29",81000,-0.4],["2025-11-06",80500,-0.6],["2025-11-09",80000,-0.6],["2025-11-11",79500,-0.6],["2025-11-16",79000,-0.6],["2025-12-01",79500,0.6],["2025-12-04",79000,-0.6],["2026-01-10",79200,0.3],["2026-01-12",79500,0.4],["2026-01-17",79800,0.4],["2026-01-19",80000,0.3],["2026-01-21",80500,0.6],["2026-01-24",81000,0.6],["2026-01-27",81500,0.6],["2026-01-28",82000,0.6],["2026-02-03",82500,0.6],["2026-02-10",83500,1.2],["2026-02-16",84000,0.6],["2026-02-18",84200,0.2],["2026-02-22",84500,0.4],["2026-02-24",84700,0.2],["2026-02-28",85000,0.4],["2026-03-03",85500,0.6],["2026-03-04",86500,1.2],["2026-03-05",88500,2.3],["2026-03-06",89000,0.6],["2026-03-07",91500,2.8],["2026-03-08",93000,1.6],["2026-03-09",94000,1.1],["2026-03-30",94700,0.7],["2026-03-31",95000,0.3],["2026-04-19",94000,-1.1],["2026-04-20",95000,1.1],["2026-04-22",94000,-1.1],["2026-04-25",95000,1.1],["2026-04-26",94300,-0.7],["2026-05-06",93300,-1.1],["2026-05-07",93000,-0.3],["2026-06-01",89000,-4.3],["2026-06-02",92000,3.4],["2026-06-03",91500,-0.5],["2026-06-06",92000,0.5],["2026-06-22",91500,-0.5],["2026-07-02",91000,-0.5],["2026-07-05",90500,-0.5],["2026-07-08",89500,-1.1],["2026-07-14",89000,-0.6],["2026-07-20",88000,-1.1],["2026-08-17",88500,0.6],["2026-09-01",87700,-0.9],["2026-09-03",88000,0.3],["2026-09-15",88200,0.2],["2026-09-20",88500,0.3],["2026-09-22",88700,0.2],["2026-09-23",89000,0.3],["2026-09-28",89300,0.3],["2026-10-06",89800,0.6],["2026-10-28",89900,0.1]
   ]
 };
+/* ============ fiscal-year data (fresh ERP pull, FY = July–June) ============ */
+(function(){
+  D.yearlyRev = {2022:4275611778, 2023:9268892199, 2024:12525816530, 2025:16041982002, 2026:4884373575};
+  D.yearlyDel = {2022:[3172,3585793783], 2023:[8443,8390732333], 2024:[11414,11343406576], 2025:[15102,14044202771], 2026:[4641,4047707252]};
+  D.cat = {
+    "MS Rod": {2022:4272683902, 2023:9178308699, 2024:12363304090, 2025:15410332052, 2026:4766762031},
+    "Wastage & By-Products": {2022:2927876, 2023:90583500, 2024:162512440, 2025:631649949, 2026:117611544}
+  };
+  var skuFy = {
+    "B500 DWR 10 mm":[3167956147,4028472882,5178987213],
+    "B500 DWR 16 mm":[1982573204,2526917074,3427697965],
+    "B500 DWR 12 mm":[1244203928,1786002885,2240208541],
+    "B500 DWR 20 mm":[918094714,1288137749,1808874687],
+    "B500 DWR 8 mm":[915732981,873964709,930381587],
+    "B500 DWR 25 mm":[228497986,567059373,636898684],
+    "B500 DWR 32 mm":[6151800,269243620,230771291],
+    "B420 DWR 10 mm":[158327392,309263212,269960487],
+    "B420 DWR 12 mm":[139464276,247349111,169224555],
+    "B420 DWR 16 mm":[108076748,140749550,175331305],
+    "B420 DWR 20 mm":[110459651,108745730,121918314],
+    "B420 DWR 25 mm":[115666432,118068470,77319029]
+  };
+  D.sku.forEach(function(s){
+    var k = s[0].replace("Akij Ispat ","");
+    if(skuFy[k]){ s[2]=skuFy[k][0]; s[3]=skuFy[k][1]; s[4]=skuFy[k][2]; }
+  });
+})();
 /* ============ helpers ============ */
 function cr(v){ if(v==null||isNaN(v))return "—"; var c=v/1e7; if(c>=100)return "৳ "+Math.round(c).toLocaleString("en-US")+" Cr"; if(c>=10)return "৳ "+c.toFixed(0)+" Cr"; return "৳ "+c.toFixed(1)+" Cr"; }
 function taka(v){ if(v==null||isNaN(v))return"—"; return "৳ "+Math.round(v).toLocaleString("en-US"); }
@@ -1474,7 +1501,7 @@ renderSku();
 /* ============ DEALER ============ */
 (function(){
   var total=0; D.commType.forEach(function(c){total+=c[1];});
-  var m25=0; D.comm.forEach(function(c){if(c[0]===2025)m25+=c[2];});
+  var m25=0; D.comm.forEach(function(c){if((c[1]>=7?c[0]:c[0]-1)===2025)m25+=c[2];});
   var k=[
     {l:"Total commission (2023–26)",v:cr(total),n:"dealer incentive paid"},
     {l:"FY2025-26 commission",v:cr(m25),n:"~"+(m25/D.yearlyRev[2025]*100).toFixed(1)+"% of FY25-26 sales"},
@@ -1509,11 +1536,11 @@ renderSku();
   var y23=D.yearlyRev[2023],y24=D.yearlyRev[2024],y25=D.yearlyRev[2025],y26=D.yearlyRev[2026];
   var v23=D.yearlyDel[2023][0],v24=D.yearlyDel[2024][0],v25=D.yearlyDel[2025][0];
   var k=[
-    {l:"FY2023-24",v:cr(y23),n:mt(v23)+" MT"},
-    {l:"FY2024-25",v:cr(y24),n:pf(pct(y24,y23))+" · "+mt(v24)+" MT",c:pct(y24,y23)>=0?"up":"down"},
-    {l:"FY2025-26",v:cr(y25),n:pf(pct(y25,y24))+" · "+mt(v25)+" MT",c:pct(y25,y24)>=0?"up":"down"},
-    {l:"FY2026-27 (11 mo)",v:cr(y26),n:pf(pct(y26,y25))+" partial year",c:pct(y26,y25)>=0?"up":"down"},
-    {l:"3-yr CAGR",v:(((y25/y23)**0.5-1)*100).toFixed(1)+"%",n:"FY23-24 → FY25-26"}
+    {l:"FY2023-24",v:cr(y23),n:mt(v23)+" deliveries"},
+    {l:"FY2024-25",v:cr(y24),n:pf(pct(y24,y23))+" · "+mt(v24)+" deliveries",c:pct(y24,y23)>=0?"up":"down"},
+    {l:"FY2025-26",v:cr(y25),n:pf(pct(y25,y24))+" · "+mt(v25)+" deliveries",c:pct(y25,y24)>=0?"up":"down"},
+    {l:"FY2026-27 (5 mo)",v:cr(y26),n:"Jul–Nov 2026 · partial year",c:"up"},
+    {l:"2-yr CAGR",v:(((y25/y23)**0.5-1)*100).toFixed(1)+"%",n:"FY23-24 → FY25-26"}
   ];
   document.getElementById("growthKpis").innerHTML=k.map(function(x){
     return '<div class="card kpi"><div class="lab">'+x.l+'</div><div class="val">'+x.v+'</div><div class="note '+(x.c||"")+'">'+x.n+'</div></div>';}).join("");
@@ -1521,7 +1548,7 @@ renderSku();
     {name:"Net sales (Tk)",data:[y23,y24,y25]}
   ],{yfmt:fmtY,colors:["#2f7dff"]});
   document.getElementById("revYear").insertAdjacentHTML("beforeend",
-    '<div class="small" style="margin-top:6px">Volume: FY23-24 '+mt(v23)+' MT → FY24-25 '+mt(v24)+' MT → FY25-26 '+mt(v25)+' MT ('+pf(pct(v25,v24))+').</div>');
+    '<div class="small" style="margin-top:6px">Deliveries (fiscal-year activity proxy): FY23-24 '+mt(v23)+' → FY24-25 '+mt(v24)+' → FY25-26 '+mt(v25)+'. MT volume omitted — ERP quantity is mixed-unit (kg/MT) for rebar.</div>');
 })();
 
 /* ============ DIRECTION · DECISION · ACTION ============ */
@@ -1534,12 +1561,12 @@ renderSku();
 
   /* ---- 1. DIRECTION ---- */
   document.getElementById("ddaDirExpl").innerHTML=
-    'Akij Ispat is in a clear growth phase. Net revenue rose <b>৳818 Cr → ৳1,488 Cr</b> from FY23-24 to FY25-26 — a <b>+49%</b> jump last year — and FY26-27 already stands at <b>৳1,442 Cr</b> after 11 months, on track to overtake FY25-26. Steel market share climbed <b>2.06% → 2.59%</b> (+0.5 percentage points), making Akij the fastest-rising of the named mills, and monthly share touched <b>3.49%</b> in March 2026. The direction is up — on volume and share, at a stable mill rate.';
+    'Akij Ispat is in a clear growth phase. Net revenue rose <b>৳927 Cr → ৳1,604 Cr</b> from FY23-24 to FY25-26 — a <b>+28%</b> jump in the latest year (2-year CAGR +32%) — and the first five months of FY26-27 (July–November 2026) already stand at <b>৳488 Cr</b>. Steel market share climbed <b>2.06% → 2.59%</b> (+0.5 percentage points), making Akij the fastest-rising of the named mills, and monthly share touched <b>3.49%</b> in March 2026. The direction is up — on volume and share, at a stable mill rate.';
   var dirHtml='<table><thead><tr><th>FY</th><th>Net revenue</th><th>YoY</th><th>Steel share</th><th>Note</th></tr></thead><tbody>';
   dirHtml+='<tr><td>FY2023-24</td><td>'+cr(y23)+'</td><td>—</td><td>'+share23.toFixed(2)+'%</td><td>baseline</td></tr>';
   dirHtml+='<tr><td>FY2024-25</td><td>'+cr(y24)+'</td><td class="pos">'+pf(pct(y24,y23))+'</td><td>'+share24.toFixed(2)+'%</td><td>share +0.5 pp</td></tr>';
   dirHtml+='<tr><td>FY2025-26</td><td>'+cr(y25)+'</td><td class="pos">'+pf(pct(y25,y24))+'</td><td>—</td><td>fastest growth</td></tr>';
-  dirHtml+='<tr><td>FY2026-27 (11 mo)</td><td>'+cr(y26)+'</td><td>on track</td><td>'+lastShare.toFixed(2)+'% (Sep 26)</td><td>partial year</td></tr>';
+  dirHtml+='<tr><td>FY2026-27 (5 mo, Jul–Nov)</td><td>'+cr(y26)+'</td><td>in progress</td><td>'+lastShare.toFixed(2)+'% (Sep 26)</td><td>partial year</td></tr>';
   dirHtml+='</tbody></table>';
   document.getElementById("ddaDirTable").innerHTML=dirHtml;
   var mlab=D.monthly.map(function(m){return mn(m[1])+String(m[0]).slice(2);});
@@ -1550,7 +1577,7 @@ renderSku();
   document.getElementById("ddaDecExpl").innerHTML=
     'Three choices follow from the data. <ul>'+
     '<li><b>Price with the mill rate, not against it.</b> The mainstream B500 10/12/16/20 mm carry only ~5% gross margin and several read elastic, so cost-plus discipline matters more than headline price.</li>'+
-    '<li><b>Concentrate the portfolio.</b> B500 grades are ~93% of revenue and the top four SKUs (10/16/12/20 mm) are ~79% — focus planning, inventory and sales effort there.</li>'+
+    '<li><b>Concentrate the portfolio.</b> B500 grades are ~94% of revenue and the top four SKUs (10/16/12/20 mm) are ~82% — focus planning, inventory and sales effort there.</li>'+
     '<li><b>Protect the margin-rich niche.</b> 8 mm, 32 mm and the B420 grades earn 10–16% gross margin on small volume — grow them selectively rather than letting them drift.</li></ul>';
   var skuMeta={}; D.sku.forEach(function(s){ skuMeta[s[0].replace("Akij Ispat ","")]={fy25:s[4],grade:s[1]}; });
   var skuGp={}; D.price25.forEach(function(p){ skuGp[p[0].replace("Akij Ispat ","")]={gp:(p[2]-p[3])/p[2]*100}; });
@@ -1575,9 +1602,9 @@ renderSku();
     '<li><b>Hold the mill rate</b> (now ৳89,900) and pass scrap-cost changes through selectively, since the portfolio is inelastic on balance.</li>'+
     '<li><b>Revalidate the GP cost basis</b> — gross margin rests on a point-in-time average cost.</li>'+
     '<li><b>Target 3.5% monthly share</b> — already hit once (March 2026) — as the next threshold.</li>'+
-    '<li><b>Review the B420 tail</b> (~7% of revenue) for consolidation or re-pricing.</li></ul>';
+    '<li><b>Review the B420 tail</b> (~5% of revenue) for consolidation or re-pricing.</li></ul>';
   var actRows=[
-    [1,"Defend top 4 SKUs (10/16/12/20 mm)","79% of revenue (৳1,117 Cr)","High","Secures core volume"],
+    [1,"Defend top 4 SKUs (10/16/12/20 mm)","82% of revenue (৳1,266 Cr)","High","Secures core volume"],
     [2,"Hold mill rate, pass scrap through selectively","portfolio inelastic on balance · rate ৳89,900","High","Revenue without volume loss"],
     [3,"Grow top 5 zones","Cumilla, Noakhali, Mirpur, Gazipur, Daudkandi","High","Deepens fastest regions"],
     [4,"Revalidate GP cost basis","GP% rests on point-in-time avg cost","Medium","Accurate margin view"],
