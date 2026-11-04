@@ -416,6 +416,14 @@
     <div class="card"><h3>Chart — share momentum &amp; target</h3><div class="hint">Monthly steel-market share with a 3.5% target line (the Mar'26 peak).</div><div class="chart" id="ddaActChart"></div></div>
     <div class="card"><h3>Proof</h3><div class="scroll" id="ddaActTable"></div></div>
   </div>
+
+  <!-- 4 · LOSS-MAKING SKUs -->
+  <div class="dda-title"><span class="num">4</span>Loss-making / at-risk SKUs</div>
+  <div class="dda-expl" id="ddaLossExpl"></div>
+  <div class="grid g2">
+    <div class="card"><h3>Chart — net margin by SKU</h3><div class="hint">Estimated net-profit % per SKU (gross margin − ~2.1% commission &amp; freight). Red = below 4% (at-risk), green = healthy.</div><div class="chart" id="ddaLossChart"></div></div>
+    <div class="card"><h3>Proof</h3><div class="scroll" id="ddaLossTable"></div></div>
+  </div>
 </section>
 
 <!-- ============ METHOD & COVERAGE ============ -->
@@ -688,7 +696,7 @@ window.untip=function(){ TIP.style.display="none"; };
 /* synopsis: append a bulleted takeaway under a chart/table container */
 window.syn=function(id, bullets){
   var el=document.getElementById(id); if(!el) return;
-  var h='<div class="syn"><b>At a glance</b><ul>';
+  var h='<div class="syn"><b>SMART synopsis</b><ul>';
   bullets.forEach(function(b){ h+='<li>'+b+'</li>'; });
   h+='</ul></div>';
   el.insertAdjacentHTML("afterend", h);
@@ -1635,6 +1643,36 @@ renderSku();
     {name:"AKIJ monthly share",data:D.msAkijShare,w:2.4},
     {name:"3.5% target",data:D.msAkijShare.map(function(){return 3.5;}),w:1.4,dash:"6,5"}
   ],D.msMonths,{yfmt:function(v){return v.toFixed(1)+"%";},ytitle:"Share %",colors:["#f0b90b","#ff5c7a"],tipfmt:function(v){return v.toFixed(2)+"%";}});
+
+  /* ---- 4. LOSS-MAKING / AT-RISK SKUs ---- */
+  var lossRows=D.price25.map(function(p){
+    var name=p[0], short=name.replace("Akij Ispat ","");
+    var net=p[2], cost=p[3];
+    var gp=(net-cost)/net*100, np=gp-2.1;
+    var skuRow=D.sku.filter(function(s){return s[0]===name;})[0];
+    var rev=skuRow?skuRow[4]:0;
+    var b=EL[short]?EL[short].b:null;
+    return {k:short, gp:gp, np:np, rev:rev, b:b};
+  }).sort(function(a,b){return a.np-b.np;});
+  var lossSkus=lossRows.filter(function(r){return r.np<4;});
+  var lossRev=lossSkus.reduce(function(a,r){return a+r.rev;},0);
+  var msRod25=D.cat["MS Rod"][2025];
+  document.getElementById("ddaLossExpl").innerHTML=
+    'Six core grades — B500 10/12/16/20/25 mm and B420 10 mm — are the volume engine (<b>'+Math.round(lossRev/msRod25*100)+'% of MS-Rod revenue</b>) but earn the thinnest net margin (<b>~3%</b> after commission &amp; freight). Their cost is drifting up with scrap, so they sit one raw-material spike away from an actual loss. <ul>'+
+    '<li><b>Direction:</b> margin on the core is compressing — volume is safe, profit is not.</li>'+
+    '<li><b>Decision:</b> hold the mill rate (these grades are elastic — price cuts recover nothing, hikes leak volume). Attack the cost base instead.</li>'+
+    '<li><b>Action:</b> re-price B500 20 mm (the thinnest), push the 9–14% NP grades (8/32 mm, B420 12–25 mm), and renegotiate the ~1.3% dealer commission.</li></ul>';
+  var lossItems=lossRows.map(function(r){
+    var col=r.np<4?"#ff5c7a":(r.np<8?"#f0b90b":"#2fd181");
+    return {label:r.k, value:r.np, color:col};
+  });
+  barChart(document.getElementById("ddaLossChart"),lossItems,{fmt:function(v){return v.toFixed(1)+"%";}});
+  var lh='<table><thead><tr><th>SKU</th><th>FY25-26 rev</th><th>GP%</th><th>Est NP%</th><th>β</th><th>Read</th></tr></thead><tbody>';
+  lossRows.forEach(function(r){
+    lh+='<tr'+(r.np<4?' style="background:rgba(255,92,122,.06)"':'')+'><td><b>'+esc(r.k)+'</b></td><td>'+cr(r.rev)+'</td><td>'+r.gp.toFixed(1)+'%</td><td class="'+(r.np<4?"neg":"pos")+'"><b>'+r.np.toFixed(1)+'%</b></td><td>'+(r.b==null?"—":r.b.toFixed(2))+'</td><td>'+(r.np<4?"at-risk":"healthy")+'</td></tr>';
+  });
+  lh+='</tbody></table>';
+  document.getElementById("ddaLossTable").innerHTML=lh;
 })();
 
 /* ============ chart synopses (bullet takeaways) ============ */
@@ -1756,6 +1794,11 @@ renderSku();
   syn("ddaActChart", [
     "Monthly steel share with a dashed 3.5% target line.",
     "3.5% is the next milestone — already reached once in Mar'26."
+  ]);
+  syn("ddaLossChart", [
+    "Six core grades carry ~88% of revenue but only ~3% net margin (red bars).",
+    "They are one scrap-cost spike away from an actual loss.",
+    "Hold price and fix cost — scrap sourcing, mix shift and the dealer commission."
   ]);
 })();
 
