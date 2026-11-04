@@ -94,7 +94,7 @@
     <h1>Akij Ispat — <span>Product Intelligence Cockpit</span></h1>
     <div class="sub">Price · margin · SKU momentum · competitors · market share · dealers · areas · growth · elasticity · declared price — follow the AEL cockpit pattern</div>
   </div>
-  <div class="badge">FY2023-24 → FY2026-27 · clean window Jan'25–Nov'26 for per-ton series</div>
+  <div class="badge">FY2023-24 → FY2026-27 (July–June) · per-ton clean window Jan'25–Nov'26</div>
 </header>
 
 <nav id="nav">
@@ -112,7 +112,7 @@
   <button data-t="area">Area</button>
   <button data-t="growth">Growth</button>
   <button data-t="dda">Direction · Decision · Action</button>
-  <button data-t="mt">Method &amp; coverage</button>
+   <!-- <button data-t="mt">Method &amp; coverage</button>  -->
 </nav>
 
 <main>
@@ -376,7 +376,7 @@
 
 <!-- ============ GROWTH ============ -->
 <section id="growth">
-  <div class="guide"><span class="gl">What this answers</span><p>Revenue and volume by fiscal year.</p><span class="gl">How to read it</span><p>FY2025-26 vs FY2024-25 growth plus the 3-yr CAGR. FY2026-27 is a partial year (11 months).</p></div>
+  <div class="guide"><span class="gl">What this answers</span><p>Net revenue by fiscal year (July–June), with delivery counts as an activity proxy.</p><span class="gl">How to read it</span><p>FY2025-26 vs FY2024-25 growth plus the 2-yr CAGR. FY2026-27 is a partial year (5 months, July–November).</p></div>
   <div class="grid g5" id="growthKpis" style="margin-bottom:12px"></div>
   <div class="card">
     <h3>Revenue &amp; volume by year</h3>
@@ -471,7 +471,7 @@
     <span>Business Unit: Akij Ispat Ltd (AIL · ERP 224)</span>
     <span>Source: iBOSDDD live ERP (read-only)</span>
     <span>Pattern: AEL Price Elasticity Cockpit</span>
-    <span>Clean window: FY2023-24 → FY2026-27 (Nov)</span>
+    <span>Fiscal years: July–June · FY2023-24 → FY2026-27 (5 mo)</span>
     <span>Generated: Nov 2026</span>
   </div>
   <div class="small">Comprehensive cockpit — the Product Analysis sections (Price, GP/NP, Competitor, Market Share, Dealer, Area, Growth) merged with the AEL price &amp; elasticity pattern, plus the declared price grid (Trade mill-rate + MRP). Every figure comes from the embedded ERP extract (BU 224 · Akij Ispat).</div>
@@ -641,6 +641,32 @@ var D = {
     ["2024-09-11",86500,-0.6],["2024-09-29",86000,-0.6],["2024-10-06",85500,-0.6],["2024-10-09",84700,-0.9],["2024-10-14",85200,0.6],["2024-10-23",85500,0.4],["2024-11-03",85200,-0.4],["2024-11-05",85000,-0.2],["2024-11-06",84700,-0.4],["2024-11-07",84500,-0.2],["2024-11-10",83500,-1.2],["2024-11-14",83000,-0.6],["2024-11-19",82500,-0.6],["2024-12-01",82000,-0.6],["2024-12-05",81000,-1.2],["2024-12-10",80500,-0.6],["2024-12-15",80000,-0.6],["2024-12-24",80500,0.6],["2024-12-27",81500,1.2],["2024-12-31",82000,0.6],["2025-01-01",83000,1.2],["2025-01-04",85000,2.4],["2025-01-06",86500,1.8],["2025-01-07",87000,0.6],["2025-01-16",86000,-1.1],["2025-01-23",85500,-0.6],["2025-01-30",86000,0.6],["2025-02-02",85500,-0.6],["2025-02-04",84500,-1.2],["2025-02-16",85000,0.6],["2025-02-19",84500,-0.6],["2025-03-02",84000,-0.6],["2025-03-16",84500,0.6],["2025-03-19",84000,-0.6],["2025-04-20",84500,0.6],["2025-04-24",84000,-0.6],["2025-04-25",84500,0.6],["2025-04-30",84000,-0.6],["2025-05-01",84200,0.2],["2025-05-04",84000,-0.2],["2025-05-06",84800,1],["2025-05-08",84300,-0.6],["2025-05-11",84500,0.2],["2025-05-15",84200,-0.4],["2025-05-22",84000,-0.2],["2025-05-26",84200,0.2],["2025-07-01",85000,1],["2025-07-15",84800,-0.2],["2025-07-29",85000,0.2],["2025-08-04",84500,-0.6],["2025-08-06",84000,-0.6],["2025-08-16",83000,-1.2],["2025-08-27",82500,-0.6],["2025-09-07",82000,-0.6],["2025-09-09",82300,0.4],["2025-09-11",82500,0.2],["2025-09-21",82300,-0.2],["2025-09-23",82000,-0.4],["2025-09-27",82500,0.6],["2025-10-09",82200,-0.4],["2025-10-12",82000,-0.2],["2025-10-14",81700,-0.4],["2025-10-16",81500,-0.2],["2025-10-19",81000,-0.6],["2025-10-23",81300,0.4],["2025-10-29",81000,-0.4],["2025-11-06",80500,-0.6],["2025-11-09",80000,-0.6],["2025-11-11",79500,-0.6],["2025-11-16",79000,-0.6],["2025-12-01",79500,0.6],["2025-12-04",79000,-0.6],["2026-01-10",79200,0.3],["2026-01-12",79500,0.4],["2026-01-17",79800,0.4],["2026-01-19",80000,0.3],["2026-01-21",80500,0.6],["2026-01-24",81000,0.6],["2026-01-27",81500,0.6],["2026-01-28",82000,0.6],["2026-02-03",82500,0.6],["2026-02-10",83500,1.2],["2026-02-16",84000,0.6],["2026-02-18",84200,0.2],["2026-02-22",84500,0.4],["2026-02-24",84700,0.2],["2026-02-28",85000,0.4],["2026-03-03",85500,0.6],["2026-03-04",86500,1.2],["2026-03-05",88500,2.3],["2026-03-06",89000,0.6],["2026-03-07",91500,2.8],["2026-03-08",93000,1.6],["2026-03-09",94000,1.1],["2026-03-30",94700,0.7],["2026-03-31",95000,0.3],["2026-04-19",94000,-1.1],["2026-04-20",95000,1.1],["2026-04-22",94000,-1.1],["2026-04-25",95000,1.1],["2026-04-26",94300,-0.7],["2026-05-06",93300,-1.1],["2026-05-07",93000,-0.3],["2026-06-01",89000,-4.3],["2026-06-02",92000,3.4],["2026-06-03",91500,-0.5],["2026-06-06",92000,0.5],["2026-06-22",91500,-0.5],["2026-07-02",91000,-0.5],["2026-07-05",90500,-0.5],["2026-07-08",89500,-1.1],["2026-07-14",89000,-0.6],["2026-07-20",88000,-1.1],["2026-08-17",88500,0.6],["2026-09-01",87700,-0.9],["2026-09-03",88000,0.3],["2026-09-15",88200,0.2],["2026-09-20",88500,0.3],["2026-09-22",88700,0.2],["2026-09-23",89000,0.3],["2026-09-28",89300,0.3],["2026-10-06",89800,0.6],["2026-10-28",89900,0.1]
   ]
 };
+/* ============ fiscal-year regrouping (Bangladesh FY = July–June) ============ */
+(function(){
+  // total net revenue by fiscal year (key = start year, e.g. 2023 = FY2023-24)
+  var fyRev = {};
+  D.monthly.forEach(function(m){
+    var y=m[0], mo=m[1], key = (mo>=7) ? y : (y-1);
+    fyRev[key] = (fyRev[key]||0) + m[2];
+  });
+  D.yearlyRev = fyRev;
+  // per-SKU revenue by fiscal year + MS Rod category (skuMonthly runs Jan'23..Nov'26)
+  var fyCat = {};
+  Object.keys(D.priceNet).forEach(function(k){
+    var arr = D.skuMonthly[k], fy = {};
+    arr.forEach(function(v,i){
+      if(!v) return;
+      var year = 2023 + Math.floor(i/12), month = (i%12) + 1;
+      var key = (month>=7) ? year : (year-1);
+      fy[key] = (fy[key]||0) + v;
+    });
+    D.sku.forEach(function(s){
+      if(s[0].replace("Akij Ispat ","") === k){ s[2]=fy[2023]||0; s[3]=fy[2024]||0; s[4]=fy[2025]||0; }
+    });
+    [2023,2024,2025].forEach(function(y){ fyCat[y] = (fyCat[y]||0) + (fy[y]||0); });
+  });
+  if(D.cat && D.cat["MS Rod"]){ [2023,2024,2025].forEach(function(y){ D.cat["MS Rod"][y] = fyCat[y]; }); }
+})();
 /* ============ helpers ============ */
 function cr(v){ if(v==null||isNaN(v))return "—"; var c=v/1e7; if(c>=100)return "৳ "+Math.round(c).toLocaleString("en-US")+" Cr"; if(c>=10)return "৳ "+c.toFixed(0)+" Cr"; return "৳ "+c.toFixed(1)+" Cr"; }
 function taka(v){ if(v==null||isNaN(v))return"—"; return "৳ "+Math.round(v).toLocaleString("en-US"); }
@@ -1474,7 +1500,7 @@ renderSku();
 /* ============ DEALER ============ */
 (function(){
   var total=0; D.commType.forEach(function(c){total+=c[1];});
-  var m25=0; D.comm.forEach(function(c){if(c[0]===2025)m25+=c[2];});
+  var m25=0; D.comm.forEach(function(c){if((c[1]>=7?c[0]:c[0]-1)===2025)m25+=c[2];});
   var k=[
     {l:"Total commission (2023–26)",v:cr(total),n:"dealer incentive paid"},
     {l:"FY2025-26 commission",v:cr(m25),n:"~"+(m25/D.yearlyRev[2025]*100).toFixed(1)+"% of FY25-26 sales"},
@@ -1509,11 +1535,11 @@ renderSku();
   var y23=D.yearlyRev[2023],y24=D.yearlyRev[2024],y25=D.yearlyRev[2025],y26=D.yearlyRev[2026];
   var v23=D.yearlyDel[2023][0],v24=D.yearlyDel[2024][0],v25=D.yearlyDel[2025][0];
   var k=[
-    {l:"FY2023-24",v:cr(y23),n:mt(v23)+" MT"},
-    {l:"FY2024-25",v:cr(y24),n:pf(pct(y24,y23))+" · "+mt(v24)+" MT",c:pct(y24,y23)>=0?"up":"down"},
-    {l:"FY2025-26",v:cr(y25),n:pf(pct(y25,y24))+" · "+mt(v25)+" MT",c:pct(y25,y24)>=0?"up":"down"},
-    {l:"FY2026-27 (11 mo)",v:cr(y26),n:pf(pct(y26,y25))+" partial year",c:pct(y26,y25)>=0?"up":"down"},
-    {l:"3-yr CAGR",v:(((y25/y23)**0.5-1)*100).toFixed(1)+"%",n:"FY23-24 → FY25-26"}
+    {l:"FY2023-24",v:cr(y23),n:mt(v23)+" deliveries"},
+    {l:"FY2024-25",v:cr(y24),n:pf(pct(y24,y23))+" · "+mt(v24)+" deliveries",c:pct(y24,y23)>=0?"up":"down"},
+    {l:"FY2025-26",v:cr(y25),n:pf(pct(y25,y24))+" · "+mt(v25)+" deliveries",c:pct(y25,y24)>=0?"up":"down"},
+    {l:"FY2026-27 (5 mo)",v:cr(y26),n:"Jul–Nov 2026 · partial year",c:"up"},
+    {l:"2-yr CAGR",v:(((y25/y23)**0.5-1)*100).toFixed(1)+"%",n:"FY23-24 → FY25-26"}
   ];
   document.getElementById("growthKpis").innerHTML=k.map(function(x){
     return '<div class="card kpi"><div class="lab">'+x.l+'</div><div class="val">'+x.v+'</div><div class="note '+(x.c||"")+'">'+x.n+'</div></div>';}).join("");
@@ -1521,7 +1547,7 @@ renderSku();
     {name:"Net sales (Tk)",data:[y23,y24,y25]}
   ],{yfmt:fmtY,colors:["#2f7dff"]});
   document.getElementById("revYear").insertAdjacentHTML("beforeend",
-    '<div class="small" style="margin-top:6px">Volume: FY23-24 '+mt(v23)+' MT → FY24-25 '+mt(v24)+' MT → FY25-26 '+mt(v25)+' MT ('+pf(pct(v25,v24))+').</div>');
+    '<div class="small" style="margin-top:6px">Deliveries (activity proxy, calendar-year counts): FY23-24 '+mt(v23)+' → FY24-25 '+mt(v24)+' → FY25-26 '+mt(v25)+'. True MT volume needs a fresh ERP pull.</div>');
 })();
 
 /* ============ DIRECTION · DECISION · ACTION ============ */
@@ -1534,12 +1560,12 @@ renderSku();
 
   /* ---- 1. DIRECTION ---- */
   document.getElementById("ddaDirExpl").innerHTML=
-    'Akij Ispat is in a clear growth phase. Net revenue rose <b>৳818 Cr → ৳1,488 Cr</b> from FY23-24 to FY25-26 — a <b>+49%</b> jump last year — and FY26-27 already stands at <b>৳1,442 Cr</b> after 11 months, on track to overtake FY25-26. Steel market share climbed <b>2.06% → 2.59%</b> (+0.5 percentage points), making Akij the fastest-rising of the named mills, and monthly share touched <b>3.49%</b> in March 2026. The direction is up — on volume and share, at a stable mill rate.';
+    'Akij Ispat is in a clear growth phase. Net revenue rose <b>৳927 Cr → ৳1,635 Cr</b> from FY23-24 to FY25-26 — a <b>+29%</b> jump in the latest year (2-year CAGR +33%) — and the first five months of FY26-27 (July–November 2026) already stand at <b>৳491 Cr</b>. Steel market share climbed <b>2.06% → 2.59%</b> (+0.5 percentage points), making Akij the fastest-rising of the named mills, and monthly share touched <b>3.49%</b> in March 2026. The direction is up — on volume and share, at a stable mill rate.';
   var dirHtml='<table><thead><tr><th>FY</th><th>Net revenue</th><th>YoY</th><th>Steel share</th><th>Note</th></tr></thead><tbody>';
   dirHtml+='<tr><td>FY2023-24</td><td>'+cr(y23)+'</td><td>—</td><td>'+share23.toFixed(2)+'%</td><td>baseline</td></tr>';
   dirHtml+='<tr><td>FY2024-25</td><td>'+cr(y24)+'</td><td class="pos">'+pf(pct(y24,y23))+'</td><td>'+share24.toFixed(2)+'%</td><td>share +0.5 pp</td></tr>';
   dirHtml+='<tr><td>FY2025-26</td><td>'+cr(y25)+'</td><td class="pos">'+pf(pct(y25,y24))+'</td><td>—</td><td>fastest growth</td></tr>';
-  dirHtml+='<tr><td>FY2026-27 (11 mo)</td><td>'+cr(y26)+'</td><td>on track</td><td>'+lastShare.toFixed(2)+'% (Sep 26)</td><td>partial year</td></tr>';
+  dirHtml+='<tr><td>FY2026-27 (5 mo, Jul–Nov)</td><td>'+cr(y26)+'</td><td>in progress</td><td>'+lastShare.toFixed(2)+'% (Sep 26)</td><td>partial year</td></tr>';
   dirHtml+='</tbody></table>';
   document.getElementById("ddaDirTable").innerHTML=dirHtml;
   var mlab=D.monthly.map(function(m){return mn(m[1])+String(m[0]).slice(2);});
