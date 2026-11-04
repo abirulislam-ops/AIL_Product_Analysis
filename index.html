@@ -143,6 +143,11 @@
     <div id="priceTable"></div>
   </div>
   <div class="card" style="margin-top:12px">
+    <h3>Net vs Gross vs MRP — overall monthly compare</h3>
+    <div class="hint">Blended average across all rebar SKUs, Tk/MT. The three lines run almost on top of each other because rebar trades at the mill rate with ~0% discount — hover any point for the exact value.</div>
+    <div class="chart" id="cThreePrice"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
     <h3>Monthly net price — by SKU (select)</h3>
     <div class="hint">Realised net price per MT over time. "Overall" = blended average across all products; "All SKUs" overlays every grade.</div>
     <select id="netPriceSel"></select>
@@ -275,7 +280,7 @@
 
 <!-- ============ ELASTICITY ============ -->
 <section id="el">
-  <div class="guide"><span class="gl">What this answers</span><p>How volume responds to price, SKU by SKU.</p><span class="gl">How to read it</span><p><b>β &lt; 0</b> = normal (price up → volume down); <b>β &gt; 0</b> = anomalous (cost pass-through). Volume is derived (revenue ÷ price), so read β directionally, not as a causal demand curve.</p></div>
+  <div class="guide"><span class="gl">What this answers</span><p>How strongly volume responds to price, SKU by SKU.</p><span class="gl">What β means</span><p>β is own-price elasticity — the % change in volume for a 1% change in price. <b>β = −2</b>: a 10% price rise is linked to a ~20% volume drop. <b>β = −0.5</b>: a 10% rise only trims volume ~5%. <b>β &gt; 0</b>: price and volume move together (scrap-cost pass-through, not demand).</p><span class="gl">How to read it</span><p>Hover any bar, point or table cell for the full interpretation. Volume is derived (revenue ÷ price), so β is directional, not a causal demand curve. <b>R²</b> shows how reliable the fit is; <b>Pairs</b> is the number of month-over-month observations used.</p></div>
   <div class="grid g4" id="elKpis" style="margin-bottom:12px"></div>
   <div class="grid g2">
     <div class="card">
@@ -883,7 +888,8 @@ function divergingBars(container, rows, opts){
     var bw=(Math.abs(r.value)/maxAbs)*hw;
     var xx=r.value>=0?xc:xc-bw;
     var col=r.value<0?"#22c3aa":"#ff5c7a";
-    svg.appendChild(el("rect",{x:xx,y:T+i*bh+4,width:Math.max(1.5,bw),height:bh-8,rx:2,fill:col,"fill-opacity":r.strong?0.95:0.6,onmousemove:"tip(event,'"+esc(r.label)+"<br>"+r.value.toFixed(2)+(opts.suffix||"")+"')",onmouseout:"untip()"}));
+    var tipText = opts.tip ? opts.tip(r) : (esc(r.label)+"<br>"+r.value.toFixed(2)+(opts.suffix||""));
+    svg.appendChild(el("rect",{x:xx,y:T+i*bh+4,width:Math.max(1.5,bw),height:bh-8,rx:2,fill:col,"fill-opacity":r.strong?0.95:0.6,onmousemove:"tip(event,'"+tipText+"')",onmouseout:"untip()"}));
     svg.appendChild(txt(x0-8,T+i*bh+bh/2-3,r.label.length>26?r.label.slice(0,25)+"…":r.label,{anchor:"end",fill:C.muted,size:"10.5"}));
     svg.appendChild(txt(r.value>=0?xx+bw+5:xx-5,T+i*bh+bh/2-3,r.value.toFixed(2)+(opts.suffix||""),{anchor:r.value>=0?"start":"end",fill:C.tx,size:"10"}));
   });
@@ -892,26 +898,40 @@ function divergingBars(container, rows, opts){
 
 /* within-SKU demeaned log-log scatter */
 function scatterChart(container, groups){
-  var W=920,H=340,L=56,R=16,T=14,B=42;
+  var W=920,H=360,L=64,R=20,T=22,B=56;
   var svg=el("svg",{width:"100%",height:H,viewBox:"0 0 "+W+" "+H,preserveAspectRatio:"xMinYMin meet"});
   container.innerHTML=""; container.appendChild(svg);
   var xs=[],ys=[];
   groups.forEach(function(g){ g.pts.forEach(function(p){ xs.push(p[0]); ys.push(p[1]); }); });
   var xmin=Math.min.apply(null,xs),xmax=Math.max.apply(null,xs),ymin=Math.min.apply(null,ys),ymax=Math.max.apply(null,ys);
-  var px=(xmax-xmin)*0.06||1, py=(ymax-ymin)*0.06||1;
+  var px=(xmax-xmin)*0.08||1, py=(ymax-ymin)*0.08||1;
   xmin-=px;xmax+=px;ymin-=py;ymax+=py;
   var x0=L,x1=W-R,y0=T,y1=H-B;
   function X(v){return x0+(v-xmin)/(xmax-xmin)*(x1-x0);}
   function Y(v){return y1-(v-ymin)/(ymax-ymin)*(y1-y0);}
-  for(var g2=0;g2<=4;g2++){ var v=xmin+(xmax-xmin)*g2/4; svg.appendChild(el("line",{x1:X(v),y1:y0,x2:X(v),y2:y1,stroke:C.line,"stroke-width":.6})); svg.appendChild(txt(X(v),H-26,v.toFixed(2),{size:"9"})); }
+  for(var g2=0;g2<=4;g2++){ var v=xmin+(xmax-xmin)*g2/4; svg.appendChild(el("line",{x1:X(v),y1:y0,x2:X(v),y2:y1,stroke:C.line,"stroke-width":.6})); svg.appendChild(txt(X(v),H-30,v.toFixed(2),{size:"9"})); }
   for(var g3=0;g3<=4;g3++){ var v2=ymin+(ymax-ymin)*g3/4; svg.appendChild(el("line",{x1:x0,y1:Y(v2),x2:x1,y2:Y(v2),stroke:C.line,"stroke-width":.6})); svg.appendChild(txt(x0-7,Y(v2)+3,v2.toFixed(2),{anchor:"end",size:"9"})); }
   svg.appendChild(el("line",{x1:X(0),y1:y0,x2:X(0),y2:y1,stroke:C.axis,"stroke-width":1}));
   svg.appendChild(el("line",{x1:x0,y1:Y(0),x2:x1,y2:Y(0),stroke:C.axis,"stroke-width":1}));
+  svg.appendChild(txt(x0+8,y0+12,"price up + volume up → cost pass-through",{anchor:"start",fill:C.dim,size:"8.6"}));
+  svg.appendChild(txt(x1-8,y0+12,"price up + volume down → normal",{anchor:"end",fill:C.dim,size:"8.6"}));
+  svg.appendChild(txt(x0+8,y1-10,"price down + volume down → unusual",{anchor:"start",fill:C.dim,size:"8.6"}));
+  svg.appendChild(txt(x1-8,y1-10,"price down + volume up → normal",{anchor:"end",fill:C.dim,size:"8.6"}));
+  function quad(x,y){
+    if(x>0.004&&y<0) return "price up + volume down → normal demand";
+    if(x< -0.004&&y>0) return "price down + volume up → normal demand";
+    if(x>0.004&&y>0) return "price up + volume up → cost pass-through";
+    if(x< -0.004&&y<0) return "price down + volume down → unusual, investigate";
+    return "near zero — little movement";
+  }
   groups.forEach(function(g){
-    g.pts.forEach(function(p){ svg.appendChild(el("circle",{cx:X(p[0]),cy:Y(p[1]),r:2.1,fill:g.color,"fill-opacity":g.op||0.55})); });
+    g.pts.forEach(function(p){
+      var tt="<b>"+esc(g.name)+"</b><br>Δln price "+p[0].toFixed(3)+"<br>Δln volume "+p[1].toFixed(3)+"<br>"+quad(p[0],p[1]);
+      svg.appendChild(el("circle",{cx:X(p[0]),cy:Y(p[1]),r:2.6,fill:g.color,"fill-opacity":g.op||0.6,onmousemove:"tip(event,'"+tt+"')",onmouseout:"untip()"}));
+    });
   });
-  svg.appendChild(txt((x0+x1)/2,H-6,"Δ ln price (log scale, per-SKU demeaned)",{size:"10",fill:C.muted}));
-  var yt=txt(12,(y0+y1)/2,"Δ ln volume",{anchor:"middle",fill:C.muted,size:"10"}); yt.setAttribute("transform","rotate(-90 12 "+(y0+y1)/2+")"); svg.appendChild(yt);
+  svg.appendChild(txt((x0+x1)/2,H-12,"Δ ln price (per-SKU demeaned)",{size:"10",fill:C.muted}));
+  var yt=txt(14,(y0+y1)/2,"Δ ln volume",{anchor:"middle",fill:C.muted,size:"10"}); yt.setAttribute("transform","rotate(-90 14 "+(y0+y1)/2+")"); svg.appendChild(yt);
   legend(container,[{name:"β < 0 (normal)"},{name:"β > 0 (anomalous)"}],["#22c3aa","#ff5c7a"]);
   return svg;
 }
@@ -1042,6 +1062,11 @@ window.addEventListener("hashchange",function(){ showTab(location.hash.slice(1))
   skuSelector("netPriceSel","netPriceChart",D.priceNet,D.priceOverallNet,D.priceMonths,"Tk / MT",{yfmt:fmtMT,overallName:"Overall net price"});
   skuSelector("grossPriceSel","grossPriceChart",D.priceGross,D.priceOverallGross,D.priceMonths,"Tk / MT",{yfmt:fmtMT,overallName:"Overall gross price"});
   skuSelector("mrpPriceSel","mrpPriceChart",D.priceMRP,D.priceOverallMRP,D.priceMonths,"Tk / MT",{yfmt:fmtMT,overallName:"Overall MRP"});
+  lineChart(document.getElementById("cThreePrice"),[
+    {name:"Net (realised)",data:D.priceOverallNet,w:2.6},
+    {name:"Gross (list)",data:D.priceOverallGross,w:1.5},
+    {name:"MRP (announced)",data:D.priceOverallMRP,w:1.5}
+  ],D.priceMonths,{yfmt:fmtMT,ytitle:"Tk / MT",tipfmt:function(v){return taka(v);},colors:["#2f7dff","#f0b90b","#22c3aa"]});
 })();
 
 /* ============ GP / NP / NET ============ */
@@ -1287,6 +1312,25 @@ renderSku();
 
 /* ============ ELASTICITY ============ */
 (function(){
+  function elasticityRead(b, r2, n){
+    if(b==null) return "Not measurable — needs at least 8 valid month-over-month pairs with real price variation.";
+    var fit = (r2==null) ? "" : (r2<0.10 ? "Weak fit (R² "+r2.toFixed(2)+") — treat as a direction only." : (r2<0.30 ? "Moderate fit (R² "+r2.toFixed(2)+")." : "Strong fit (R² "+r2.toFixed(2)+")."));
+    var head, body;
+    if(b>0){
+      head = "β = +"+b.toFixed(2)+" — anomalous (positive)";
+      body = "Price and volume move in the SAME direction: a 10% price rise is linked to a ~"+(b*10).toFixed(0)+"% volume RISE. Usually scrap-cost pass-through (raw-material cost drives both) or lumpy project orders — not a demand response.";
+    } else if(b<-1){
+      head = "β = "+b.toFixed(2)+" — elastic";
+      body = "Volume reacts more than price: a 10% price rise is linked to a ~"+Math.abs(b*10).toFixed(0)+"% volume DROP, so revenue FALLS. Hike with caution.";
+    } else {
+      head = "β = "+b.toFixed(2)+" — inelastic";
+      body = "Volume is sticky to price: a 10% price rise only trims volume ~"+Math.abs(b*10).toFixed(0)+"%, so revenue RISES. There is price headroom.";
+    }
+    return head+"<br>"+body+(fit?"<br>"+fit:"")+(n?"<br>Based on "+n+" month-pairs.":"");
+  }
+  function r2Read(r2){
+    return "R² = "+r2.toFixed(2)+" — how much of the month-to-month volume variation the price move explains."+(r2<0.10?" Weak fit: treat β as a direction only.":(r2<0.30?" Moderate fit.":" Strong fit."));
+  }
   var meas=0, neg=0, inel=0, anom=0;
   SKUKEYS.forEach(function(k){ var e=EL[k]; if(!e) return; meas++; if(e.b<-1)neg++; else if(e.b<=0)inel++; else anom++; });
   var k=[
@@ -1299,12 +1343,14 @@ renderSku();
     return '<div class="card kpi"><div class="lab">'+x.l+'</div><div class="val">'+x.v+'</div><div class="note">'+x.n+'</div></div>';}).join("");
   var rows=SKUKEYS.map(function(key){ return {label:key, value:EL[key]?EL[key].b:null, strong:EL[key]?EL[key].r2>0.2:false}; })
     .sort(function(a,b){ return (b.value==null?-99:b.value)-(a.value==null?-99:a.value); });
-  divergingBars(document.getElementById("cEl"),rows,{});
-  // scatter: per-SKU demeaned Δln pairs
+  divergingBars(document.getElementById("cEl"),rows,{tip:function(r){
+    var e=EL[r.label];
+    return "<b>"+esc(r.label)+"</b><br>"+elasticityRead(e?e.b:null, e?e.r2:null, e?e.n:0);
+  }});
+  // scatter: per-SKU demeaned Δln pairs (one group per SKU, so hover can name it)
   var groups=[];
   SKUKEYS.forEach(function(key){
     var e=EL[key]; if(!e) return;
-    var pts=[];
     var pArr=D.priceNet[key], vArr=winVol[key], raw=[];
     for(var i=1;i<pArr.length;i++){
       var p1=pArr[i-1],p2=pArr[i],v1=vArr[i-1],v2=vArr[i];
@@ -1313,19 +1359,29 @@ renderSku();
     }
     if(raw.length<8) return;
     var mx=0,my=0; raw.forEach(function(r){mx+=r[0];my+=r[1];}); mx/=raw.length; my/=raw.length;
-    raw.forEach(function(r){ pts.push([r[0]-mx,r[1]-my]); });
-    groups.push({pts:pts,color:e.b<0?"#22c3aa":"#ff5c7a",op:e.r2>0.2?0.75:0.4});
+    var pts=raw.map(function(r){ return [r[0]-mx, r[1]-my]; });
+    groups.push({name:key, pts:pts, color:e.b<0?"#22c3aa":"#ff5c7a", op:e.r2>0.2?0.8:0.45});
   });
   scatterChart(document.getElementById("cScatter"),groups);
   var h='<table><thead><tr><th>SKU</th><th>β (first-diff)</th><th>R²</th><th>Pairs</th><th>Read</th></tr></thead><tbody>';
   SKUKEYS.forEach(function(key){
     var e=EL[key];
     h+='<tr class="drill" onclick="openMom(\''+esc(key)+'\')"><td><b>'+esc(key)+'</b></td>';
-    if(!e){ h+='<td>—</td><td>—</td><td>—</td><td><span class="tag t-mut">not measurable</span></td></tr>'; return; }
-    var read = e.b<-1 ? "elastic — hike cautiously" : (e.b<=0 ? (e.r2<0.1?"weak signal":"inelastic — price headroom") : "anomalous — investigate");
-    h+='<td>'+e.b.toFixed(2)+'</td><td>'+e.r2.toFixed(2)+'</td><td>'+e.n+'</td><td>'+read+'</td></tr>';
+    if(!e){
+      var nt="Not measurable — needs at least 8 valid month-over-month pairs with real price variation. This SKU sells too intermittently to estimate a reliable slope.";
+      h+='<td onmousemove="tip(event,\''+nt+'\')" onmouseout="untip()">—</td><td>—</td><td>—</td>';
+      h+='<td onmousemove="tip(event,\''+nt+'\')" onmouseout="untip()"><span class="tag t-mut">not measurable</span></td></tr>';
+      return;
+    }
+    var full=elasticityRead(e.b,e.r2,e.n);
+    var read=e.b<-1 ? "elastic" : (e.b<=0 ? "inelastic" : "anomalous");
+    var readClass=e.b<-1 ? "t-neg" : (e.b<=0 ? "t-neg" : "t-pos");
+    h+='<td onmousemove="tip(event,\''+full+'\')" onmouseout="untip()">'+e.b.toFixed(2)+'</td>';
+    h+='<td onmousemove="tip(event,\''+r2Read(e.r2)+'\')" onmouseout="untip()">'+e.r2.toFixed(2)+'</td>';
+    h+='<td onmousemove="tip(event,\''+e.n+' month-over-month pairs used in the regression — more pairs mean a more stable estimate.\')" onmouseout="untip()">'+e.n+'</td>';
+    h+='<td onmousemove="tip(event,\''+full+'\')" onmouseout="untip()"><span class="tag '+readClass+'">'+read+'</span></td></tr>';
   });
-  if(OVEL) h+='<tr style="background:rgba(240,185,11,.06)"><td><b>Overall (blended)</b></td><td>'+OVEL.b.toFixed(2)+'</td><td>'+OVEL.r2.toFixed(2)+'</td><td>'+OVEL.n+'</td><td>portfolio signal</td></tr>';
+  if(OVEL) h+='<tr style="background:rgba(240,185,11,.06)"><td><b>Overall (blended)</b></td><td onmousemove="tip(event,\''+elasticityRead(OVEL.b,OVEL.r2,OVEL.n)+'\')" onmouseout="untip()">'+OVEL.b.toFixed(2)+'</td><td>'+OVEL.r2.toFixed(2)+'</td><td>'+OVEL.n+'</td><td>portfolio signal</td></tr>';
   h+='</tbody></table>';
   document.getElementById("tEl").innerHTML=h;
 })();
