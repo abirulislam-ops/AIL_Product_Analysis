@@ -1110,17 +1110,16 @@ window.addEventListener("hashchange",function(){ showTab(location.hash.slice(1))
   document.getElementById("ovKpis").innerHTML=k.map(function(x){
     return '<div class="card kpi"><div class="lab">'+x.l+'</div><div class="val">'+x.v+'</div><div class="note '+(x.c||'')+'">'+x.n+'</div></div>';}).join("");
 
-  // Loss / Win card
+  // Deficit / (Surplus) card — Q1 revenue shortfall vs budget (not the bottom-line loss)
   (function(){
-    function revYm(y,m){ for(var i=0;i<D.monthly.length;i++){ if(D.monthly[i][0]===y && D.monthly[i][1]===m) return D.monthly[i][2]; } return 0; }
-    var cur=0, prev=0;
-    for(var m=7;m<=11;m++){ cur+=revYm(2026,m); prev+=revYm(2025,m); }
-    var diff=cur-prev, pct=(diff/prev)*100;
-    var isLoss=diff<0;
+    var PNL={sbu:"AIL",name:"Ispat",period:"Q1FY27",revenue:275.41,budget_revenue:371.29,deficit:95.89,loss:11.2};
+    var isDeficit=PNL.deficit>0.5;
     var sharePeak=Math.max.apply(null,D.msAkijShare), shareLatest=D.msAkijShare[D.msAkijShare.length-1];
     var shareLost=shareLatest-sharePeak;
-    var h='<div class="ind '+(isLoss?'loss':'win')+'">'+(isLoss?'Loss':'Win')+'</div>';
-    h+='<div class="m"><div class="l">Revenue this FY vs last FY (Jul–Nov)</div><div class="v '+(isLoss?'neg':'pos')+'">'+(diff>=0?'+':'−')+'৳'+Math.abs(diff/1e7).toFixed(1)+' Cr <span style="font-size:12px;color:var(--muted)">('+(diff>=0?'+':'')+pct.toFixed(1)+'%)</span></div></div>';
+    var h='<div class="ind '+(isDeficit?'loss':'win')+'">'+(isDeficit?'Deficit':'Surplus')+'</div>';
+    h+='<div class="m"><div class="l">Q1 FY27 revenue vs budget</div><div class="v">৳'+PNL.revenue.toFixed(2)+' Cr <span style="font-size:12px;color:var(--muted)">vs ৳'+PNL.budget_revenue.toFixed(2)+' Cr budget</span></div></div>';
+    h+='<div class="m"><div class="l">Deficit — revenue shortfall</div><div class="v '+(isDeficit?'neg':'pos')+'">'+(PNL.deficit>=0?'−':'+')+'৳'+Math.abs(PNL.deficit).toFixed(2)+' Cr</div></div>';
+    h+='<div class="m"><div class="l">Bottom-line loss (EAT)</div><div class="v neg">−৳'+Math.abs(PNL.loss).toFixed(2)+' Cr</div></div>';
     h+='<div class="m"><div class="l">Competitive positioning — share lost</div><div class="v neg">−'+Math.abs(shareLost).toFixed(2)+' pp <span style="font-size:12px;color:var(--muted)">('+sharePeak.toFixed(2)+'% → '+shareLatest.toFixed(2)+'%)</span></div></div>';
     document.getElementById("lossWinCard").innerHTML=h;
   })();
