@@ -144,7 +144,7 @@
   </div>
   <div class="card" style="margin-top:12px">
     <h3>Net vs Gross vs MRP — overall monthly compare</h3>
-    <div class="hint">Blended average across all rebar SKUs, Tk/MT. The three lines run almost on top of each other because rebar trades at the mill rate with ~0% discount — hover any point for the exact value.</div>
+    <div class="hint">Blended average across all rebar SKUs, Tk/MT. <b>Net</b> (solid blue) and <b>Gross</b> (dashed gold) are nearly identical — Akij applies ~0% trade discount, so the dashed Gross rides on top of the solid Net line. <b>MRP</b> (teal) is the announced list price. Hover any point for the exact value.</div>
     <div class="chart" id="cThreePrice"></div>
   </div>
   <div class="card" style="margin-top:12px">
@@ -715,7 +715,7 @@ function lineChart(container, series, labels, opts){
     var col=colors[si%colors.length];
     var d="", open=false;
     s.data.forEach(function(v,i){ if(v==null||isNaN(v)){ open=false; return; } d+=(open?"L":"M")+X(i).toFixed(1)+","+Y(v).toFixed(1); open=true; });
-    svg.appendChild(el("path",{d:d,fill:"none",stroke:col,"stroke-width":s.w||2.2,"stroke-opacity":.95}));
+    svg.appendChild(el("path",{d:d,fill:"none",stroke:col,"stroke-width":s.w||2.2,"stroke-opacity":.95,"stroke-dasharray":s.dash||""}));
     if(opts.dots!==false) s.data.forEach(function(v,i){ if(v!=null&&!isNaN(v)){
       svg.appendChild(el("circle",{cx:X(i),cy:Y(v),r:2.6,fill:col,stroke:C.bg,"stroke-width":1}));
       svg.appendChild(el("circle",{cx:X(i),cy:Y(v),r:8,fill:"transparent",onmousemove:"tip(event,'"+esc(s.name)+"<br>"+labels[i]+": "+esc((opts.tipfmt||opts.yfmt||fmtY)(v))+"')",onmouseout:"untip()"}));
@@ -1064,9 +1064,9 @@ window.addEventListener("hashchange",function(){ showTab(location.hash.slice(1))
   skuSelector("mrpPriceSel","mrpPriceChart",D.priceMRP,D.priceOverallMRP,D.priceMonths,"Tk / MT",{yfmt:fmtMT,overallName:"Overall MRP"});
   lineChart(document.getElementById("cThreePrice"),[
     {name:"Net (realised)",data:D.priceOverallNet,w:2.6},
-    {name:"Gross (list)",data:D.priceOverallGross,w:1.5},
-    {name:"MRP (announced)",data:D.priceOverallMRP,w:1.5}
-  ],D.priceMonths,{yfmt:fmtMT,ytitle:"Tk / MT",tipfmt:function(v){return taka(v);},colors:["#2f7dff","#f0b90b","#22c3aa"]});
+    {name:"MRP (announced)",data:D.priceOverallMRP,w:1.8},
+    {name:"Gross (list)",data:D.priceOverallGross,w:2,dash:"7,5"}
+  ],D.priceMonths,{yfmt:fmtMT,ytitle:"Tk / MT",tipfmt:function(v){return taka(v);},colors:["#2f7dff","#22c3aa","#f0b90b"]});
 })();
 
 /* ============ GP / NP / NET ============ */
