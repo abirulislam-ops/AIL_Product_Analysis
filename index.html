@@ -1590,7 +1590,12 @@ renderSku();
 
   /* ---- 1. DIRECTION ---- */
   document.getElementById("ddaDirExpl").innerHTML=
-    'Akij Ispat is in a clear growth phase. Net revenue rose <b>৳927 Cr → ৳1,604 Cr</b> from FY23-24 to FY25-26 — a <b>+28%</b> jump in the latest year (2-year CAGR +32%) — and the first five months of FY26-27 (July–November 2026) already stand at <b>৳488 Cr</b>. Steel market share climbed <b>2.06% → 2.59%</b> (+0.5 percentage points), making Akij the fastest-rising of the named mills, and monthly share touched <b>3.49%</b> in March 2026. The direction is up — on volume and share, at a stable mill rate.';
+    '<ul style="margin:4px 0 0">'+
+    '<li><b>S</b> — Clear growth phase: net revenue rose <b>৳927 Cr → ৳1,604 Cr</b> from FY23-24 to FY25-26.</li>'+
+    '<li><b>M</b> — <b>+28%</b> latest-year growth and a <b>+32%</b> 2-year CAGR; FY26-27 already <b>৳488 Cr</b> in 5 months (Jul–Nov).</li>'+
+    '<li><b>A</b> — Matching or beating FY25-26 (৳1,604 Cr) in FY26-27 is achievable if the quarter-start dips are closed.</li>'+
+    '<li><b>R</b> — Growth is volume- and share-led at a stable mill rate — the core engine is healthy.</li>'+
+    '<li><b>T</b> — Steel share climbed <b>2.06% → 2.59%</b> (peak <b>3.49%</b> in Mar\u201926); FY26-27 closes June 2027.</li></ul>';
   var dirHtml='<table><thead><tr><th>FY</th><th>Net revenue</th><th>YoY</th><th>Steel share</th><th>Note</th></tr></thead><tbody>';
   dirHtml+='<tr><td>FY2023-24</td><td>'+cr(y23)+'</td><td>—</td><td>'+share23.toFixed(2)+'%</td><td>baseline</td></tr>';
   dirHtml+='<tr><td>FY2024-25</td><td>'+cr(y24)+'</td><td class="pos">'+pf(pct(y24,y23))+'</td><td>'+share24.toFixed(2)+'%</td><td>share +0.5 pp</td></tr>';
