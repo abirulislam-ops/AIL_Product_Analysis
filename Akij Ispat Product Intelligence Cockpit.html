@@ -123,7 +123,9 @@
   <button data-t="dealer">Dealer</button>
   <button data-t="area">Area</button>
   <button data-t="growth">Growth</button>
+  <button data-t="promo">Promotion</button>
   <button data-t="dda">Direction · Decision · Action</button>
+  <button data-t="w2p">Where to Play · Whom to Play · How to Win</button>
    <!-- <button data-t="mt">Method &amp; coverage</button>  -->
 </nav>
 
@@ -397,6 +399,54 @@
   </div>
 </section>
 
+<!-- ============ PROMOTION ============ -->
+<section id="promo">
+  <div class="guide"><span class="gl">What this is</span><p>Akij Ispat's marketing spend, activities and budgets versus competitors — and where we are under-investing.</p><span class="gl">How to read it</span><p>Three lenses: <b>our budget &amp; spend</b> (brand marketing), <b>competitor activity</b> (digital presence &amp; trade incentives), and the <b>gap</b> (where we under-invest and what to fix).</p></div>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3>Digital presence — Facebook followers</h3>
+      <div class="hint">Akij Ispat trails every major mill on owned digital reach.</div>
+      <div class="chart" id="promoSocial"></div>
+    </div>
+    <div class="card">
+      <h3>Trade incentives — Tk per MT (May'26 survey)</h3>
+      <div class="hint">Anwar leads on trade spend; Akij is mid-pack but priced lowest.</div>
+      <div class="chart" id="promoIncentive"></div>
+    </div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3>Offline campaigns — ours vs competitors (Jan–Apr'26)</h3>
+      <div class="hint">Akij's "12% stronger" USP is the sharpest, most product-led message; competitors lean on leadership claims.</div>
+      <div class="scroll" id="promoCampaign"></div>
+    </div>
+    <div class="card">
+      <h3>Digital spend &amp; reach (Dec'25–Feb'26)</h3>
+      <div class="hint">BSRM outspends us 5× and reaches 5× more people online.</div>
+      <div class="chart" id="promoDigital"></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <h3>Total marketing spend vs revenue contribution (Dec'25–Feb'26)</h3>
+    <div class="hint">Akij spends the most as a % of revenue (1.58%) but the least in absolute terms — a scale gap, not an effort gap.</div>
+    <div class="scroll" id="promoSpendTable"></div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3>Competitor activity &amp; spend — the comparison</h3>
+      <div class="scroll" id="promoCompTable"></div>
+    </div>
+    <div class="card">
+      <h3>Where we under-invest &amp; what to fix</h3>
+      <div class="scroll" id="promoGap"></div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ DIRECTION · DECISION · ACTION ============ -->
 <section id="dda">
   <div class="guide"><span class="gl">What this is</span><p>A management read-out — where Akij Ispat is heading, what to decide, and what to do — each grounded in the data shown across the other tabs.</p><span class="gl">How to read it</span><p>Three blocks: <b>Direction</b> (the trend), <b>Decision</b> (the choices) and <b>Action</b> (the next moves). Each pairs a plain-language explanation with a <b>proof table</b> and a <b>chart</b>.</p></div>
@@ -440,6 +490,26 @@
     <div class="card"><h3>Chart — Jul–Oct revenue, FY25-26 vs FY26-27</h3><div class="hint">Grouped bars by month. July &amp; October are the loss months; August &amp; September over-recover.</div><div class="chart" id="ddaRecoveryChart"></div></div>
     <div class="card"><h3>Proof — the loss</h3><div class="scroll" id="ddaRecoveryTable"></div></div>
   </div>
+</section>
+
+<!-- ============ WHERE TO PLAY · WHOM TO PLAY · HOW TO WIN ============ -->
+<section id="w2p">
+  <div class="guide"><span class="gl">What this is</span><p>The zone-and-district map of where Akij Ispat lost steel market share from Q4 2025-26 to Q1 2026-27 — in <b>position</b> (share), <b>volume</b> (MT) and <b>revenue</b> (Cr) — and the playbook to win it back.</p><span class="gl">How to read it</span><p>Three blocks: <b>Where to play</b> (the divisions &amp; districts we lost), <b>Whom to play</b> (who took the share), and <b>How to win</b> (the SMART plan).</p></div>
+
+  <!-- 1 · WHERE TO PLAY -->
+  <div class="dda-title"><span class="num">1</span>Where to play — divisions &amp; districts we lost</div>
+  <div class="dda-expl" id="w2pWhereExpl"></div>
+  <div class="grid g2">
+    <div class="card"><h3>Chart — revenue loss by division</h3><div class="hint">Dhaka alone is ~92% of the revenue loss; Chattogram is a distant second.</div><div class="chart" id="w2pRegionChart"></div></div>
+    <div class="card"><h3>District wise Market share Loss</h3><div class="scroll" id="w2pRegionTable"></div></div>
+  </div>
+
+  <!-- 2 · WHOM TO PLAY -->
+  <div class="dda-title"><span class="num">2</span>Whom to play — who took the share</div>
+  <div class="dda-expl" id="w2pWhomExpl"></div>
+  <!-- 3 · HOW TO WIN -->
+  <div class="dda-title"><span class="num">3</span>How to win — the playbook</div>
+  <div class="dda-expl" id="w2pHowExpl"></div>
 </section>
 
 <!-- ============ METHOD & COVERAGE ============ -->
@@ -1061,7 +1131,7 @@ function skuSelector(selId, chartId, map, overallArr, labels, ytitle, opts){
 }
 
 /* ============ tabs + deep-link ============ */
-var TABS=["ov","price","margin","sku","mom","chg","pg","el","comp","ms","dealer","area","growth","dda","mt"];
+var TABS=["ov","price","margin","sku","mom","chg","pg","el","comp","ms","dealer","area","growth","promo","dda","w2p","mt"];
 function showTab(t){
   if(TABS.indexOf(t)<0) t="ov";
   TABS.forEach(function(id){
@@ -1110,16 +1180,18 @@ window.addEventListener("hashchange",function(){ showTab(location.hash.slice(1))
   document.getElementById("ovKpis").innerHTML=k.map(function(x){
     return '<div class="card kpi"><div class="lab">'+x.l+'</div><div class="val">'+x.v+'</div><div class="note '+(x.c||'')+'">'+x.n+'</div></div>';}).join("");
 
-  // Deficit / (Surplus) card — Q1 revenue shortfall vs budget (not the bottom-line loss)
+  // Deficit / (Surplus) card — Q1 FY 26-27 + Q2 (October) FY 26-27 revenue vs budget (DB budget module)
   (function(){
-    var PNL={sbu:"AIL",name:"Ispat",period:"Q1FY27",revenue:275.41,budget_revenue:371.29,deficit:95.89,loss:11.2};
-    var isDeficit=PNL.deficit>0.5;
+    // Budget = bgt.tblBudgetIncomeExpenseRow (GL 3010001+3010003); Revenue = fin.tblAccountingJournal net GL (3010001, net of returns)
+    var rev=77.86+95.54+108.37+105.32, bud=128.40+124.01+130.25+125.48; // Q1 (Jul-Sep) + October combined
+    var def=bud-rev;
+    var isDeficit=def>0.5;
+    var loss=11.2; // bottom-line EAT loss
     var sharePeak=Math.max.apply(null,D.msAkijShare), shareLatest=D.msAkijShare[D.msAkijShare.length-1];
     var shareLost=shareLatest-sharePeak;
     var h='<div class="ind '+(isDeficit?'loss':'win')+'">'+(isDeficit?'Deficit':'Surplus')+'</div>';
-    h+='<div class="m"><div class="l">Q1 FY27 revenue vs budget</div><div class="v">৳'+PNL.revenue.toFixed(2)+' Cr <span style="font-size:12px;color:var(--muted)">vs ৳'+PNL.budget_revenue.toFixed(2)+' Cr budget</span></div></div>';
-    h+='<div class="m"><div class="l">Deficit — revenue shortfall</div><div class="v '+(isDeficit?'neg':'pos')+'">'+(PNL.deficit>=0?'−':'+')+'৳'+Math.abs(PNL.deficit).toFixed(2)+' Cr</div></div>';
-    h+='<div class="m"><div class="l">Bottom-line loss (EAT)</div><div class="v neg">−৳'+Math.abs(PNL.loss).toFixed(2)+' Cr</div></div>';
+    h+='<div class="m"><div class="l" style="text-transform:none;letter-spacing:0;font-size:12px">Q1 FY 26-27 and Q2 (October) FY 26-27 revenue vs Q1 FY 26-27 and Q2 (October) FY 26-27 Budget</div><div class="v">৳'+rev.toFixed(2)+' Cr <span style="font-size:12px;color:var(--muted)">vs ৳'+bud.toFixed(2)+' Cr budget</span> <span class="'+(def>0?'neg':'pos')+'" style="font-size:12.5px;font-weight:600">('+(def>0?'−':'+')+'৳'+Math.abs(def).toFixed(2)+' Cr '+(def>0?'deficit':'surplus')+')</span></div></div>';
+    h+='<div class="m"><div class="l">Bottom-line loss (EAT)</div><div class="v neg">−৳'+loss.toFixed(2)+' Cr</div></div>';
     h+='<div class="m"><div class="l">Competitive positioning — share lost</div><div class="v neg">−'+Math.abs(shareLost).toFixed(2)+' pp <span style="font-size:12px;color:var(--muted)">('+sharePeak.toFixed(2)+'% → '+shareLatest.toFixed(2)+'%)</span></div></div>';
     document.getElementById("lossWinCard").innerHTML=h;
   })();
@@ -1737,7 +1809,7 @@ renderSku();
     '<li><b>Product:</b> push 8/32 mm &amp; B420 (high margin); keep B500 core for volume.</li>'+
     '<li><b>Price:</b> hold the mill rate; pass scrap through selectively; no discounting the elastic core.</li>'+
     '<li><b>Place:</b> defend Cumilla, Noakhali, Mirpur, Gazipur; deepen quarter-start coverage.</li>'+
-    '<li><b>Promotion:</b> trade incentives tied to quarterly (not just monthly) targets.</li>'+
+    '<li><b>Promotion:</b> outspent 3× in absolute terms (৳6.3 Cr vs BSRM/AKS ~৳20.5 Cr) but already leading on % of revenue (1.58%) — so fix reach, not just budget: shift outdoor→digital (45K vs AKS 496K followers; BSRM reaches 5× more online), add DSP/influencers, and convert our lowest-NSP edge into volume through demand-generation, not discounting.</li>'+
     '<li><b>People:</b> sales KPIs on margin + share, not volume alone.</li>'+
     '<li><b>Process:</b> smooth the quarter-end push into steady monthly flow.</li>'+
     '<li><b>Physical evidence:</b> the published daily mill rate (Trade) builds trust vs competitors\u2019 opaque pricing.</li></ul>';
@@ -1885,6 +1957,183 @@ renderSku();
     "July and October are the loss months (down vs FY25-26); August and September over-recover.",
     "The dip is a quarter-start timing effect, not a structural decline.",
     "Recovery = smooth the quarter-starts and win back share in the thin months."
+  ]);
+})();
+
+/* ============ PROMOTION ============ */
+(function(){
+  var social=[
+    {label:"AKS",value:496,color:"#3b4f8a"},
+    {label:"BSRM",value:316,color:"#3b4f8a"},
+    {label:"GPH Ispat",value:290,color:"#3b4f8a"},
+    {label:"KSRM",value:200,color:"#3b4f8a"},
+    {label:"Anwar Ispat",value:196,color:"#3b4f8a"},
+    {label:"Rahim Steel",value:59,color:"#3b4f8a"},
+    {label:"Akij Ispat (us)",value:45,color:"#f0b90b"}
+  ];
+  barChart(document.getElementById("promoSocial"), social, {fmt:function(v){return v+"K";}});
+
+  var incent=[
+    {label:"Anwar Ispat",value:5000,color:"#3b4f8a"},
+    {label:"GPH Ispat",value:4000,color:"#3b4f8a"},
+    {label:"Akij Ispat (us)",value:4000,color:"#f0b90b"},
+    {label:"BSRM",value:3920,color:"#3b4f8a"},
+    {label:"AKS",value:3350,color:"#3b4f8a"},
+    {label:"Rahim Steel",value:500,color:"#3b4f8a"},
+    {label:"KSRM",value:450,color:"#3b4f8a"}
+  ];
+  barChart(document.getElementById("promoIncentive"), incent, {fmt:function(v){return "৳"+v.toLocaleString("en-US")+"/MT";}});
+
+  var ct='<table><thead><tr><th>Brand</th><th>FB followers</th><th>Ex-mill (Tk)</th><th>NSP (Tk)</th><th>Share FY26</th></tr></thead><tbody>';
+  ct+='<tr><td><b>BSRM</b></td><td>316K</td><td>96,000</td><td>92,080</td><td>27.7%</td></tr>';
+  ct+='<tr><td><b>AKS</b></td><td>496K</td><td>94,600</td><td>91,250</td><td>18.1%</td></tr>';
+  ct+='<tr><td><b>GPH Ispat</b></td><td>290K</td><td>95,000</td><td>91,000</td><td>9.3%</td></tr>';
+  ct+='<tr><td><b>KSRM</b></td><td>200K</td><td>91,100</td><td>90,650</td><td>7.1%</td></tr>';
+  ct+='<tr><td><b>Anwar Ispat</b></td><td>196K</td><td>94,500</td><td>89,500</td><td>3.0%</td></tr>';
+  ct+='<tr><td><b>Rahim Steel</b></td><td>59K</td><td>90,500</td><td>90,000</td><td>3.7%</td></tr>';
+  ct+='<tr style="background:rgba(240,185,11,.06)"><td><b>Akij Ispat</b></td><td>45K</td><td>93,000</td><td>89,000</td><td>2.9%</td></tr>';
+  ct+='</tbody></table>';
+  document.getElementById("promoCompTable").innerHTML=ct;
+
+  var gap='<ul style="margin:0;padding-left:18px;line-height:1.6;color:#c9d7ea">'+
+    '<li><b style="color:var(--gold)">Outspent 3× in absolute terms.</b> We spend ৳6.28 Cr vs BSRM/AKS ~৳20.5 Cr (Dec\u201925–Feb\u201926) — but we already lead on % of revenue (1.58% vs their 0.7–0.9%). The gap is scale, not effort.</li>'+
+    '<li><b style="color:var(--gold)">Digital is the widest capability gap.</b> 45K followers vs AKS 496K (11×) and BSRM 316K (7×); BSRM reaches 5× more people online and runs DSP + influencers we have not activated.</li>'+
+    '<li><b style="color:var(--gold)">Lowest-priced but not converting to share.</b> NSP ৳89,000 (lowest of the majors) yet share is stuck at 2.9% — the price edge leaks margin without pulling volume.</li>'+
+    '<li><b style="color:var(--gold)">Sharpest message, thinnest reach.</b> Our "12% stronger" USP is concrete vs competitors\u2019 "No.1" claims — but it is under-distributed.</li>'+
+    '<li><b style="color:var(--gold)">What to fix:</b> (1) redirect outdoor → digital + social and activate DSP/influencers to close the reach gap; (2) protect spend during the share-gain phase; (3) tie trade incentives to quarterly/annual targets; (4) convert the price edge into volume via engineer-loyalty &amp; demand-generation, not discounting.</li>'+
+    '</ul>';
+  document.getElementById("promoGap").innerHTML=gap;
+
+  // competitor offline campaigns (Jan–Apr'26)
+  var cp='<table><thead><tr><th>Company</th><th>Campaign</th><th>Type</th><th>Spend</th><th>Objective</th></tr></thead><tbody>';
+  cp+='<tr style="background:rgba(240,185,11,.06)"><td><b>Akij Ispat</b></td><td>"12% Stronger than Good Quality TMT Bars"</td><td>360 (ATL+BTL+Digital+OOH)</td><td>৳5.58 Cr</td><td>Brand awareness</td></tr>';
+  cp+='<tr><td><b>BSRM</b></td><td>"বাংলাদেশ এর নাম্বার ওয়ান স্টিল"</td><td>360 (ATL+BTL+Digital)</td><td>—</td><td>Retention</td></tr>';
+  cp+='<tr><td><b>GPH Ispat</b></td><td>"দৃঢ়তায় ১ নাম্বার"</td><td>Digital</td><td>৳1.2 Cr</td><td>TOF — B600 DWR launch</td></tr>';
+  cp+='<tr><td><b>AKS</b></td><td>"সর্বোচ্চ মানসম্পন্ন স্টিল"</td><td>Digital</td><td>৳0.3–0.5 Cr</td><td>Engagement</td></tr>';
+  cp+='<tr><td><b>Anwar Ispat</b></td><td>"Strongest Steel Since 1978"</td><td>360 (BTL+Digital)</td><td>৳5.5–8 Cr</td><td>Brand positioning</td></tr>';
+  cp+='</tbody></table>';
+  document.getElementById("promoCampaign").innerHTML=cp;
+
+  // digital spend (Dec'25–Feb'26)
+  var dig=[
+    {label:"BSRM",value:1.50,color:"#3b4f8a"},
+    {label:"GPH Ispat",value:0.50,color:"#3b4f8a"},
+    {label:"AKS",value:0.40,color:"#3b4f8a"},
+    {label:"Akij Ispat (us)",value:0.28,color:"#f0b90b"},
+    {label:"KSRM",value:0.20,color:"#3b4f8a"},
+    {label:"Anwar",value:0.15,color:"#3b4f8a"}
+  ];
+  barChart(document.getElementById("promoDigital"), dig, {fmt:function(v){return "৳"+v.toFixed(2)+" Cr";}});
+
+  // total spend vs revenue contribution (Dec'25–Feb'26)
+  var st='<table><thead><tr><th>Company</th><th>Total spend (Cr)</th><th>Revenue (Cr)</th><th>Offline %</th><th>Digital %</th><th>Total %</th></tr></thead><tbody>';
+  st+='<tr style="background:rgba(240,185,11,.06)"><td><b>Akij Ispat</b></td><td><b>৳6.28</b></td><td>397</td><td>1.51%</td><td>0.07%</td><td><b>1.58%</b></td></tr>';
+  st+='<tr><td><b>BSRM</b></td><td>৳20.50</td><td>3,114</td><td>0.61%</td><td>0.05%</td><td>0.66%</td></tr>';
+  st+='<tr><td><b>AKS</b></td><td>৳20.40</td><td>2,293</td><td>0.87%</td><td>0.02%</td><td>0.89%</td></tr>';
+  st+='<tr><td><b>GPH Ispat</b></td><td>৳12.50</td><td>1,353</td><td>0.89%</td><td>0.04%</td><td>0.93%</td></tr>';
+  st+='<tr><td><b>KSRM</b></td><td>৳6.40</td><td>788</td><td>0.79%</td><td>0.03%</td><td>0.82%</td></tr>';
+  st+='<tr><td><b>Anwar</b></td><td>৳4.15</td><td>338</td><td>1.19%</td><td>0.04%</td><td>1.23%</td></tr>';
+  st+='</tbody></table>';
+  document.getElementById("promoSpendTable").innerHTML=st;
+
+  syn("promoCampaign", [
+    "Akij's \"12% stronger\" USP campaign is the most concrete, product-led message in the set.",
+    "Competitors default to leadership claims (\"No.1\", \"strongest\") — a gap we can exploit with proof-based positioning.",
+    "Anwar is the biggest offline spender (৳5.5–8 Cr); GPH is launching a new grade (B600 DWR)."
+  ]);
+  syn("promoDigital", [
+    "BSRM outspends us 5× on digital (৳1.50 Cr vs ৳0.28 Cr) and reaches 5× more people (88M vs 16M).",
+    "BSRM also runs DSP, website and influencers — channels we have not activated.",
+    "Our ৳0.28 Cr buys 164M impressions — efficient, but too small to move share."
+  ]);
+  syn("promoSpendTable", [
+    "Akij spends the most as a % of revenue (1.58%) — but the least in absolute terms (৳6.28 Cr vs BSRM/AKS ~৳20.5 Cr).",
+    "The gap is scale, not effort: our small revenue base caps absolute spend.",
+    "So the lever is efficiency + share growth, not simply spending more."
+  ]);
+  syn("promoSocial", [
+    "Akij Ispat has 45K Facebook followers — the lowest of every tracked mill.",
+    "AKS (496K), BSRM (316K) and GPH (290K) out-reach us 7–11× on owned digital.",
+    "Digital is our single widest competitive gap and the cheapest channel to fix."
+  ]);
+  syn("promoIncentive", [
+    "Anwar leads trade incentives at ৳5,000/MT; Akij and GPH tie at ৳4,000/MT.",
+    "Our incentives are mid-pack but structured around monthly, not quarterly, targets.",
+    "Re-timing incentives to quarterly targets can smooth the quarter-start revenue dip."
+  ]);
+})();
+
+/* ============ WHERE TO PLAY · WHOM TO PLAY · HOW TO WIN ============ */
+(function(){
+  var regions=[
+    {name:"Dhaka", loss:71.94, rev:79.79, mt:9080, q4:1.52, q1:1.46},
+    {name:"Chattogram", loss:4.23, rev:52.75, mt:5995, q4:1.01, q1:0.96},
+    {name:"Barishal", loss:1.15, rev:3.40, mt:385, q4:0.06, q1:0.06},
+    {name:"Khulna", loss:0.73, rev:7.68, mt:867, q4:0.15, q1:0.14},
+    {name:"Rajshahi", loss:0.39, rev:9.45, mt:1072, q4:0.18, q1:0.17},
+    {name:"Rangpur", loss:0.26, rev:1.26, mt:141, q4:0.02, q1:0.02},
+    {name:"Mymensingh", loss:0.10, rev:5.55, mt:628, q4:0.11, q1:0.10}
+  ];
+  // log-scale horizontal bars so every division is readable (Dhaka dwarfs the rest on a linear scale)
+  (function(){
+    var items=regions.map(function(r){return {label:r.name,value:r.loss};});
+    var W=920,L=150,R=118,T=12,B=34,H=Math.max(280,items.length*34+44);
+    var svg=el("svg",{width:"100%",height:H,viewBox:"0 0 "+W+" "+H,preserveAspectRatio:"xMinYMin meet"});
+    var cont=document.getElementById("w2pRegionChart"); cont.innerHTML=""; cont.appendChild(svg);
+    var mn=Math.min.apply(null,items.map(function(i){return i.value;}));
+    var mx=Math.max.apply(null,items.map(function(i){return i.value;}));
+    var l0=Math.log10(mn), l1=Math.log10(mx);
+    var x0=L,x1=W-R,y0=T,y1=H-B;
+    function X(v){ return x0+(Math.log10(v)-l0)/(l1-l0)*(x1-x0); }
+    var bh=(y1-y0)/items.length;
+    [0.1,0.3,1,3,10,30,100].forEach(function(g){
+      if(g<mn||g>mx) return;
+      var gx=X(g);
+      svg.appendChild(el("line",{x1:gx,y1:y0,x2:gx,y2:y1,stroke:C.line,"stroke-width":1}));
+      svg.appendChild(txt(gx,y1+14,"৳"+g,{size:"11",fill:C.muted}));
+    });
+    svg.appendChild(el("line",{x1:x0,y1:y1,x2:x1,y2:y1,stroke:C.axis,"stroke-width":1}));
+    items.forEach(function(it,idx){
+      var yy=y0+idx*bh+4;
+      var bw=Math.max(3,X(it.value)-x0);
+      svg.appendChild(el("rect",{x:x0,y:yy,width:bw,height:bh-8,rx:3,fill:"#ff5c7a"}));
+      svg.appendChild(txt(x0-8,yy+bh/2-4,it.label,{anchor:"end",fill:C.muted,size:"13"}));
+      svg.appendChild(txt(X(it.value)+6,yy+bh/2-4,"−৳"+it.value.toFixed(2)+" Cr",{anchor:"start",fill:C.tx,size:"12.5"}));
+    });
+  })();
+
+  var rt='<table><thead><tr><th>Division</th><th>Loss (Cr)</th><th>Revenue (Cr)</th><th>Volume (MT)</th><th>Q4 to Q1 market share loss</th></tr></thead><tbody>';
+  regions.forEach(function(r){
+    rt+='<tr><td><b>'+r.name+'</b></td><td class="neg">−৳'+r.loss.toFixed(2)+'</td><td>৳'+r.rev.toFixed(2)+'</td><td>'+r.mt.toLocaleString("en-US")+'</td><td>'+r.q4.toFixed(2)+'% → '+r.q1.toFixed(2)+'% <span class="tag t-pos">−'+(r.q4-r.q1).toFixed(2)+'%</span></td></tr>';
+  });
+  rt+='</tbody></table>';
+  document.getElementById("w2pRegionTable").innerHTML=rt;
+
+  document.getElementById("w2pWhereExpl").innerHTML=
+    '<b style="color:var(--gold)">Where the share went</b><ul style="margin:4px 0 0">'+
+    '<li>Overall share slipped <b>3.05% → 2.92%</b> (−0.13pp) from Q4 25-26 to Q1 26-27.</li>'+
+    '<li><b>Dhaka</b> is the biggest loss: 1.52% → 1.46%, <b>−৳71.94 Cr</b> (~92% of the total revenue loss).</li>'+
+    '<li><b>Chattogram</b> is second: 1.01% → 0.96%, −৳4.23 Cr.</li>'+
+    '<li>Inside Dhaka, the bleeding is in <b>Dhaka district</b> (−৳50.09 Cr) and <b>Munshiganj · Gajaria</b> (−৳15.41 Cr).</li>'+
+    '</ul>';
+  document.getElementById("w2pWhomExpl").innerHTML=
+    '<b style="color:var(--gold)">Who took it</b><ul style="margin:4px 0 0">'+
+    '<li>Our −0.13pp went to <b>RRM (+1.61pp)</b>, <b>Anwar Ispat (+0.87pp)</b> and <b>KSRM (+0.81pp)</b>.</li>'+
+    '<li>These are the same three mills that under-cut us on trade schemes in the lost thanas.</li>'+
+    '<li><b>GPH (−2.80pp)</b> lost more than we did — the competitive window is against the mid-tier mills (RRM / Anwar / KSRM), not the leaders BSRM / AKS.</li>'+
+    '</ul>';
+  document.getElementById("w2pHowExpl").innerHTML=
+    '<b style="color:var(--gold)">SMART playbook</b><ul style="margin:4px 0 0">'+
+    '<li><b>S</b> — Defend Dhaka first: it is half our revenue (৳79.79 Cr) and 92% of the loss. <b>M</b> — recover Dhaka district to ≥1.52% share. <b>A</b> — achievable; the loss is recent. <b>R</b> — closes the single biggest gap. <b>T</b> — by Q3.</li>'+
+    '<li><b>S</b> — Counter RRM in Munshiganj·Gajaria and Noakhali (the districts it took). <b>M</b> — match its trade scheme within 5%. <b>A</b> — schemes are our strongest lever. <b>T</b> — 30 days.</li>'+
+    '<li><b>S</b> — Match KSRM &amp; Anwar dealer incentives in Chatkhil, Sitakunda and Gajaria thanas. <b>M</b> — dealer activation back to Q4 levels.</li>'+
+    '<li><b>S</b> — Re-point the engineer-loyalty program (৳1.1 Cr budgeted) at the lost districts. <b>M</b> — +10 active engineers per lost district.</li>'+
+    '<li><b>S</b> — Hold price (we are already the lowest NSP) — win on service, delivery and schemes, not further discounting.</li></ul>';
+
+  syn("w2pRegionChart", [
+    "Dhaka is ~92% of the revenue loss (৳71.94 Cr) — a single-division problem.",
+    "Chattogram is the only other division above ৳1 Cr of loss.",
+    "Defending Dhaka closes almost the whole gap."
   ]);
 })();
 
