@@ -497,7 +497,7 @@
   <div class="guide"><span class="gl">What this is</span><p>The zone-and-district map of where Akij Ispat lost steel market share from Q4 2025-26 to Q1 2026-27 — in <b>position</b> (share), <b>volume</b> (MT) and <b>revenue</b> (Cr) — and the playbook to win it back.</p><span class="gl">How to read it</span><p>Three blocks: <b>Where to play</b> (the divisions &amp; districts we lost), <b>Whom to play</b> (who took the share), and <b>How to win</b> (the SMART plan).</p></div>
 
   <!-- 1 · WHERE TO PLAY -->
-  <div class="dda-title"><span class="num">1</span>Where to play — divisions &amp; districts we lost</div>
+  <div class="dda-title"><span class="num">1</span>Where to play — divisions we lost</div>
   <div class="dda-expl" id="w2pWhereExpl"></div>
   <div class="grid g2">
     <div class="card"><h3>Chart — revenue loss by division</h3><div class="hint">Timeline: Q4 FY2025-26 (Jul-Sep) → Q1 FY 2026-27 (Oct). Dhaka alone is ~92% of the revenue loss; Chattogram is a distant second.</div><div class="chart" id="w2pRegionChart"></div></div>
@@ -2066,13 +2066,13 @@ renderSku();
 /* ============ WHERE TO PLAY · WHOM TO PLAY · HOW TO WIN ============ */
 (function(){
   var regions=[
-    {name:"Dhaka", loss:71.94, rev:79.79, mt:9080, q4:1.52, q1:1.46},
-    {name:"Chattogram", loss:4.23, rev:52.75, mt:5995, q4:1.01, q1:0.96},
-    {name:"Barishal", loss:1.15, rev:3.40, mt:385, q4:0.06, q1:0.06},
-    {name:"Khulna", loss:0.73, rev:7.68, mt:867, q4:0.15, q1:0.14},
-    {name:"Rajshahi", loss:0.39, rev:9.45, mt:1072, q4:0.18, q1:0.17},
-    {name:"Rangpur", loss:0.26, rev:1.26, mt:141, q4:0.02, q1:0.02},
-    {name:"Mymensingh", loss:0.10, rev:5.55, mt:628, q4:0.11, q1:0.10}
+    {name:"Dhaka", loss:71.94, rev:79.79, mt:9080, q4:1.52, q1:1.46, d:0.060},
+    {name:"Chattogram", loss:4.23, rev:52.75, mt:5995, q4:1.01, q1:0.96, d:0.040},
+    {name:"Barishal", loss:1.15, rev:3.40, mt:385, q4:0.06, q1:0.06, d:0.003},
+    {name:"Khulna", loss:0.73, rev:7.68, mt:867, q4:0.15, q1:0.14, d:0.010},
+    {name:"Rajshahi", loss:0.39, rev:9.45, mt:1072, q4:0.18, q1:0.17, d:0.010},
+    {name:"Rangpur", loss:0.26, rev:1.26, mt:141, q4:0.02, q1:0.02, d:0.001},
+    {name:"Mymensingh", loss:0.10, rev:5.55, mt:628, q4:0.11, q1:0.10, d:0.005}
   ];
   // log-scale horizontal bars so every division is readable (Dhaka dwarfs the rest on a linear scale)
   (function(){
@@ -2104,7 +2104,7 @@ renderSku();
 
   var rt='<table><thead><tr><th>Division</th><th>Loss (Cr)</th><th>Revenue (Cr)</th><th>Volume (MT)</th><th>Q4 to Q1 market share loss</th></tr></thead><tbody>';
   regions.forEach(function(r){
-    rt+='<tr><td><b>'+r.name+'</b></td><td class="neg">−৳'+r.loss.toFixed(2)+'</td><td>৳'+r.rev.toFixed(2)+'</td><td>'+r.mt.toLocaleString("en-US")+'</td><td>'+r.q4.toFixed(2)+'% → '+r.q1.toFixed(2)+'% <span class="tag t-pos">−'+(r.q4-r.q1).toFixed(2)+'%</span></td></tr>';
+    rt+='<tr><td><b>'+r.name+'</b></td><td class="neg">−৳'+r.loss.toFixed(2)+'</td><td>৳'+r.rev.toFixed(2)+'</td><td>'+r.mt.toLocaleString("en-US")+'</td><td>'+r.q4.toFixed(2)+'% → '+r.q1.toFixed(2)+'% <span class="tag t-pos">−'+r.d.toFixed(3)+'%</span></td></tr>';
   });
   rt+='</tbody></table>';
   document.getElementById("w2pRegionTable").innerHTML=rt;
