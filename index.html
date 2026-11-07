@@ -121,6 +121,7 @@
   <button data-t="area">Area</button>
   <button data-t="growth">Growth</button>
   <button data-t="promo">Promotion</button>
+  <button data-t="people">People</button>
   <button data-t="dda">Direction · Decision · Action</button>
   <button data-t="w2p">Where to Play · Whom to Play · How to Win</button>
    <!-- <button data-t="mt">Method &amp; coverage</button>  -->
@@ -507,6 +508,33 @@
   <!-- 3 · HOW TO WIN -->
   <div class="dda-title"><span class="num">3</span>How to win — the playbook</div>
   <div class="dda-expl" id="w2pHowExpl"></div>
+</section>
+
+<!-- ============ PEOPLE ============ -->
+<section id="people">
+  <div class="guide"><span class="gl">What this is</span><p>Why Akij Ispat's dealers left (CRM call-back) and which sales officers own the lost customers — the people side of the recovery plan.</p><span class="gl">How to read it</span><p>Two blocks: <b>Customer analysis</b> (why dealers left + what brings them back) and <b>People analysis</b> (31 officers ranked by loss risk). Source: lost-dealer CRM call-back, Oct 2026.</p></div>
+  <div class="grid g5" id="peopleKpis" style="margin-bottom:12px"></div>
+
+  <!-- 1 · CUSTOMER ANALYSIS -->
+  <div class="dda-title"><span class="num">1</span>Customer analysis — why dealers left</div>
+  <div class="card">
+    <h3>Why dealers left — reason mentions</h3>
+    <div class="hint">From the responded dealers (Oct 2026 call-back). Price is the #1 churn driver.</div>
+    <div class="chart" id="peopleReason"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>What brings them back + recommended actions</h3>
+    <div id="peopleActions"></div>
+  </div>
+
+  <!-- 2 · PEOPLE ANALYSIS -->
+  <div class="dda-title"><span class="num">2</span>People analysis — sales force with lost customers</div>
+  <div class="card">
+    <h3>Officers by region, area &amp; territory</h3>
+    <div class="hint">91 lost customers traced to 31 officers, arranged by their demarcation. Click any officer for the full profile. 4 are high-risk (score ≥ 50).</div>
+    <div class="scroll" id="peopleRank"></div>
+  </div>
+  <div id="peopleProfile"></div>
 </section>
 
 <!-- ============ METHOD & COVERAGE ============ -->
@@ -1118,7 +1146,7 @@ function skuSelector(selId, chartId, map, overallArr, labels, ytitle, opts){
 }
 
 /* ============ tabs + deep-link ============ */
-var TABS=["ov","price","margin","sku","mom","chg","pg","el","comp","ms","dealer","area","growth","promo","dda","w2p","mt"];
+var TABS=["ov","price","margin","sku","mom","chg","pg","el","comp","ms","dealer","area","growth","promo","people","dda","w2p","mt"];
 function showTab(t){
   if(TABS.indexOf(t)<0) t="ov";
   TABS.forEach(function(id){
@@ -1797,7 +1825,7 @@ renderSku();
     '<li><b>Price:</b> hold the mill rate; pass scrap through selectively; no discounting the elastic core.</li>'+
     '<li><b>Place:</b> defend Cumilla, Noakhali, Mirpur, Gazipur; deepen quarter-start coverage.</li>'+
     '<li><b>Promotion:</b> outspent 3× in absolute terms (৳6.3 Cr vs BSRM/AKS ~৳20.5 Cr) but already leading on % of revenue (1.58%) — so fix reach, not just budget: shift outdoor→digital (45K vs AKS 496K followers; BSRM reaches 5× more online), add DSP/influencers, and convert our lowest-NSP edge into volume through demand-generation, not discounting.</li>'+
-    '<li><b>People:</b> sales KPIs on margin + share, not volume alone.</li>'+
+    '<li><b>People:</b> 91 lost customers map to 31 officers — 4 are high-risk (score ≥50): Mahmudul Hasan (13), Shaiful Alam (12), Feroz Ahmed (4) &amp; Shamim Mia (3) hold ~63% of the lost sale value. Assign win-back ownership to these named officers and tie KPIs to recovered share, not volume alone.</li>'+
     '<li><b>Process:</b> smooth the quarter-end push into steady monthly flow.</li>'+
     '<li><b>Physical evidence:</b> the published daily mill rate (Trade) builds trust vs competitors\u2019 opaque pricing.</li></ul>';
   var mm=[7,8,9,10];
@@ -2120,6 +2148,149 @@ renderSku();
     "Dhaka is ~92% of the revenue loss (৳71.94 Cr) — a single-division problem.",
     "Chattogram is the only other division above ৳1 Cr of loss.",
     "Defending Dhaka closes almost the whole gap."
+  ]);
+})();
+
+/* ============ PEOPLE ============ */
+(function(){
+  var kpis=[
+    {l:"Sales officers",v:"31",n:"active force"},
+    {l:"Lost customers",v:"91",n:"silent Q1 + Oct"},
+    {l:"Sale lost",v:"৳35.2 Cr",n:"3,827 MT",c:"down"},
+    {l:"Collection lost",v:"৳32.5 Cr",n:"BDT",c:"down"},
+    {l:"High-risk officers",v:"4",n:"risk score ≥ 50",c:"down"}
+  ];
+  document.getElementById("peopleKpis").innerHTML=kpis.map(function(x){
+    return '<div class="card kpi"><div class="lab">'+x.l+'</div><div class="val">'+x.v+'</div><div class="note '+(x.c||'')+'">'+x.n+'</div></div>';
+  }).join("");
+
+  var reasons=[
+    {label:"Price",value:6},
+    {label:"Product Quality",value:5},
+    {label:"Sales / Field Service",value:3},
+    {label:"No Demand / Work",value:3},
+    {label:"Still Active (data error)",value:3},
+    {label:"Competitor / Price-switch",value:2},
+    {label:"Supply / Availability",value:1}
+  ];
+  barChart(document.getElementById("peopleReason"), reasons, {fmt:String});
+
+  document.getElementById("peopleActions").innerHTML=
+    '<p style="margin:0 0 8px"><b style="color:var(--gold)">What brings them back:</b> &ldquo;If the price is reduced, he is certainly willing to use Akij Ispat again.&rdquo;</p>'+
+    '<ul style="margin:0;padding-left:18px;line-height:1.6;color:#c9d7ea">'+
+    '<li><b>Price</b> — most common churn driver (6 mentions). Review price positioning vs BSRM/AKS.</li>'+
+    '<li><b>Quality</b> — rod quality complaints (5). Escalate to Production.</li>'+
+    '<li><b>Field service</b> — &ldquo;no representative / negligence&rdquo; (3). Reassign coverage.</li>'+
+    '<li><b>Demand</b> — project-driven, project completed (3). Re-engage on next project.</li>'+
+    '<li><b>Supply</b> — ensure the specific product lines dealers used (1).</li>'+
+    '<li><b>Data</b> — 3 customers said still active (data error). Reconcile the lost list.</li>'+
+    '</ul>';
+
+  // [name, designation, phone, custLost, saleLostMT, saleLostBDT, collLostBDT, risk, lostCustomerNames, evaluation, needToImprove]
+  var PPL=[
+    ["Md. Shamim Mia","Deputy Manager","01672353759",3,791,73151000,74357460,76.9,"China Construction Seventh Engineering Division Corp. Ltd. (WP-10), International Trading Services Limited, Rancon Edison Developments Limited","Sales below target (330 vs 550); revenue below target (41.5M vs 50M)","Sales below target (60%) · Revenue below target (83%)"],
+    ["Md. Mahmudul Hasan","Deputy Manager","—",13,502.75,46525906,40707308,71.9,"Interstoff Group - South East Textiles (Pvt) Limited, Asia Composite Mills Limited, Astha Feed Industries Ltd., Credence Housing Ltd., Concord Engineers & Construction Ltd., ACI Formulations Limited, Multi Line Industries Ltd., Center For Zakat Management (CZM), Advanced Chemical Industries Ltd., Crown Cement PLC, PROPERTY DEVELOPMENT LTD., Crown Food and Beverage PLC., Yunusco (BD) Limited","Claims sales target met/exceeded but lost 46,525,906 BDT; revenue below target (115.9M vs 118.8M)","Revenue below target (98%)"],
+    ["Md. Feroz Ahmed","Senior Manager","01772100173",4,590.4,54027150,67834888,66.1,"ABC Real Estate Limited, National Development Engineers Ltd, Spectra Properties Ltd, International Classic Composite Ltd","Sales below target (1950 vs 2150); revenue below target (14 vs 15)","Sales below target (91%) · Revenue below target (93%)"],
+    ["Mr. Shaiful Alam","Senior Manager","01776293670",12,535,49254140,26069658,65.1,"Baridhara Diplomatic Enclave Club Limited, Mr. Shaiful Alam For General Customer, UDC Construction Ltd., ASDWA Fashion Limited, IPCO Hotels Limited, Panda Shoes Industry Ltd, Brig. General Md. Mizanur Rahman, LIZDA Holding Limited, STBD SUN Trading Co., M/S. MD. JAMIL IQBAL, Tamanna Faroque Theama, MS. IQBAL TRADERS (RAMIM Group)","Sales below target (1900 vs 2350); revenue below target (164.9M vs 205.6M)","Sales below target (81%) · Revenue below target (80%)"],
+    ["Md. Sirajul Islam","Assistant Manager","01712436510",8,246.43,19520530,11255127,33.7,"Akij Dairy Ltd., Akij Healthcare & Hygiene Ltd., Janata Jute Mills Limited, Akij Bashir Energy Limited, M/S Mayer Doa Iron Store- Narayanganj, Mr. Mosaraff Hossain (Deputy Manager - Finance), Akij Renewable Energy and Automobiles Ltd., Takaful Properties Limited","Claims sales target met/exceeded but lost 19,520,530 BDT",""],
+    ["Md. Shafiqur Rahman","Deputy Manager","—",4,75.2,6941480,14217626,18.8,"Paragon Poultry Limited, General Customer For Md.Shafiqur Rahman, Paragon Agro Ltd (Grand Parents), ACME TECHNOLOGIES LTD.","Sales below target (175.7 vs 300); revenue below target (14.0M vs 25.8M)","Sales below target (59%) · Revenue below target (54%)"],
+    ["Redwan Hossain Bablu","Deputy Manager","—",4,109.75,9974969,7803600,17.8,"Pixel Space Development Ltd., UTTARAN TRADERS, Fortress Realestate Limited, Monalisa Ceramics (BD) Ltd.","Sales below target (276 vs 400); revenue below target (24.7M vs 30M)","Sales below target (69%) · Revenue below target (82%)"],
+    ["Kishor Kumar Kar","Senior Territory Manager","01671681340",2,122.59,13352969,13204750,17.2,"EPS International (wastage) ctg, M/S Bablu Traders- Noakhali","Claims sales target met/exceeded but lost 13,352,969 BDT",""],
+    ["Atik Ishrak","Senior Officer","—",4,76.5,7135550,6059310,15.6,"Essential Clothing Ltd., Cube Holdings Ltd., MI Engineering, TURAG GARMENTS AND HOSIERY MILLS LTD","Claims sales target met/exceeded but lost 7,135,550 BDT; revenue below target (21.0M vs 27.0M)","Revenue below target (78%)"],
+    ["Md. Sariful Islam","Senior Territory Officer","—",3,70,6534750,5517100,12.7,"M/S Anik Motors, M/S Sarker Trading- Sirajgonj, Mobasshirah Trading Co. - Sirajganj","Claims sales target met/exceeded but lost 6,534,750 BDT","Retention overstated"],
+    ["Md Magfirul Amin","—","—",3,62.05,5787375,4219100,11.8,"M/S Alamgir Others -Laxmipur, M/S Zilani Traders - Laxmipur, M/S Ali & Brothers- Laxmipur","",""],
+    ["Md. Abu Taher","Senior Territory Officer","—",2,70,6496000,6287800,10.7,"M/S Nalta Traders -Kaligonj- Shatkhira, M/S Vai Vai Enterprise- Satkhira","Sales below target (84 vs 98); revenue below target (13 vs 15)","Sales below target (86%) · Revenue below target (85%)"],
+    ["Md. Maniruzzaman","—","—",1,76,7070000,7251750,9.1,"M/S Harun Mollah & Sons - Faridpur","",""],
+    ["Makbul Hosain","Senior Engineer","—",2,43.4,4082500,4609440,8.7,"M/S Kazi Traders- Jashore, M/S Dhaka Iron Store- Jashore","",""],
+    ["Md. Monzurul Islam","Senior Territory Officer","—",2,42.4,3920000,3835200,8.3,"M/S Mir Trading- Mymenshing, M/S Nazim Enterprise- Netrokona","Claims sales target met/exceeded but lost 3,920,000 BDT","Retention overstated"],
+    ["Refajur Rahman","Assistant Manager","01916241123",1,56,5252000,6815600,7.9,"M/S Allahar Dan Enterprise- Bagerhat","Sales below target (409 vs 450)","Sales below target (91%)"],
+    ["Md. Arif-Uzzaman","Territory Manager","—",2,39.5,3677750,2435900,7.6,"M/S JR Corporation - Moghbazar, Bangladesh Trading Corporation","Claims sales target met/exceeded but lost 3,677,750 BDT","Retention overstated"],
+    ["Redwan Bukhari","Territory Manager","—",2,42,3790000,1925180,7.5,"M/S Faruk & Mridha Brothers- Chandpur, M/S Modhuban Enterprise- Chandpur","Claims sales target met/exceeded but lost 3,790,000 BDT",""],
+    ["Rakibul Islam","—","—",2,28,2660000,2695100,7.2,"M/S Modina Shop- Potuakhali, M/S Mijan Enterprise- Patuakhali","",""],
+    ["Md. Sirajul Islam (Bogura)","Assistant Manager","—",2,28,2636200,2685400,7.1,"M/S Emdadul Haque- Bogura, M/S Moriom Enterprise- Bogura","Reports 99% retention (vs 100% target); sales below target (41 vs 42)","Sales below target (98%)"],
+    ["Md. Nasir Uddin","—","—",2,22.5,2105000,2038400,6.6,"M/S Baba Mayer Doa Enterprise- Tangail, M/S Abu Hanif- Tangail","",""],
+    ["Md. Khairul Bashar","Territory Manager","01963536706",2,30.6,2675600,1297280,6.6,"M/S Hussain Bhuiya Steel House - Kishorgonj, M/S Talukder Traders- Kishoreganj","Claims sales target met/exceeded but lost 2,675,600 BDT",""],
+    ["Md. Sabbir Hossain","Senior Territory Officer","—",2,16,1520000,1470500,6,"M/S Faruk Enterprise- Sherpur, M/S Bismillah Enterprise- Jamalpur","Sales below target (50 vs 95)","Sales below target (53%)"],
+    ["Md. Mosaddekur Rahman","Senior Territory Manager","—",2,12.61,1189320,775000,5.6,"M/S Esha Enterprise - Narayanganj, M/S Deen Enterprise Narayanganj","Reports 95% retention (vs 100% target); sales below target (98 vs 100)","Sales below target (98%)"],
+    ["Md. Shobuz Rana","Territory Manager","—",1,23.2,2194000,2336290,4.4,"M/S Rayhan Enterprise-Dhamrai","Claims sales target met/exceeded but lost 2,194,000 BDT","Retention overstated"],
+    ["Minhazul Alam","Senior Territory Manager","—",1,29.5,2741650,1185500,4.3,"M/S.Kalam And Brothers","Sales below target (113 vs 140)","Sales below target (81%)"],
+    ["Md. Abdul Momin","Territory Manager","—",1,26.3,2455510,1190290,4.1,"M/S Jamal Enterprise- Kustia","Sales below target (15 vs 42)","Sales below target (36%)"],
+    ["Taufiq Ahammed","Territory Officer","—",1,15,1414500,1627250,3.7,"M/S Anonna Steel Corparation - Gopalgonj","Sales below target (14 vs 70); revenue below target (3 vs 15)","Sales below target (20%) · Revenue below target (20%)"],
+    ["Md. Hossain Tarif","—","—",1,15,1380000,1380000,3.6,"M/S Naziba Enterprises- Bhola","",""],
+    ["Md. Babor Ali","Territory Sales Officer","—",1,14,1330000,1358700,3.6,"M/S Idris Trades- Naogaon","Reports 95% retention (vs 100% target); claims sales target met/exceeded but lost 1,330,000 BDT",""],
+    ["Md. Rakibul Islam","—","—",1,15,1410000,337500,3.2,"M/S Suma Traders- Lalmonirhat","",""]
+  ];
+  var GEO=[
+    ["Corporate (Region)","Corporate (Area)","Shamim Mia (Corporate)"],
+    ["Corporate (Region)","Corporate (Area)","Mahmudul Hasan (Corporate)"],
+    ["Corporate (Region)","Corporate (Area)","Feroz Ahmad (Corporate)"],
+    ["Corporate (Region)","Corporate (Area)","Shaiful Alam (Corporate)"],
+    ["Sister Concern (Region)","Sister Concern (Area)","Sirajul Islam (Corporate + Sister Concern)"],
+    ["Corporate (Region)","Corporate (Area)","Shafiq Rahman (Corporate)"],
+    ["Corporate (Region)","Corporate (Area)","Redwan Hossain (Corporate)"],
+    ["Noakhali","Noakhali","Noakhali-1"],
+    ["Corporate (Region)","Corporate (Area)","Atik Ishrak (Corporate)"],
+    ["Bogura","Rajshahi","Sirajganj"],
+    ["Noakhali","Chandpur/Laxmipur","Laxmipur"],
+    ["Khulna/Faridpur","Khulna","Satkhira"],
+    ["Khulna/Faridpur","Barishal","Faridpur & Rajbari"],
+    ["Khulna/Faridpur","Jhenaidah","Jashore"],
+    ["Dhaka Outer & Mymensingh","Mymensingh","Mymensingh + Netrokona"],
+    ["Khulna/Faridpur","Khulna","Khulna-2 & Bagerhat"],
+    ["Dhaka South","Jatrabari","Demra"],
+    ["Noakhali","Chandpur/Laxmipur","Chandpur Sadar + Hajiganj"],
+    ["Khulna/Faridpur","Barishal","Patuakhali & Barguna"],
+    ["Bogura","Bogura","Bogura"],
+    ["Dhaka Outer & Mymensingh","Gazipur","Tangail Sadar"],
+    ["Dhaka Outer & Mymensingh","Narsingdi","Kishoreganj"],
+    ["Dhaka Outer & Mymensingh","Mymensingh","Jamalpur"],
+    ["Dhaka South","Narayanganj","Narayanganj-1"],
+    ["Dhaka North","Savar","Savar"],
+    ["Khulna/Faridpur","Barishal","Barishal"],
+    ["Khulna/Faridpur","Jhenaidah","Kushtia"],
+    ["Khulna/Faridpur","Khulna","Gopalganj & Narail"],
+    ["Khulna/Faridpur","Barishal","Bhola"],
+    ["Bogura","Bogura","Naogaon"],
+    ["Bogura","Rangpur","Rangpur"]
+  ];
+  var order=PPL.map(function(_,i){return i;});
+  order.sort(function(a,b){ var x=GEO[a][0]+'|'+GEO[a][1]+'|'+GEO[a][2], y=GEO[b][0]+'|'+GEO[b][1]+'|'+GEO[b][2]; return x<y?-1:(x>y?1:0); });
+  function riskClass(r){ return r>=50?'t-pos':(r>=10?'t-warn':'t-neg'); }
+  var pr='<table><thead><tr><th>#</th><th>Officer</th><th>Mobile</th><th>Region</th><th>Area</th><th>Territory</th><th>Customers Lost</th><th>Sale Lost (MT)</th><th>Sale Lost (BDT)</th><th>Risk Score</th></tr></thead><tbody>';
+  order.forEach(function(idx,i){
+    var o=PPL[idx], g=GEO[idx];
+    pr+='<tr class="drill" onclick="peopleShow('+idx+')"'+(o[7]>=50?' style="background:rgba(255,92,122,.07)"':'')+'><td>'+(i+1)+'</td><td><b>'+o[0]+'</b></td><td>'+o[2]+'</td><td>'+g[0]+'</td><td>'+g[1]+'</td><td>'+g[2]+'</td><td>'+o[3]+'</td><td>'+o[4]+'</td><td>৳'+o[5].toLocaleString("en-US")+'</td><td><span class="tag '+riskClass(o[7])+'">'+o[7]+'</span></td></tr>';
+  });
+  pr+='</tbody></table>';
+  document.getElementById("peopleRank").innerHTML=pr;
+
+  window.peopleShow=function(i){
+    var o=PPL[i]; if(!o) return;
+    var hi=o[7]>=50;
+    var h='<div class="card" style="margin-top:12px">';
+    h+='<h3>'+o[0]+' <span style="font-weight:400;color:var(--muted)">— '+o[1]+'</span></h3>';
+    h+='<div style="margin:4px 0 10px"><span class="tag t-mut">Phone: '+(o[2]||'—')+'</span> <span class="tag '+(hi?'t-pos':'t-neg')+'">Risk Score: '+o[7]+'</span></div>';
+    h+='<table style="max-width:640px"><tbody>';
+    h+='<tr><td style="text-align:left"><b>Customers lost</b></td><td>'+o[3]+'</td></tr>';
+    h+='<tr><td style="text-align:left"><b>Sale lost</b></td><td>'+o[4]+' MT · ৳'+o[5].toLocaleString("en-US")+'</td></tr>';
+    h+='<tr><td style="text-align:left"><b>Collection lost</b></td><td>৳'+o[6].toLocaleString("en-US")+'</td></tr>';
+    h+='</tbody></table>';
+    h+='<div style="margin-top:10px"><b style="color:var(--gold)">Lost customers</b><div style="color:#c9d7ea;font-size:13.5px;margin-top:3px">'+(o[8]||'—')+'</div></div>';
+    h+='<div style="margin-top:10px"><b style="color:var(--gold)">Evaluation (KPI vs Lost Analysis)</b><div style="color:#c9d7ea;font-size:13.5px;margin-top:3px">'+(o[9]||'—')+'</div></div>';
+    h+='<div style="margin-top:10px"><b style="color:var(--gold)">Need to Improve (People Analysis)</b><ul style="margin:4px 0 0;padding-left:18px;color:#c9d7ea;font-size:13.5px;line-height:1.6">';
+    h+='<li>Recover '+o[3]+' lost customer(s) — ৳'+o[5].toLocaleString("en-US")+' at risk</li>';
+    if(o[10]) h+='<li>'+o[10]+'</li>';
+    h+='</ul></div>';
+    h+='</div>';
+    var el=document.getElementById("peopleProfile");
+    el.innerHTML=h;
+    el.scrollIntoView({behavior:"smooth",block:"nearest"});
+  };
+
+  syn("peopleReason", [
+    "Price is the #1 churn driver (6 of 21 mentions), followed by product quality (5).",
+    "Field-service gaps and project-driven 'no demand' also surfaced.",
+    "3 customers are actually still active — a data error to reconcile."
   ]);
 })();
 
