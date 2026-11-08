@@ -19,9 +19,10 @@
   .sub{color:var(--muted);font-size:13px;margin-top:4px}
   .badge{background:rgba(240,185,11,.12);border:1px solid rgba(240,185,11,.45);color:var(--gold);padding:5px 11px;border-radius:999px;font-size:12px;letter-spacing:.4px;white-space:nowrap}
   nav{position:sticky;top:0;z-index:100;display:flex;gap:2px;padding:10px 26px 0;flex-wrap:wrap;background:rgba(13,18,32,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
-  nav button{background:transparent;border:0;border-bottom:2px solid transparent;color:var(--muted);padding:10px 13px;cursor:pointer;font-size:14px}
+  nav button{background:transparent;border:0;border-bottom:2px solid transparent;color:var(--muted);padding:9px 11px;cursor:pointer;font-size:13px}
   nav button:hover{color:var(--tx)}
   nav button.on{color:var(--gold);border-bottom-color:var(--gold)}
+nav .nsep{width:1px;align-self:stretch;margin:9px 7px;background:var(--line);opacity:.9}
   main{padding:18px 26px 40px;max-width:1300px;margin:0 auto}
   section{display:none}
   section.on{display:block}
@@ -72,6 +73,12 @@
   .guide .gl{color:var(--gold);font-size:12px;text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin:8px 0 2px;display:block}
   .guide .gl:first-child{margin-top:0}
   .guide p{margin:2px 0 0}
+.winchip{display:flex;align-items:baseline;gap:8px;background:rgba(47,125,255,.07);border:1px solid rgba(47,125,255,.25);border-radius:8px;padding:6px 12px;margin:0 0 10px;font-size:12.5px;color:#a8c4e8;line-height:1.45}
+.winchip .wlab{color:#6f96c9;text-transform:uppercase;letter-spacing:.6px;font-size:10.5px;font-weight:700;white-space:nowrap}
+.flink{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(240,185,11,.45)}
+footer{margin:10px 26px 30px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;max-width:1300px}
+footer .fmeta{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:8px;align-items:baseline}
+footer .small{color:var(--muted);font-size:12px;line-height:1.6}
   .syn{margin-top:10px;padding:11px 14px;background:rgba(47,125,255,.045);border:1px solid rgba(47,125,255,.16);border-left:3px solid var(--accent);border-radius:9px;color:#c9d7ea;font-size:13.5px;line-height:1.55}
   .syn b{color:var(--gold)}
   .syn ul{margin:6px 0 0;padding-left:20px}
@@ -101,36 +108,37 @@
 <header>
   <div>
     <h1>Akij Ispat — <span>Product Intelligence Cockpit</span></h1>
-    <div class="sub">Price · margin · SKU momentum · competitors · market share · dealers · areas · growth · elasticity · declared price — follow the AEL cockpit pattern</div>
+    <div class="sub">Decision path: Overview → Direction · Decision · Action → Market position → Why (price, margin, elasticity, promotion, people) → Where to play &amp; how to win → Evidence annex</div>
   </div>
   <div class="badge">FY2023-24 → FY2026-27 (July–June) &amp; Oct · per-ton clean window Jan'25–Nov'26</div>
 </header>
 
 <nav id="nav">
   <button class="on" data-t="ov">Overview</button>
-  <button data-t="price">Price</button>
-  <button data-t="margin">GP / NP / Net</button>
-  <button data-t="sku">All SKUs</button>
-  <button data-t="mom">SKU month-on-month</button>
-  <button data-t="chg">Price change tracker</button>
-  <button data-t="pg">Declared price grid</button>
-  <button data-t="el">Elasticity</button>
+  <button data-t="dda">Direction · Decision · Action</button>
+  <span class="nsep"></span>
+  <button data-t="ms">Market Share &amp; Growth</button>
   <button data-t="comp">Competitor</button>
-  <button data-t="ms">Market Share</button>
-  <button data-t="dealer">Dealer</button>
-  <button data-t="area">Area</button>
-  <button data-t="growth">Growth</button>
+  <span class="nsep"></span>
+  <button data-t="price">Price &amp; Margin</button>
+  <button data-t="el">Elasticity</button>
   <button data-t="promo">Promotion</button>
   <button data-t="people">People</button>
-  <button data-t="dda">Direction · Decision · Action</button>
+  <span class="nsep"></span>
+  <button data-t="rtm">Route to Market</button>
   <button data-t="w2p">Where to Play · Whom to Play · How to Win</button>
-   <!-- <button data-t="mt">Method &amp; coverage</button>  -->
+  <span class="nsep"></span>
+  <button data-t="sku">All SKUs</button>
+  <button data-t="mom">SKU monthly</button>
+  <button data-t="chg">Price changes</button>
+  <button data-t="pg">Declared grid</button>
+  <!-- <button data-t="mt">Method &amp; coverage</button>  -->
 </nav>
 
 <main>
-
-<!-- ============ OVERVIEW ============ -->
+<!-- ===== OV ===== -->
 <section id="ov" class="on">
+  <div class="winchip"><span class="wlab">Data window</span><span>Revenue Dec’22–Nov’26 · per-ton price Jan’25–Nov’26 (clean window) · FY2025-26 for margin</span></div>
   <div class="guide"><span class="gl">What this answers</span><p>Your whole business in one screen — revenue, price direction and the biggest SKU moves across the clean window.</p><span class="gl">How to read it</span><p>KPIs summarise the window. Portfolio chart = monthly revenue (bars) + active SKUs (line). Breadth = share of SKUs raising (green) vs cutting (red) price vs the prior month.</p></div>
   <div class="grid g5" id="ovKpis"></div>
   <div class="lw" id="lossWinCard"></div>
@@ -157,8 +165,101 @@
   </div>
 </section>
 
-<!-- ============ PRICE ============ -->
+<!-- ===== DDA ===== -->
+<section id="dda">
+  <div class="winchip"><span class="wlab">Data window</span><span>Revenue Dec’22–Nov’26 · FY comparison FY2023-24 → FY2026-27 (5 mo) · share Dec’25–Sep’26 · deficit vs budget Q1 FY26-27 + Oct</span></div>
+  <div class="guide"><span class="gl">What this is</span><p>A management read-out — where Akij Ispat is heading, what to decide, and what to do — each grounded in the data shown across the other tabs.</p><span class="gl">How to read it</span><p>Three blocks: <b>Direction</b> (the trend), <b>Decision</b> (the choices) and <b>Action</b> (the next moves). Each pairs a plain-language explanation with a <b>proof table</b> and a <b>chart</b>.</p></div>
+
+  <!-- 1 · DIRECTION -->
+  <div class="dda-title"><span class="num">1</span>Direction — where the business is heading</div>
+  <div class="dda-expl" id="ddaDirExpl"></div>
+  <div class="grid g2">
+    <div class="card"><h3>Chart — revenue trajectory (Dec'22 → Nov'26)</h3><div class="hint">Monthly net revenue, Dec'22 → Nov'26.</div><div class="chart" id="ddaDirChart"></div></div>
+    <div class="card"><h3>Proof</h3><div class="scroll" id="ddaDirTable"></div></div>
+  </div>
+
+  <!-- 2 · DECISION -->
+  <div class="dda-title"><span class="num">2</span>Decision — what to decide</div>
+  <div class="dda-expl" id="ddaDecExpl"></div>
+  <div class="grid g2">
+    <div class="card"><h3>Chart — where the money &amp; margin are (FY2025-26)</h3><div class="hint">Top SKUs by FY25-26 net revenue; colour = gross-margin tier (blue &lt;6%, teal 6–9%, gold ≥10%).</div><div class="chart" id="ddaDecChart"></div></div>
+    <div class="card"><h3>Proof</h3><div class="scroll" id="ddaDecTable"></div></div>
+  </div>
+
+  <!-- 3 · ACTION -->
+  <div class="dda-title"><span class="num">3</span>Action — what to do now</div>
+  <div class="dda-expl" id="ddaActExpl"></div>
+  <div class="grid g2">
+    <div class="card"><h3>Chart — share momentum &amp; target (Dec'25 → Sep'26)</h3><div class="hint">Monthly steel-market share with a 3.5% target line (the Mar'26 peak).</div><div class="chart" id="ddaActChart"></div></div>
+    <div class="card"><h3>Proof</h3><div class="scroll" id="ddaActTable"></div></div>
+  </div>
+
+  <!-- 4 · LOSS-MAKING SKUs -->
+  <div class="dda-title"><span class="num">4</span>Loss-making / at-risk SKUs</div>
+  <div class="dda-expl" id="ddaLossExpl"></div>
+  <div class="grid g2">
+    <div class="card"><h3>Chart — net margin by SKU (FY2025-26)</h3><div class="hint">Estimated net-profit % per SKU (gross margin − ~2.1% commission &amp; freight). Red = below 4% (at-risk), green = healthy.</div><div class="chart" id="ddaLossChart"></div></div>
+    <div class="card"><h3>Proof</h3><div class="scroll" id="ddaLossTable"></div></div>
+  </div>
+
+  <!-- 5 · LOSS RECOVERY PLAN -->
+  <div class="dda-title"><span class="num">5</span>Loss Recovery Plan — FY26-27 (Q1 &amp; October)</div>
+  <div class="dda-expl" id="ddaRecoveryExpl"></div>
+  <div class="grid g2">
+    <div class="card"><h3>Chart — Jul–Oct revenue, FY25-26 vs FY26-27</h3><div class="hint">Grouped bars by month. July &amp; October are the loss months; August &amp; September over-recover.</div><div class="chart" id="ddaRecoveryChart"></div></div>
+    <div class="card"><h3>Proof — the loss</h3><div class="scroll" id="ddaRecoveryTable"></div></div>
+  </div>
+</section>
+
+<!-- ============ MARKET SHARE & GROWTH ============ -->
+<section id="ms">
+  <div class="winchip"><span class="wlab">Data window</span><span>Share FY2023-24 vs FY2024-25 + monthly Dec’25–Sep’26 · revenue by FY2023-24 → FY2026-27 (5 mo)</span></div>
+  <div class="guide"><span class="gl">What this answers</span><p>Are we winning? Block 1: our share of the steel market versus named mills, plus the monthly trend. Block 2: fiscal-year revenue growth and the 2-year CAGR.</p><span class="gl">How to read it</span><p>Block 1: share in %, higher is better — watch the direction of the monthly line more than the level. Block 2: net sales by fiscal year (July–June); FY2026-27 is a partial year.</p></div>
+  <div class="dda-title"><span class="num">1</span>Share position — where we stand vs the market</div>
+<div class="grid g4" id="msKpis" style="margin-bottom:12px"></div>
+  <div class="card">
+    <h3>Steel market share — FY2023-24 vs FY2024-25 (%)</h3>
+    <div class="hint">Akij Ispat highlighted — 7th of the named mills, fastest-growing (+21.7% YoY).</div>
+    <div class="chart" id="msLadder"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Akij Ispat share — monthly (Dec'25 → Sep'26)</h3>
+    <div class="hint">Share hovered 2.7–3.5%, peaking 3.49% (Mar'26).</div>
+    <div class="chart" id="msTrend"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Steel market share — full table</h3>
+    <div id="msTable"></div>
+  </div>
+  <div class="dda-title"><span class="num">2</span>Revenue growth — fiscal-year view</div>
+<div class="grid g5" id="growthKpis" style="margin-bottom:12px"></div>
+  <div class="card">
+    <h3>Revenue &amp; volume by year (FY2023-24 → FY2026-27)</h3>
+    <div class="chart" id="revYear"></div>
+  </div>
+</section>
+
+<!-- ===== COMP ===== -->
+<section id="comp">
+  <div class="winchip"><span class="wlab">Data window</span><span>Competitor mill rates May’24–Jan’25 — survey of 25 mills</span></div>
+  <div class="guide"><span class="gl">What this answers</span><p>Akij's mill rate against its peers.</p><span class="gl">How to read it</span><p>The survey covers 25 mills but only <b>May'24–Jan'25</b> — a full 3-year competitor series is not in the ERP. Ranking shows each mill's average mill-gate rate over that window.</p></div>
+  <div class="note-box"><b>Coverage:</b> market price survey (<code>oms.tblCompetitorPriceHeader/Row</code>) holds 25 competitors, <b>May 2024 → Jan 2025</b>. A full 3-year competitor series is not in the ERP.</div>
+  <div class="card">
+    <h3>Mill-rate trend — Akij vs top competitors (May'24 → Jan'25)</h3>
+    <div class="hint">Monthly average mill-gate price, Tk/MT.</div>
+    <div class="chart" id="compTrend"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Competitor ranking (avg mill rate, May'24–Jan'25)</h3>
+    <div id="compTable"></div>
+  </div>
+</section>
+
+<!-- ============ PRICE & MARGIN ============ -->
 <section id="price">
+  <div class="winchip"><span class="wlab">Data window</span><span>Net / gross / MRP per ton Jan’25–Nov’26 (clean) · margin basis FY2025-26</span></div>
+  <div class="guide"><span class="gl">What this answers</span><p>Block 1: what we actually realise per ton vs declared MRP. Block 2: how that price stacks against cost — gross profit and net after commission &amp; freight.</p><span class="gl">How to read it</span><p><b>Net</b> = realised after discount; <b>MRP</b> = announced list price. In margin, GP% = net price vs average item cost, NP% = GP% minus commission &amp; freight (directional).</p></div>
+  <div class="dda-title"><span class="num">1</span>Price — what we charge</div>
   <div class="guide"><span class="gl">What this answers</span><p>Realised net, gross and MRP price per MT — by SKU and over time.</p><span class="gl">How to read it</span><p><b>Net</b> = realised after discount; <b>Gross</b> ≈ net (Akij applies ~0% trade discount); <b>MRP</b> = announced list price. Use the selectors to isolate one SKU or overlay all.</p></div>
   <div class="card">
     <h3>Realised net price per metric ton — FY2025-26</h3>
@@ -188,12 +289,8 @@
     <select id="mrpPriceSel"></select>
     <div class="chart" id="mrpPriceChart" style="margin-top:8px"></div>
   </div>
-</section>
-
-<!-- ============ GP / NP / NET ============ -->
-<section id="margin">
-  <div class="guide"><span class="gl">What this answers</span><p>How price stacks against cost — gross profit, and net after commission &amp; freight.</p><span class="gl">How to read it</span><p>Waterfall = price → cost → GP → NP. Scrap chart = net price vs raw-material cost (monthly scrap purchase, a proxy — no production cost is posted). GP% uses a point-in-time average item cost, so treat it as a snapshot.</p></div>
-  <div class="note-box"><b>Basis:</b> <b>Net price</b> = realised after discounts. <b>GP%</b> = net price vs item average cost (<code>itm.tblItem.numAverageRate</code>). <b>NP%</b> = GP% minus dealer commission &amp; freight — directional; exact net margin needs the finance P&amp;L.</div>
+  <div class="dda-title"><span class="num">2</span>Margin — what we keep</div>
+<div class="note-box"><b>Basis:</b> <b>Net price</b> = realised after discounts. <b>GP%</b> = net price vs item average cost (<code>itm.tblItem.numAverageRate</code>). <b>NP%</b> = GP% minus dealer commission &amp; freight — directional; exact net margin needs the finance P&amp;L.</div>
   <div class="grid g2">
     <div class="card">
       <h3>Price waterfall — FY2025-26 (avg across B500 &amp; B420, Tk/MT)</h3>
@@ -211,98 +308,9 @@
   </div>
 </section>
 
-<!-- ============ ALL SKUs ============ -->
-<section id="sku">
-  <div class="guide"><span class="gl">What this answers</span><p>Every rebar SKU — revenue, volume, price, month-on-month and elasticity in one sortable table.</p><span class="gl">How to read it</span><p>Click any header to sort; use search and the grade/elasticity/move filters; click a row to drill into its month-on-month view.</p></div>
-  <div class="grid g5" id="skuKpis" style="margin-bottom:12px"></div>
-  <div class="card">
-    <h3>Every SKU — price &amp; volume summary <span class="small" id="skuCount"></span></h3>
-    <div class="toolbar">
-      <input type="search" id="q" placeholder="Search SKU / grade…">
-      <select id="fGrade"><option value="all">All grades</option><option>B500</option><option>B420</option></select>
-      <select id="fEl"><option value="all">Any elasticity</option><option value="neg">Negative β (normal)</option><option value="pos">Positive β (anomalous)</option><option value="na">Not measurable</option></select>
-      <select id="fMove"><option value="all">Any move</option><option value="r3">Raised in last 3 mo</option><option value="big">Window move |Δ| &gt; 10%</option></select>
-    </div>
-    <div class="scroll" id="tSku"></div>
-    <div class="hint" style="margin-top:8px">Click any row to drill into its month-on-month view. Sort by clicking headers.</div>
-  </div>
-  <div class="card" style="margin-top:12px">
-    <h3>Monthly net revenue — by SKU (select) (Jan'23 → Nov'26)</h3>
-    <select id="skuSel"></select>
-    <div class="chart" id="skuRevMonthly" style="margin-top:8px"></div>
-  </div>
-  <div class="card" style="margin-top:12px">
-    <h3>Top SKU revenue — FY2025-26 (ranked)</h3>
-    <div class="hint">Net sales by SKU, Tk Cr.</div>
-    <div class="chart" id="skuRank"></div>
-  </div>
-</section>
-
-<!-- ============ SKU MONTH-ON-MONTH ============ -->
-<section id="mom">
-  <div class="guide"><span class="gl">What this answers</span><p>One SKU's volume, revenue and price month by month.</p><span class="gl">How to read it</span><p>Pick a SKU and range. The chart overlays volume and realised price; the table adds MoM price &amp; volume changes and realised-vs-MRP. Click a row in "All SKUs" to jump here.</p></div>
-  <div class="card">
-    <h3 id="momTitle">Month-on-month series (Jan'25 → Nov'26)</h3>
-    <div class="hint">Volume derived as net revenue ÷ realised net price (MT). Compare to the previous month with sales. Click rows in "All SKUs" to switch.</div>
-    <div class="toolbar">
-      <select id="momPick"></select>
-      <select id="momRange"><option value="all">Full window (Jan'25–Nov'26)</option><option value="12">Last 12 months</option><option value="6">Last 6 months</option></select>
-    </div>
-    <div class="chart" id="momChart"></div>
-  </div>
-  <div class="card" style="margin-top:12px">
-    <h3>Month table</h3>
-    <div class="scroll" id="tMom"></div>
-  </div>
-</section>
-
-<!-- ============ PRICE CHANGE TRACKER ============ -->
-<section id="chg">
-  <div class="guide"><span class="gl">What this answers</span><p>Where prices actually moved — the biggest realised jumps and every declared (MRP + Trade mill-rate) change.</p><span class="gl">How to read it</span><p>Realised moves are ≥2% month-on-month with a unit-typo guard. Declared changes show when the announced MRP or the daily Trade (mill) rate was revised.</p></div>
-  <div class="card">
-    <h3>Largest realised price moves <span class="small" id="chc"></span></h3>
-    <div class="hint">Month-on-month realised-price moves ≥ 2% within a SKU (ratio guard 0.5–2 excludes unit/ERP typos). Same-month volume change shown. Click a row to drill.</div>
-    <div class="toolbar"><input type="search" id="chq" placeholder="Filter SKU / month…"></div>
-    <div class="scroll" id="tJump"></div>
-  </div>
-  <div class="card" style="margin-top:12px">
-    <h3>Declared (MRP) price changes</h3>
-    <div class="hint">Moves of ≥ 0.5% in the announced MRP list price — the "declared" price book effect.</div>
-    <div class="scroll" id="tDecl"></div>
-  </div>
-  <div class="card" style="margin-top:12px">
-    <h3>Declared Trade (mill-rate) changes</h3>
-    <div class="hint">Every revision of the daily Trade/mill rate (<code>itm.tblPriceSetup</code>, channel 108). The mill rate moves frequently — these are the declared sell-rate changes.</div>
-    <div class="toolbar"><input type="search" id="tq" placeholder="Filter month…"></div>
-    <div class="scroll" id="tTradeDecl"></div>
-  </div>
-</section>
-
-<!-- ============ DECLARED PRICE GRID ============ -->
-<section id="pg">
-  <div class="guide"><span class="gl">What this answers</span><p>What Akij has declared for each SKU — the daily Trade (mill) rate and MRP — and how far the realised price sits from it.</p><span class="gl">How to read it</span><p><b>Trade rate</b> = the daily-updated mill rate (<code>itm.tblPriceSetup</code>, channel "Trade"). <b>MRP</b> = announced list price. <b>Gap</b> = realised vs Trade. Ispat has no separate distributor (DP) tier — rebar trades at a single mill rate, so MRP sits almost on top of Trade.</p><span class="gl">Source</span><p><code>itm.tblPriceSetup</code> (channel 108 "Trade", since Sep-2024) + <code>numItemPrice</code> (MRP).</p></div>
-  <div class="grid g4" id="pgKpis" style="margin-bottom:12px"></div>
-  <div class="grid g2">
-    <div class="card">
-      <h3>Declared Trade (mill) rate vs realised net price (Sep'24 → Nov'26)</h3>
-      <div class="hint">Monthly: the mill rate (month-end) against the overall realised net price per MT. Rebar trades at the mill rate, so the two track closely.</div>
-      <div class="chart" id="cTradeTrend"></div>
-    </div>
-    <div class="card">
-      <h3>Realised price vs declared Trade (per SKU) (latest)</h3>
-      <div class="hint">How far each SKU's latest realised price sits above (teal) or below (red) the current Trade rate, in %.</div>
-      <div class="chart" id="cGap"></div>
-    </div>
-  </div>
-  <div class="card" style="margin-top:12px">
-    <h3>Declared price grid — every rebar SKU</h3>
-    <div class="hint">Current Trade rate, latest MRP and latest realised price, with realised-vs-Trade and MRP-vs-Trade gaps.</div>
-    <div class="scroll" id="tGrid"></div>
-  </div>
-</section>
-
-<!-- ============ ELASTICITY ============ -->
+<!-- ===== EL ===== -->
 <section id="el">
+  <div class="winchip"><span class="wlab">Data window</span><span>Jan’25–Nov’26 · volume derived from revenue ÷ realised price · needs ≥8 monthly pairs per SKU</span></div>
   <div class="guide"><span class="gl">What this answers</span><p>How strongly volume responds to price, SKU by SKU.</p><span class="gl">What β means</span><p>β is own-price elasticity — the % change in volume for a 1% change in price. <b>β = −2</b>: a 10% price rise is linked to a ~20% volume drop. <b>β = −0.5</b>: a 10% rise only trims volume ~5%. <b>β &gt; 0</b>: price and volume move together (scrap-cost pass-through, not demand).</p><span class="gl">How to read it</span><p>Hover any bar, point or table cell for the full interpretation. Volume is derived (revenue ÷ price), so β is directional, not a causal demand curve. <b>R²</b> shows how reliable the fit is; <b>Pairs</b> is the number of month-over-month observations used.</p></div>
   <div class="grid g4" id="elKpis" style="margin-bottom:12px"></div>
   <div class="grid g2">
@@ -324,81 +332,9 @@
   </div>
 </section>
 
-<!-- ============ COMPETITOR ============ -->
-<section id="comp">
-  <div class="guide"><span class="gl">What this answers</span><p>Akij's mill rate against its peers.</p><span class="gl">How to read it</span><p>The survey covers 25 mills but only <b>May'24–Jan'25</b> — a full 3-year competitor series is not in the ERP. Ranking shows each mill's average mill-gate rate over that window.</p></div>
-  <div class="note-box"><b>Coverage:</b> market price survey (<code>oms.tblCompetitorPriceHeader/Row</code>) holds 25 competitors, <b>May 2024 → Jan 2025</b>. A full 3-year competitor series is not in the ERP.</div>
-  <div class="card">
-    <h3>Mill-rate trend — Akij vs top competitors (May'24 → Jan'25)</h3>
-    <div class="hint">Monthly average mill-gate price, Tk/MT.</div>
-    <div class="chart" id="compTrend"></div>
-  </div>
-  <div class="card" style="margin-top:12px">
-    <h3>Competitor ranking (avg mill rate, May'24–Jan'25)</h3>
-    <div id="compTable"></div>
-  </div>
-</section>
-
-<!-- ============ MARKET SHARE ============ -->
-<section id="ms">
-  <div class="guide"><span class="gl">What this answers</span><p>Akij's share of the Bangladesh steel market.</p><span class="gl">How to read it</span><p>Akij is 7th of the named mills at ~2.6% and the <b>fastest-growing (+21.7% YoY)</b>. Share comes from an external sheet; monthly figures cover Dec'25–Sep'26.</p></div>
-  <div class="grid g4" id="msKpis" style="margin-bottom:12px"></div>
-  <div class="card">
-    <h3>Steel market share — FY2023-24 vs FY2024-25 (%)</h3>
-    <div class="hint">Akij Ispat highlighted — 7th of the named mills, fastest-growing (+21.7% YoY).</div>
-    <div class="chart" id="msLadder"></div>
-  </div>
-  <div class="card" style="margin-top:12px">
-    <h3>Akij Ispat share — monthly (Dec'25 → Sep'26)</h3>
-    <div class="hint">Share hovered 2.7–3.5%, peaking 3.49% (Mar'26).</div>
-    <div class="chart" id="msTrend"></div>
-  </div>
-  <div class="card" style="margin-top:12px">
-    <h3>Steel market share — full table</h3>
-    <div id="msTable"></div>
-  </div>
-</section>
-
-<!-- ============ DEALER ============ -->
-<section id="dealer">
-  <div class="guide"><span class="gl">What this answers</span><p>Dealer commission and how it tracks sales.</p><span class="gl">How to read it</span><p>Commission (left axis) vs net sales (right axis). The by-type chart shows the incentive mix (Monthly, General, Performance…).</p></div>
-  <div class="grid g4" id="commKpis" style="margin-bottom:12px"></div>
-  <div class="card">
-    <h3>Dealer commission vs sales — monthly (FY2023-24 → FY2026-27)</h3>
-    <div class="hint">Dealer commission (left axis) against net sales (right axis) — compare the two trends.</div>
-    <div class="chart" id="commMonthly"></div>
-  </div>
-  <div class="card" style="margin-top:12px">
-    <h3>Commission by incentive type (total) (FY2023-24 → FY2026-27)</h3>
-    <div class="chart" id="commType"></div>
-  </div>
-</section>
-
-<!-- ============ AREA ============ -->
-<section id="area">
-  <div class="guide"><span class="gl">What this answers</span><p>Where volume and value land by delivery zone — <b>cumulative across FY2022-23 → FY2026-27 (up to Oct '26)</b>.</p><span class="gl">How to read it</span><p>Top zones ranked by cumulative value; the table adds volume (MT) for each zone.</p></div>
-  <div class="card">
-    <h3>Top 12 delivery zones — cumulative value (FY2022-23 → FY2026-27, up to Oct '26)</h3>
-    <div class="chart" id="zoneBar"></div>
-  </div>
-  <div class="card" style="margin-top:12px">
-    <h3>All top zones — value &amp; volume (FY2022-23 → FY2026-27, up to Oct '26)</h3>
-    <div id="zoneTable"></div>
-  </div>
-</section>
-
-<!-- ============ GROWTH ============ -->
-<section id="growth">
-  <div class="guide"><span class="gl">What this answers</span><p>Net revenue by fiscal year (July–June), with delivery counts as an activity proxy.</p><span class="gl">How to read it</span><p>FY2025-26 vs FY2024-25 growth plus the 2-yr CAGR. FY2026-27 is a partial year (5 months, July–November).</p></div>
-  <div class="grid g5" id="growthKpis" style="margin-bottom:12px"></div>
-  <div class="card">
-    <h3>Revenue &amp; volume by year (FY2023-24 → FY2026-27)</h3>
-    <div class="chart" id="revYear"></div>
-  </div>
-</section>
-
-<!-- ============ PROMOTION ============ -->
+<!-- ===== PROMO ===== -->
 <section id="promo">
+  <div class="winchip"><span class="wlab">Data window</span><span>Digital reach &amp; spend Dec’25–Feb’26 · offline campaigns Jan–Apr’26 · trade incentives May’26</span></div>
   <div class="guide"><span class="gl">What this is</span><p>Akij Ispat's marketing spend, activities and budgets versus competitors — and where we are under-investing.</p><span class="gl">How to read it</span><p>Three lenses: <b>our budget &amp; spend</b> (brand marketing), <b>competitor activity</b> (digital presence &amp; trade incentives), and the <b>gap</b> (where we under-invest and what to fix).</p></div>
 
   <div class="grid g2">
@@ -445,73 +381,9 @@
   </div>
 </section>
 
-<!-- ============ DIRECTION · DECISION · ACTION ============ -->
-<section id="dda">
-  <div class="guide"><span class="gl">What this is</span><p>A management read-out — where Akij Ispat is heading, what to decide, and what to do — each grounded in the data shown across the other tabs.</p><span class="gl">How to read it</span><p>Three blocks: <b>Direction</b> (the trend), <b>Decision</b> (the choices) and <b>Action</b> (the next moves). Each pairs a plain-language explanation with a <b>proof table</b> and a <b>chart</b>.</p></div>
-
-  <!-- 1 · DIRECTION -->
-  <div class="dda-title"><span class="num">1</span>Direction — where the business is heading</div>
-  <div class="dda-expl" id="ddaDirExpl"></div>
-  <div class="grid g2">
-    <div class="card"><h3>Chart — revenue trajectory (Dec'22 → Nov'26)</h3><div class="hint">Monthly net revenue, Dec'22 → Nov'26.</div><div class="chart" id="ddaDirChart"></div></div>
-    <div class="card"><h3>Proof</h3><div class="scroll" id="ddaDirTable"></div></div>
-  </div>
-
-  <!-- 2 · DECISION -->
-  <div class="dda-title"><span class="num">2</span>Decision — what to decide</div>
-  <div class="dda-expl" id="ddaDecExpl"></div>
-  <div class="grid g2">
-    <div class="card"><h3>Chart — where the money &amp; margin are (FY2025-26)</h3><div class="hint">Top SKUs by FY25-26 net revenue; colour = gross-margin tier (blue &lt;6%, teal 6–9%, gold ≥10%).</div><div class="chart" id="ddaDecChart"></div></div>
-    <div class="card"><h3>Proof</h3><div class="scroll" id="ddaDecTable"></div></div>
-  </div>
-
-  <!-- 3 · ACTION -->
-  <div class="dda-title"><span class="num">3</span>Action — what to do now</div>
-  <div class="dda-expl" id="ddaActExpl"></div>
-  <div class="grid g2">
-    <div class="card"><h3>Chart — share momentum &amp; target (Dec'25 → Sep'26)</h3><div class="hint">Monthly steel-market share with a 3.5% target line (the Mar'26 peak).</div><div class="chart" id="ddaActChart"></div></div>
-    <div class="card"><h3>Proof</h3><div class="scroll" id="ddaActTable"></div></div>
-  </div>
-
-  <!-- 4 · LOSS-MAKING SKUs -->
-  <div class="dda-title"><span class="num">4</span>Loss-making / at-risk SKUs</div>
-  <div class="dda-expl" id="ddaLossExpl"></div>
-  <div class="grid g2">
-    <div class="card"><h3>Chart — net margin by SKU (FY2025-26)</h3><div class="hint">Estimated net-profit % per SKU (gross margin − ~2.1% commission &amp; freight). Red = below 4% (at-risk), green = healthy.</div><div class="chart" id="ddaLossChart"></div></div>
-    <div class="card"><h3>Proof</h3><div class="scroll" id="ddaLossTable"></div></div>
-  </div>
-
-  <!-- 5 · LOSS RECOVERY PLAN -->
-  <div class="dda-title"><span class="num">5</span>Loss Recovery Plan — FY26-27 (Q1 &amp; October)</div>
-  <div class="dda-expl" id="ddaRecoveryExpl"></div>
-  <div class="grid g2">
-    <div class="card"><h3>Chart — Jul–Oct revenue, FY25-26 vs FY26-27</h3><div class="hint">Grouped bars by month. July &amp; October are the loss months; August &amp; September over-recover.</div><div class="chart" id="ddaRecoveryChart"></div></div>
-    <div class="card"><h3>Proof — the loss</h3><div class="scroll" id="ddaRecoveryTable"></div></div>
-  </div>
-</section>
-
-<!-- ============ WHERE TO PLAY · WHOM TO PLAY · HOW TO WIN ============ -->
-<section id="w2p">
-  <div class="guide"><span class="gl">What this is</span><p>The zone map of where Akij Ispat lost steel market share from Q4 FY2025-26 (April-June) to Q1 FY 2026-27 (Jul-Sep) &amp; Oct — in <b>position</b> (share), <b>volume</b> (MT) and <b>revenue</b> (Cr) — and the playbook to win it back.</p><span class="gl">How to read it</span><p>Three blocks: <b>Where to play</b> (the divisions we lost), <b>Whom to play</b> (who took the share), and <b>How to win</b> (the SMART plan).</p></div>
-
-  <!-- 1 · WHERE TO PLAY -->
-  <div class="dda-title"><span class="num">1</span>Where to play — divisions we lost</div>
-  <div class="dda-expl" id="w2pWhereExpl"></div>
-  <div class="grid g2">
-    <div class="card"><h3>Chart — revenue loss by division</h3><div class="hint">Timeline: Q4 FY2025-26 (April-June) → Q1 FY 2026-27 (Jul-Sep) &amp; Oct. Dhaka alone is ~92% of the revenue loss; Chattogram is a distant second.</div><div class="chart" id="w2pRegionChart"></div></div>
-    <div class="card"><h3>Division wise Market share Loss</h3><div class="scroll" id="w2pRegionTable"></div></div>
-  </div>
-
-  <!-- 2 · WHOM TO PLAY -->
-  <div class="dda-title"><span class="num">2</span>Whom to play — who took the share</div>
-  <div class="dda-expl" id="w2pWhomExpl"></div>
-  <!-- 3 · HOW TO WIN -->
-  <div class="dda-title"><span class="num">3</span>How to win — the playbook</div>
-  <div class="dda-expl" id="w2pHowExpl"></div>
-</section>
-
-<!-- ============ PEOPLE ============ -->
+<!-- ===== PEOPLE ===== -->
 <section id="people">
+  <div class="winchip"><span class="wlab">Data window</span><span>Lost-dealer CRM call-back Oct’26 · loss window Q4 FY2025-26 (Apr–Jun) → Q1 FY2026-27 (Jul–Sep) &amp; Oct</span></div>
   <div class="guide"><span class="gl">What this is</span><p>Why Akij Ispat's dealers left (CRM call-back) and which sales officers own the lost customers — the people side of the recovery plan.</p><span class="gl">How to read it</span><p>Two blocks: <b>Customer analysis</b> (why dealers left + what brings them back) and <b>People analysis</b> (31 officers ranked by loss risk). Source: lost-dealer CRM call-back, Oct 2026.</p></div>
   <div class="grid g5" id="peopleKpis" style="margin-bottom:12px"></div>
 
@@ -537,7 +409,152 @@
   <div id="peopleProfile"></div>
 </section>
 
-<!-- ============ METHOD & COVERAGE ============ -->
+<!-- ============ ROUTE TO MARKET ============ -->
+<section id="rtm">
+  <div class="winchip"><span class="wlab">Data window</span><span>Delivery zones FY2022-23 → Oct’26 (cumulative) · dealer commission Jan’23–Sep’26</span></div>
+  <div class="guide"><span class="gl">What this answers</span><p>How volume reaches the market — <b>where</b> it lands (delivery zones) and <b>who</b> sells it (dealer commission and incentive mix).</p><span class="gl">How to read it</span><p>Block 1: zone concentration, cumulative FY2022-23 → Oct '26, ranked by value. Block 2: commission vs net sales trend, then the incentive mix by type.</p></div>
+  <div class="dda-title"><span class="num">1</span>Where volume lands — delivery zones</div>
+<div class="card">
+    <h3>Top 12 delivery zones — cumulative value (FY2022-23 → FY2026-27, up to Oct '26)</h3>
+    <div class="chart" id="zoneBar"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>All top zones — value &amp; volume (FY2022-23 → FY2026-27, up to Oct '26)</h3>
+    <div id="zoneTable"></div>
+  </div>
+  <div class="dda-title"><span class="num">2</span>Who sells it — dealer commission &amp; incentive mix</div>
+<div class="grid g4" id="commKpis" style="margin-bottom:12px"></div>
+  <div class="card">
+    <h3>Dealer commission vs sales — monthly (FY2023-24 → FY2026-27)</h3>
+    <div class="hint">Dealer commission (left axis) against net sales (right axis) — compare the two trends.</div>
+    <div class="chart" id="commMonthly"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Commission by incentive type (total) (FY2023-24 → FY2026-27)</h3>
+    <div class="chart" id="commType"></div>
+  </div>
+</section>
+
+<!-- ===== W2P ===== -->
+<section id="w2p">
+  <div class="winchip"><span class="wlab">Data window</span><span>Q4 FY2025-26 (Apr–Jun) → Q1 FY2026-27 (Jul–Sep) &amp; Oct — division level</span></div>
+  <div class="guide"><span class="gl">What this is</span><p>The zone map of where Akij Ispat lost steel market share from Q4 FY2025-26 (April-June) to Q1 FY 2026-27 (Jul-Sep) &amp; Oct — in <b>position</b> (share), <b>volume</b> (MT) and <b>revenue</b> (Cr) — and the playbook to win it back.</p><span class="gl">How to read it</span><p>Three blocks: <b>Where to play</b> (the divisions we lost), <b>Whom to play</b> (who took the share), and <b>How to win</b> (the SMART plan).</p></div>
+
+  <!-- 1 · WHERE TO PLAY -->
+  <div class="dda-title"><span class="num">1</span>Where to play — divisions we lost</div>
+  <div class="dda-expl" id="w2pWhereExpl"></div>
+  <div class="grid g2">
+    <div class="card"><h3>Chart — revenue loss by division</h3><div class="hint">Timeline: Q4 FY2025-26 (April-June) → Q1 FY 2026-27 (Jul-Sep) &amp; Oct. Dhaka alone is ~92% of the revenue loss; Chattogram is a distant second.</div><div class="chart" id="w2pRegionChart"></div></div>
+    <div class="card"><h3>Division wise Market share Loss</h3><div class="scroll" id="w2pRegionTable"></div></div>
+  </div>
+
+  <!-- 2 · WHOM TO PLAY -->
+  <div class="dda-title"><span class="num">2</span>Whom to play — who took the share</div>
+  <div class="dda-expl" id="w2pWhomExpl"></div>
+  <div class="grid g2">
+    <div class="card"><h3>Chart — share movement, Q4 → Q1 (pp)</h3><div class="hint">Green = mill gained share, red = mill lost share, between Q4 FY2025-26 (Apr–Jun) and Q1 FY2026-27 (Jul–Sep) &amp; Oct.</div><div class="chart" id="w2pWhomChart"></div></div>
+    <div class="card"><h3>Proof — who gained, who lost</h3><div class="scroll" id="w2pWhomTable"></div></div>
+  </div>
+  <!-- 3 · HOW TO WIN -->
+  <div class="dda-title"><span class="num">3</span>How to win — the playbook</div>
+  <div class="dda-expl" id="w2pHowExpl"></div>
+</section>
+
+<!-- ===== SKU ===== -->
+<section id="sku">
+  <div class="winchip"><span class="wlab">Data window</span><span>Per-ton &amp; volume Jan’25–Nov’26 (clean) · revenue ranking FY2025-26</span></div>
+  <div class="guide"><span class="gl">What this answers</span><p>Every rebar SKU — revenue, volume, price, month-on-month and elasticity in one sortable table.</p><span class="gl">How to read it</span><p>Click any header to sort; use search and the grade/elasticity/move filters; click a row to drill into its month-on-month view.</p></div>
+  <div class="grid g5" id="skuKpis" style="margin-bottom:12px"></div>
+  <div class="card">
+    <h3>Every SKU — price &amp; volume summary <span class="small" id="skuCount"></span></h3>
+    <div class="toolbar">
+      <input type="search" id="q" placeholder="Search SKU / grade…">
+      <select id="fGrade"><option value="all">All grades</option><option>B500</option><option>B420</option></select>
+      <select id="fEl"><option value="all">Any elasticity</option><option value="neg">Negative β (normal)</option><option value="pos">Positive β (anomalous)</option><option value="na">Not measurable</option></select>
+      <select id="fMove"><option value="all">Any move</option><option value="r3">Raised in last 3 mo</option><option value="big">Window move |Δ| &gt; 10%</option></select>
+    </div>
+    <div class="scroll" id="tSku"></div>
+    <div class="hint" style="margin-top:8px">Click any row to drill into its month-on-month view. Sort by clicking headers.</div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Monthly net revenue — by SKU (select) (Jan'23 → Nov'26)</h3>
+    <select id="skuSel"></select>
+    <div class="chart" id="skuRevMonthly" style="margin-top:8px"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Top SKU revenue — FY2025-26 (ranked)</h3>
+    <div class="hint">Net sales by SKU, Tk Cr.</div>
+    <div class="chart" id="skuRank"></div>
+  </div>
+</section>
+
+<!-- ===== MOM ===== -->
+<section id="mom">
+  <div class="winchip"><span class="wlab">Data window</span><span>Jan’25–Nov’26 (clean per-ton window) · Nov’26 is a partial month</span></div>
+  <div class="guide"><span class="gl">What this answers</span><p>One SKU's volume, revenue and price month by month.</p><span class="gl">How to read it</span><p>Pick a SKU and range. The chart overlays volume and realised price; the table adds MoM price &amp; volume changes and realised-vs-MRP. Click a row in "All SKUs" to jump here.</p></div>
+  <div class="card">
+    <h3 id="momTitle">Month-on-month series (Jan'25 → Nov'26)</h3>
+    <div class="hint">Volume derived as net revenue ÷ realised net price (MT). Compare to the previous month with sales. Click rows in "All SKUs" to switch.</div>
+    <div class="toolbar">
+      <select id="momPick"></select>
+      <select id="momRange"><option value="all">Full window (Jan'25–Nov'26)</option><option value="12">Last 12 months</option><option value="6">Last 6 months</option></select>
+    </div>
+    <div class="chart" id="momChart"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Month table</h3>
+    <div class="scroll" id="tMom"></div>
+  </div>
+</section>
+
+<!-- ===== CHG ===== -->
+<section id="chg">
+  <div class="winchip"><span class="wlab">Data window</span><span>Realised &amp; declared moves inside Jan’25–Nov’26 · declared Trade rate Sep’24–Nov’26</span></div>
+  <div class="guide"><span class="gl">What this answers</span><p>Where prices actually moved — the biggest realised jumps and every declared (MRP + Trade mill-rate) change.</p><span class="gl">How to read it</span><p>Realised moves are ≥2% month-on-month with a unit-typo guard. Declared changes show when the announced MRP or the daily Trade (mill) rate was revised.</p></div>
+  <div class="card">
+    <h3>Largest realised price moves <span class="small" id="chc"></span></h3>
+    <div class="hint">Month-on-month realised-price moves ≥ 2% within a SKU (ratio guard 0.5–2 excludes unit/ERP typos). Same-month volume change shown. Click a row to drill.</div>
+    <div class="toolbar"><input type="search" id="chq" placeholder="Filter SKU / month…"></div>
+    <div class="scroll" id="tJump"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Declared (MRP) price changes</h3>
+    <div class="hint">Moves of ≥ 0.5% in the announced MRP list price — the "declared" price book effect.</div>
+    <div class="scroll" id="tDecl"></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Declared Trade (mill-rate) changes</h3>
+    <div class="hint">Every revision of the daily Trade/mill rate (<code>itm.tblPriceSetup</code>, channel 108). The mill rate moves frequently — these are the declared sell-rate changes.</div>
+    <div class="toolbar"><input type="search" id="tq" placeholder="Filter month…"></div>
+    <div class="scroll" id="tTradeDecl"></div>
+  </div>
+</section>
+
+<!-- ===== PG ===== -->
+<section id="pg">
+  <div class="winchip"><span class="wlab">Data window</span><span>Declared Trade rate Sep’24–Nov’26 · realised net price Jan’25–Nov’26</span></div>
+  <div class="guide"><span class="gl">What this answers</span><p>What Akij has declared for each SKU — the daily Trade (mill) rate and MRP — and how far the realised price sits from it.</p><span class="gl">How to read it</span><p><b>Trade rate</b> = the daily-updated mill rate (<code>itm.tblPriceSetup</code>, channel "Trade"). <b>MRP</b> = announced list price. <b>Gap</b> = realised vs Trade. Ispat has no separate distributor (DP) tier — rebar trades at a single mill rate, so MRP sits almost on top of Trade.</p><span class="gl">Source</span><p><code>itm.tblPriceSetup</code> (channel 108 "Trade", since Sep-2024) + <code>numItemPrice</code> (MRP).</p></div>
+  <div class="grid g4" id="pgKpis" style="margin-bottom:12px"></div>
+  <div class="grid g2">
+    <div class="card">
+      <h3>Declared Trade (mill) rate vs realised net price (Sep'24 → Nov'26)</h3>
+      <div class="hint">Monthly: the mill rate (month-end) against the overall realised net price per MT. Rebar trades at the mill rate, so the two track closely.</div>
+      <div class="chart" id="cTradeTrend"></div>
+    </div>
+    <div class="card">
+      <h3>Realised price vs declared Trade (per SKU) (latest)</h3>
+      <div class="hint">How far each SKU's latest realised price sits above (teal) or below (red) the current Trade rate, in %.</div>
+      <div class="chart" id="cGap"></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Declared price grid — every rebar SKU</h3>
+    <div class="hint">Current Trade rate, latest MRP and latest realised price, with realised-vs-Trade and MRP-vs-Trade gaps.</div>
+    <div class="scroll" id="tGrid"></div>
+  </div>
+</section>
+
+<!-- ===== MT ===== -->
 <section id="mt">
   <div class="guide"><span class="gl">What this answers</span><p>Where every number comes from and its limits.</p><span class="gl">How to read it</span><p>Check the coverage table before drawing conclusions — some series are partial (competitor survey) or derived (volume, elasticity, GP cost proxy).</p></div>
   <div class="grid g2">
@@ -587,8 +604,16 @@
     </table>
   </div>
 </section>
-
 </main>
+
+<footer>
+  <div class="fmeta">
+    <span>Business Unit: Akij Ispat Ltd (AIL · ERP 224)</span>
+    <span>Source: iBOSDDD live ERP (read-only) · steel market-share sheet · Oct’26 dealer call-back</span>
+    <span><a href="#mt" class="flink" onclick="showTab('mt');return false;">Method &amp; coverage →</a></span>
+  </div>
+  <div class="small">Each tab prints its own data window at the top. The full source, method and coverage table is under Method &amp; coverage.</div>
+</footer>
 
 <div id="tip" class="tip"></div>
 
@@ -966,13 +991,15 @@ function dualLineChart(container, s1, s2, labels, opts){
 }
 
 function barChart(container, items, opts){
-  opts=opts||{}; var W=920,H=Math.max(240,items.length*24+40),L=150,R=10,T=12,B=12;
+  opts=opts||{}; var W=920,H=Math.max(240,items.length*24+40),R=10,T=12,B=12;
+  var lmax=0; items.forEach(function(i){lmax=Math.max(lmax,String(i.label).length);});
+  var L=Math.min(330,Math.max(150,lmax*6.9+16));
   var svg=el("svg",{width:"100%",height:H,viewBox:"0 0 "+W+" "+H,preserveAspectRatio:"xMinYMin meet"});
   container.innerHTML=""; container.appendChild(svg);
   var max=0; items.forEach(function(i){max=Math.max(max,i.value);});
   var y0=T,y1=H-B,x0=L,x1=W-R; var bh=(y1-y0)/items.length;
   items.forEach(function(it,idx){
-    var bw=Math.max(2,(it.value/max)*(x1-x0));
+    var bw=Math.max(2,(it.value/max)*(x1-x0-104));
     var yy=y0+idx*bh+4;
     svg.appendChild(el("rect",{x:x0,y:yy,width:bw,height:bh-8,rx:3,fill:it.color||"#2f7dff"}));
     svg.appendChild(txt(x0-8,yy+bh/2-4,it.label,{anchor:"end",fill:C.muted,size:"13"}));
@@ -1073,9 +1100,9 @@ function divergingBars(container, rows, opts){
   var bh=(H-T-B)/rows.length;
   rows.forEach(function(r,i){
     if(r.value==null){ svg.appendChild(txt(x0-8,T+i*bh+bh/2-3,r.label,{anchor:"end",fill:C.muted,size:"13"})); svg.appendChild(txt(xc,T+i*bh+bh/2-3,"n/a",{anchor:"start",fill:C.dim,size:"12.5"})); return; }
-    var bw=(Math.abs(r.value)/maxAbs)*hw;
+    var bw=(Math.abs(r.value)/maxAbs)*Math.max(1,hw-52);
     var xx=r.value>=0?xc:xc-bw;
-    var col=r.value<0?"#22c3aa":"#ff5c7a";
+    var col=opts.colors?(r.value<0?opts.colors[1]:opts.colors[0]):(r.value<0?"#22c3aa":"#ff5c7a");
     var tipText = opts.tip ? opts.tip(r) : (esc(r.label)+"<br>"+r.value.toFixed(2)+(opts.suffix||""));
     svg.appendChild(el("rect",{x:xx,y:T+i*bh+4,width:Math.max(1.5,bw),height:bh-8,rx:2,fill:col,"fill-opacity":r.strong?0.95:0.6,onmousemove:"tip(event,'"+tipText+"')",onmouseout:"untip()"}));
     svg.appendChild(txt(x0-8,T+i*bh+bh/2-3,r.label.length>26?r.label.slice(0,25)+"…":r.label,{anchor:"end",fill:C.muted,size:"13"}));
@@ -1146,7 +1173,7 @@ function skuSelector(selId, chartId, map, overallArr, labels, ytitle, opts){
 }
 
 /* ============ tabs + deep-link ============ */
-var TABS=["ov","price","margin","sku","mom","chg","pg","el","comp","ms","dealer","area","growth","promo","people","dda","w2p","mt"];
+var TABS=["ov","dda","ms","comp","price","el","promo","people","rtm","w2p","sku","mom","chg","pg","mt"];
 function showTab(t){
   if(TABS.indexOf(t)<0) t="ov";
   TABS.forEach(function(id){
@@ -2144,6 +2171,30 @@ renderSku();
     '<li><b>S</b> — Re-point the engineer-loyalty program (৳1.1 Cr budgeted) at the lost divisions. <b>M</b> — +10 active engineers per lost division.</li>'+
     '<li><b>S</b> — Hold price (we are already the lowest NSP) — win on service, delivery and schemes, not further discounting.</li></ul>';
 
+  /* whom to play - share movement proof (Q4 FY25-26 -> Q1 FY26-27 & Oct) */
+  var movers=[
+    {label:"RRM",value:1.61},
+    {label:"Anwar Ispat",value:0.87},
+    {label:"KSRM",value:0.81},
+    {label:"GPH Ispat",value:-2.80},
+    {label:"Akij Ispat (us)",value:-0.13,strong:true}
+  ];
+  divergingBars(document.getElementById("w2pWhomChart"),movers,{suffix:" pp",colors:["#2fd181","#ff5c7a"]});
+  var wt="<table><thead><tr><th>Mill</th><th>Share move (pp)</th><th>Direction</th></tr></thead><tbody>";
+  movers.forEach(function(m){
+    var up=m.value>=0;
+    var cls=up?"t-pos":"t-neg";
+    var dir=up?"gained":"lost";
+    var val=(up?"+":"")+m.value.toFixed(2)+" pp";
+    wt+="<tr><td><b>"+m.label+"</b></td><td>"+val+"</td><td><span class='tag "+cls+"'>"+dir+"</span></td></tr>";
+  });
+  wt+='</tbody></table><div class="small" style="margin-top:8px">Named mills moving \u22650.5pp between the two periods; Akij shown for reference. Source: steel market-share sheet, Q4 FY2025-26 (Apr\u2013Jun) vs Q1 FY2026-27 (Jul\u2013Sep) &amp; Oct.</div>';
+  document.getElementById("w2pWhomTable").innerHTML=wt;
+  syn("w2pWhomChart", [
+    "The share we lost went to mid-tier mills \u2014 RRM, Anwar and KSRM \u2014 not to the leaders.",
+    "GPH lost more share than we did; the fight is mid-market, not with BSRM / AKS.",
+    "One pp is roughly 56,000 MT a year of market volume \u2014 worth chasing division by division."
+  ]);
   syn("w2pRegionChart", [
     "Dhaka is ~92% of the revenue loss (৳71.94 Cr) — a single-division problem.",
     "Chattogram is the only other division above ৳1 Cr of loss.",
