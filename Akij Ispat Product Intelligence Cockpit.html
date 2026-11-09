@@ -564,7 +564,7 @@
   <div class="dda-title"><span class="num">1</span>Sales Force Analysis</div>
   <div class="card">
     <h3>Officers by region, area &amp; territory</h3>
-    <div class="hint">91 lost customers traced to 31 officers, arranged by their demarcation. Click any officer for the full profile. 4 are high-risk (score ≥ 50).</div>
+    <div class="hint">91 lost customers traced to 31 officers, arranged by their demarcation. Click any officer for the full profile. 8 are high-risk (score &gt; 25).</div>
     <div class="scroll" id="peopleRank"></div>
   </div>
   <div id="peopleProfile"></div>
@@ -583,7 +583,7 @@
           <tr><td>Avg item cost (GP basis)</td><td><code>itm.tblItem.numAverageRate</code></td></tr>
           <tr><td>MRP / list price</td><td><code>numItemPrice</code></td></tr>
           <tr><td>Declared Trade (mill) rate</td><td><code>itm.tblPriceSetup</code> · channel 108 "Trade"</td></tr>
-          <tr><td>Dealer commission</td><td><code>sms</code> incentive postings</td></tr>
+          <tr><td>Dealer commission</td><td><code>arl_erp</code> incentive postings (separate DB)</td></tr>
           <tr><td>Competitor mill rates</td><td><code>oms.tblCompetitorPriceHeader/Row</code></td></tr>
           <tr><td>Steel market share</td><td>Provided Google Sheet (gid 663260340)</td></tr>
         </tbody>
@@ -1753,8 +1753,8 @@ renderSku();
   document.getElementById("ddaDecExpl").innerHTML=
     'Three choices follow from the data. <ul>'+
     '<li><b>Price with the mill rate, not against it.</b> The mainstream B500 10/12/16/20 mm carry only ~5% gross margin and several read elastic, so cost-plus discipline matters more than headline price.</li>'+
-    '<li><b>Concentrate the portfolio.</b> B500 grades are ~94% of revenue and the top four SKUs (10/16/12/20 mm) are ~82% — focus planning, inventory and sales effort there.</li>'+
-    '<li><b>Protect the margin-rich niche.</b> 8 mm, 32 mm and the B420 grades earn 10–16% gross margin on small volume — grow them selectively rather than letting them drift.</li></ul>';
+    '<li><b>Concentrate the portfolio.</b> B500 grades are ~95% of tracked-SKU revenue and the top four SKUs (10/16/12/20 mm) are ~83% of it — focus planning, inventory and sales effort there.</li>'+
+    '<li><b>Protect the margin-rich niche.</b> 8 mm, 32 mm and the B420 12–25 mm grades earn 10–16% gross margin on small volume — grow them selectively rather than letting them drift. (B420 10 mm is a thin-margin grade, not part of this niche.)</li></ul>';
   var skuMeta={}; D.sku.forEach(function(s){ skuMeta[s[0].replace("Akij Ispat ","")]={fy25:s[4],grade:s[1]}; });
   var skuGp={}; D.price25.forEach(function(p){ skuGp[p[0].replace("Akij Ispat ","")]={gp:(p[2]-p[3])/p[2]*100}; });
   var top8=SKUKEYS.map(function(k){ return {k:k, rev:skuMeta[k]?skuMeta[k].fy25:0, gp:skuGp[k]?skuGp[k].gp:0, b:EL[k]?EL[k].b:null}; })
@@ -1780,7 +1780,7 @@ renderSku();
     '<li><b>Target 3.5% monthly share</b> — already hit once (March 2026) — as the next threshold.</li>'+
     '<li><b>Review the B420 tail</b> (~5% of revenue) for consolidation or re-pricing.</li></ul>';
   var actRows=[
-    [1,"Defend top 4 SKUs (10/16/12/20 mm)","82% of revenue (৳1,266 Cr)","High","Secures core volume"],
+    [1,"Defend top 4 SKUs (10/16/12/20 mm)","~83% of tracked-SKU revenue (৳1,266 Cr)","High","Secures core volume"],
     [2,"Hold mill rate, pass scrap through selectively","portfolio inelastic on balance · rate ৳89,900","High","Revenue without volume loss"],
     [3,"Grow top 5 zones","Cumilla, Noakhali, Mirpur, Gazipur, Daudkandi","High","Deepens fastest regions"],
     [4,"Revalidate GP cost basis","GP% rests on point-in-time avg cost","Medium","Accurate margin view"],
@@ -1813,7 +1813,7 @@ renderSku();
   var lossRev=lossSkus.reduce(function(a,r){return a+r.rev;},0);
   var msRod25=D.cat["MS Rod"][2025];
   document.getElementById("ddaLossExpl").innerHTML=
-    'Six core grades — B500 10/12/16/20/25 mm and B420 10 mm — are the volume engine (<b>'+Math.round(lossRev/msRod25*100)+'% of MS-Rod revenue</b>) but earn the thinnest net margin (<b>~3%</b> after commission &amp; freight). Their cost is drifting up with scrap, so they sit one raw-material spike away from an actual loss. <ul>'+
+    'Six core grades — B500 10/12/16/20/25 mm and B420 10 mm — are the volume engine (<b>'+Math.round(lossRev/msRod25*100)+'% of MS-Rod revenue</b>) but earn the thinnest net margin (<b>~3.4%</b> after commission &amp; freight). Their cost is drifting up with scrap, so they sit one raw-material spike away from an actual loss. <ul>'+
     '<li><b>Direction:</b> margin on the core is compressing — volume is safe, profit is not.</li>'+
     '<li><b>Decision:</b> hold the mill rate (these grades are elastic — price cuts recover nothing, hikes leak volume). Attack the cost base instead.</li>'+
     '<li><b>Action:</b> re-price B500 20 mm (the thinnest), push the 9–14% NP grades (8/32 mm, B420 12–25 mm), and renegotiate the ~1.3% dealer commission.</li></ul>';
@@ -1841,12 +1841,12 @@ renderSku();
   var sh='<b style="color:var(--gold)">';
   document.getElementById("ddaRecoveryExpl").innerHTML=
     sh+'Diagnosis — where the loss is</b><p style="margin:3px 0 9px"><b>July 2026 fell '+julPct.toFixed(1)+'% YoY</b> (−৳'+Math.abs(julCr).toFixed(1)+' Cr) and <b>October 2026 fell '+octPct.toFixed(1)+'% YoY</b> (−৳'+Math.abs(octCr).toFixed(1)+' Cr). August (+34.7%) and September (+43.5%) over-recovered, so Q1 as a whole grew <b>+'+((q1y26-q1y25)/q1y25*100).toFixed(0)+'%</b> — the loss is a <b>quarter-start dip</b>, not a structural decline. Steel share slipped <b>'+sharePeak.toFixed(2)+'% (Mar\u201926) → '+shareLatest.toFixed(2)+'% (Sep\u201926)</b>, a loss of '+shareLoss.toFixed(2)+' points.</p>'+
-    sh+'Who took the share &amp; how</b><p style="margin:3px 0 9px">The big mills price above Akij (BSRM ~৳92.6k, AKS ~৳92.9k, GPH ~৳92.6k vs Akij ~৳86.7k in the survey). When Akij\u2019s order flow dips at each quarter-start, <b>BSRM (27.6% share), AKS (17.6%) and GPH (12.2%)</b> absorb the shortfall through wider distribution and trade credit — Akij leaks share exactly when its flow is thinnest.</p>'+
+    sh+'Who took the share &amp; how</b><p style="margin:3px 0 9px">The big mills price above Akij (BSRM ~৳92.6k, AKS ~৳92.9k, GPH ~৳92.6k vs Akij ~৳86.7k in the survey snapshot; Akij\u2019s current declared mill rate is ৳89,900). When Akij\u2019s order flow dips at each quarter-start, <b>BSRM (27.6% share), AKS (17.6%) and GPH (12.2%)</b> absorb the shortfall through wider distribution and trade credit — Akij leaks share exactly when its flow is thinnest.</p>'+
     sh+'SMART recovery plan</b><ul style="margin:4px 0 9px">'+
     '<li><b>S</b> — Smooth the quarter-starts: hold 4-week committed delivery schedules into July &amp; October. <b>M</b> — July &amp; October revenue back to ≥ ৳110 Cr each. <b>A</b> — already the norm in Aug/Sep. <b>R</b> — removes the single biggest loss. <b>T</b> — by next quarter close.</li>'+
     '<li><b>S</b> — Recover share to 3.3%. <b>M</b> — +0.4 points from 2.92%. <b>A</b> — March 2026 already hit 3.49%. <b>T</b> — by FY26-27 year-end.</li>'+
     '<li><b>S</b> — Defend core price discipline — no panic discounting (the core is elastic, β −2 to −7). <b>M</b> — realised price held at mill rate ±1%.</li>'+
-    '<li><b>S</b> — Shift mix to 8/32 mm &amp; B420 (9–14% NP) to offset the ~3% NP core. <b>M</b> — +5 points of revenue from these by Q3.</li>'+
+    '<li><b>S</b> — Shift mix to 8/32 mm &amp; B420 12–25 mm (9–14% NP) to offset the ~3.4% NP core. <b>M</b> — +5 points of revenue from these by Q3.</li>'+
     '<li><b>S</b> — Renegotiate the \u2018Monthly\u2019 dealer commission (66% of pool, ~1.3% of sales). <b>M</b> — a 0.3-point cut ≈ +৳5 Cr/yr net profit.</li>'+
     '<li><b>S</b> — Win back the 97 lost accounts (৳21.6 Cr last-month, ৳38 Cr Q4 exposure). <b>M</b> — re-contact the 52 never-reached (58%) first; price is the #1 stated reason to return. <b>A</b> — the CRM list already holds names, numbers and reasons. <b>R</b> — 68% of the value is 46 corporate accounts in Dhaka. <b>T</b> — a 90-day reactivation sprint.</li></ul>'+
     sh+'Game theory — how competitors respond</b><ul style="margin:4px 0 9px">'+
@@ -1859,7 +1859,7 @@ renderSku();
     '<li><b>Price:</b> hold the mill rate; pass scrap through selectively; no discounting the elastic core.</li>'+
     '<li><b>Place:</b> defend Cumilla, Noakhali, Mirpur, Gazipur and deepen quarter-start coverage — while noting 68% of the lost-account value (৳14.6 Cr) sits with 46 corporate accounts in Dhaka, so pair the field dealers with a dedicated corporate re-engagement track.</li>'+
     '<li><b>Promotion:</b> outspent 3× in absolute terms (৳6.3 Cr vs BSRM/AKS ~৳20.5 Cr) but already leading on % of revenue (1.58%) — so fix reach, not just budget: shift outdoor→digital (45K vs AKS 496K followers; BSRM reaches 5× more online), add DSP/influencers, and convert our lowest-NSP edge into volume through demand-generation, not discounting.</li>'+
-    '<li><b>People:</b> 97 lost accounts (45 dealers, 46 corporate, 6 sister concern) map to 31 officers — but 52 (58%) were never even reached (call "did not receive") and only 16 were interviewed. 4 officers are high-risk (score ≥50): Mahmudul Hasan (13), Shaiful Alam (12), Feroz Ahmed (4) &amp; Shamim Mia (3). Assign win-back ownership to these named officers, re-dial the 52 silent accounts first, and tie KPIs to recovered accounts, not volume alone.</li>'+
+    '<li><b>People:</b> 97 lost accounts (45 dealers, 46 corporate, 6 sister concern) map to 31 officers — but 52 (58%) were never even reached (call "did not receive") and only 16 were interviewed. 8 officers are high-risk (score &gt;25): Shamim Mia (52.7, 3), Shaiful Alam (42.2, 12), Taufiq Ahammed (41.9, 1), Feroz Ahmed (37.0, 4), Mahmudul Hasan (36.6, 13), Abdul Momin (34.1, 1), Shafiqur Rahman (31.2, 4) &amp; Sabbir Hossain (26.7, 2). Assign win-back ownership to these named officers, re-dial the 52 silent accounts first, and tie KPIs to recovered accounts, not volume alone.</li>'+
     '<li><b>Process:</b> smooth the quarter-end push into steady monthly flow.</li>'+
     '<li><b>Physical evidence:</b> the published daily mill rate (Trade) builds trust vs competitors\u2019 opaque pricing.</li></ul>';
   var mm=[7,8,9,10];
@@ -2396,7 +2396,7 @@ renderSku();
     {l:"Lost customers",v:"91",n:"silent Q1 FY26-27 & Oct"},
     {l:"Sale lost",v:"৳35.2 Cr",n:"3,827 MT · Q4 FY25-26 → Q1 FY26-27 & Oct",c:"down"},
     {l:"Collection lost",v:"৳32.5 Cr",n:"Q4 FY25-26 → Q1 FY26-27 & Oct",c:"down"},
-    {l:"High-risk officers",v:"4",n:"risk score ≥ 50",c:"down"}
+    {l:"High-risk officers",v:"8",n:"risk score > 25",c:"down"}
   ];
   document.getElementById("peopleKpis").innerHTML=kpis.map(function(x){
     return '<div class="card kpi"><div class="lab">'+x.l+'</div><div class="val">'+x.v+'</div><div class="note '+(x.c||'')+'">'+x.n+'</div></div>';
@@ -2404,37 +2404,37 @@ renderSku();
 
   // [name, designation, phone, custLost, saleLostMT, saleLostBDT, collLostBDT, risk, lostCustomerNames, evaluation, needToImprove]
   var PPL=[
-    ["Md. Shamim Mia","Deputy Manager","01672353759",3,791,73151000,74357460,76.9,"China Construction Seventh Engineering Division Corp. Ltd. (WP-10), International Trading Services Limited, Rancon Edison Developments Limited","Sales below target (330 vs 550); revenue below target (41.5M vs 50M)","Sales below target (60%) · Revenue below target (83%)"],
-    ["Md. Mahmudul Hasan","Deputy Manager","—",13,502.75,46525906,40707308,71.9,"Interstoff Group - South East Textiles (Pvt) Limited, Asia Composite Mills Limited, Astha Feed Industries Ltd., Credence Housing Ltd., Concord Engineers & Construction Ltd., ACI Formulations Limited, Multi Line Industries Ltd., Center For Zakat Management (CZM), Advanced Chemical Industries Ltd., Crown Cement PLC, PROPERTY DEVELOPMENT LTD., Crown Food and Beverage PLC., Yunusco (BD) Limited","Claims sales target met/exceeded but lost 46,525,906 BDT; revenue below target (115.9M vs 118.8M)","Revenue below target (98%)"],
-    ["Md. Feroz Ahmed","Senior Manager","01772100173",4,590.4,54027150,67834888,66.1,"ABC Real Estate Limited, National Development Engineers Ltd, Spectra Properties Ltd, International Classic Composite Ltd","Sales below target (1950 vs 2150); revenue below target (14 vs 15)","Sales below target (91%) · Revenue below target (93%)"],
-    ["Mr. Shaiful Alam","Senior Manager","01776293670",12,535,49254140,26069658,65.1,"Baridhara Diplomatic Enclave Club Limited, Mr. Shaiful Alam For General Customer, UDC Construction Ltd., ASDWA Fashion Limited, IPCO Hotels Limited, Panda Shoes Industry Ltd, Brig. General Md. Mizanur Rahman, LIZDA Holding Limited, STBD SUN Trading Co., M/S. MD. JAMIL IQBAL, Tamanna Faroque Theama, MS. IQBAL TRADERS (RAMIM Group)","Sales below target (1900 vs 2350); revenue below target (164.9M vs 205.6M)","Sales below target (81%) · Revenue below target (80%)"],
-    ["Md. Sirajul Islam","Assistant Manager","01712436510",8,246.43,19520530,11255127,33.7,"Akij Dairy Ltd., Akij Healthcare & Hygiene Ltd., Janata Jute Mills Limited, Akij Bashir Energy Limited, M/S Mayer Doa Iron Store- Narayanganj, Mr. Mosaraff Hossain (Deputy Manager - Finance), Akij Renewable Energy and Automobiles Ltd., Takaful Properties Limited","Claims sales target met/exceeded but lost 19,520,530 BDT",""],
-    ["Md. Shafiqur Rahman","Deputy Manager","—",4,75.2,6941480,14217626,18.8,"Paragon Poultry Limited, General Customer For Md.Shafiqur Rahman, Paragon Agro Ltd (Grand Parents), ACME TECHNOLOGIES LTD.","Sales below target (175.7 vs 300); revenue below target (14.0M vs 25.8M)","Sales below target (59%) · Revenue below target (54%)"],
-    ["Redwan Hossain Bablu","Deputy Manager","—",4,109.75,9974969,7803600,17.8,"Pixel Space Development Ltd., UTTARAN TRADERS, Fortress Realestate Limited, Monalisa Ceramics (BD) Ltd.","Sales below target (276 vs 400); revenue below target (24.7M vs 30M)","Sales below target (69%) · Revenue below target (82%)"],
-    ["Kishor Kumar Kar","Senior Territory Manager","01671681340",2,122.59,13352969,13204750,17.2,"EPS International (wastage) ctg, M/S Bablu Traders- Noakhali","Claims sales target met/exceeded but lost 13,352,969 BDT",""],
-    ["Atik Ishrak","Senior Officer","—",4,76.5,7135550,6059310,15.6,"Essential Clothing Ltd., Cube Holdings Ltd., MI Engineering, TURAG GARMENTS AND HOSIERY MILLS LTD","Claims sales target met/exceeded but lost 7,135,550 BDT; revenue below target (21.0M vs 27.0M)","Revenue below target (78%)"],
-    ["Md. Sariful Islam","Senior Territory Officer","—",3,70,6534750,5517100,12.7,"M/S Anik Motors, M/S Sarker Trading- Sirajgonj, Mobasshirah Trading Co. - Sirajganj","Claims sales target met/exceeded but lost 6,534,750 BDT","Retention overstated"],
-    ["Md Magfirul Amin","—","—",3,62.05,5787375,4219100,11.8,"M/S Alamgir Others -Laxmipur, M/S Zilani Traders - Laxmipur, M/S Ali & Brothers- Laxmipur","",""],
-    ["Md. Abu Taher","Senior Territory Officer","—",2,70,6496000,6287800,10.7,"M/S Nalta Traders -Kaligonj- Shatkhira, M/S Vai Vai Enterprise- Satkhira","Sales below target (84 vs 98); revenue below target (13 vs 15)","Sales below target (86%) · Revenue below target (85%)"],
-    ["Md. Maniruzzaman","—","—",1,76,7070000,7251750,9.1,"M/S Harun Mollah & Sons - Faridpur","",""],
-    ["Makbul Hosain","Senior Engineer","—",2,43.4,4082500,4609440,8.7,"M/S Kazi Traders- Jashore, M/S Dhaka Iron Store- Jashore","",""],
-    ["Md. Monzurul Islam","Senior Territory Officer","—",2,42.4,3920000,3835200,8.3,"M/S Mir Trading- Mymenshing, M/S Nazim Enterprise- Netrokona","Claims sales target met/exceeded but lost 3,920,000 BDT","Retention overstated"],
-    ["Refajur Rahman","Assistant Manager","01916241123",1,56,5252000,6815600,7.9,"M/S Allahar Dan Enterprise- Bagerhat","Sales below target (409 vs 450)","Sales below target (91%)"],
-    ["Md. Arif-Uzzaman","Territory Manager","—",2,39.5,3677750,2435900,7.6,"M/S JR Corporation - Moghbazar, Bangladesh Trading Corporation","Claims sales target met/exceeded but lost 3,677,750 BDT","Retention overstated"],
-    ["Redwan Bukhari","Territory Manager","—",2,42,3790000,1925180,7.5,"M/S Faruk & Mridha Brothers- Chandpur, M/S Modhuban Enterprise- Chandpur","Claims sales target met/exceeded but lost 3,790,000 BDT",""],
-    ["Rakibul Islam","—","—",2,28,2660000,2695100,7.2,"M/S Modina Shop- Potuakhali, M/S Mijan Enterprise- Patuakhali","",""],
-    ["Md. Sirajul Islam (Bogura)","Assistant Manager","—",2,28,2636200,2685400,7.1,"M/S Emdadul Haque- Bogura, M/S Moriom Enterprise- Bogura","Reports 99% retention (vs 100% target); sales below target (41 vs 42)","Sales below target (98%)"],
-    ["Md. Nasir Uddin","—","—",2,22.5,2105000,2038400,6.6,"M/S Baba Mayer Doa Enterprise- Tangail, M/S Abu Hanif- Tangail","",""],
-    ["Md. Khairul Bashar","Territory Manager","01963536706",2,30.6,2675600,1297280,6.6,"M/S Hussain Bhuiya Steel House - Kishorgonj, M/S Talukder Traders- Kishoreganj","Claims sales target met/exceeded but lost 2,675,600 BDT",""],
-    ["Md. Sabbir Hossain","Senior Territory Officer","—",2,16,1520000,1470500,6,"M/S Faruk Enterprise- Sherpur, M/S Bismillah Enterprise- Jamalpur","Sales below target (50 vs 95)","Sales below target (53%)"],
-    ["Md. Mosaddekur Rahman","Senior Territory Manager","—",2,12.61,1189320,775000,5.6,"M/S Esha Enterprise - Narayanganj, M/S Deen Enterprise Narayanganj","Reports 95% retention (vs 100% target); sales below target (98 vs 100)","Sales below target (98%)"],
-    ["Md. Shobuz Rana","Territory Manager","—",1,23.2,2194000,2336290,4.4,"M/S Rayhan Enterprise-Dhamrai","Claims sales target met/exceeded but lost 2,194,000 BDT","Retention overstated"],
-    ["Minhazul Alam","Senior Territory Manager","—",1,29.5,2741650,1185500,4.3,"M/S.Kalam And Brothers","Sales below target (113 vs 140)","Sales below target (81%)"],
-    ["Md. Abdul Momin","Territory Manager","—",1,26.3,2455510,1190290,4.1,"M/S Jamal Enterprise- Kustia","Sales below target (15 vs 42)","Sales below target (36%)"],
-    ["Taufiq Ahammed","Territory Officer","—",1,15,1414500,1627250,3.7,"M/S Anonna Steel Corparation - Gopalgonj","Sales below target (14 vs 70); revenue below target (3 vs 15)","Sales below target (20%) · Revenue below target (20%)"],
-    ["Md. Hossain Tarif","—","—",1,15,1380000,1380000,3.6,"M/S Naziba Enterprises- Bhola","",""],
-    ["Md. Babor Ali","Territory Sales Officer","—",1,14,1330000,1358700,3.6,"M/S Idris Trades- Naogaon","Reports 95% retention (vs 100% target); claims sales target met/exceeded but lost 1,330,000 BDT",""],
-    ["Md. Rakibul Islam","—","—",1,15,1410000,337500,3.2,"M/S Suma Traders- Lalmonirhat","",""]
+    ["Md. Shamim Mia","Deputy Manager","01672353759",3,791,73151000,74357460,52.7,"China Construction Seventh Engineering Division Corp. Ltd. (WP-10), International Trading Services Limited, Rancon Edison Developments Limited","Sales below target (330 vs 550); revenue below target (41.5M vs 50M)","Sales below target (60%) · Revenue below target (83%)"],
+    ["Md. Mahmudul Hasan","Deputy Manager","—",13,502.75,46525906,40707308,36.6,"Interstoff Group - South East Textiles (Pvt) Limited, Asia Composite Mills Limited, Astha Feed Industries Ltd., Credence Housing Ltd., Concord Engineers & Construction Ltd., ACI Formulations Limited, Multi Line Industries Ltd., Center For Zakat Management (CZM), Advanced Chemical Industries Ltd., Crown Cement PLC, PROPERTY DEVELOPMENT LTD., Crown Food and Beverage PLC., Yunusco (BD) Limited","Claims sales target met/exceeded but lost 46,525,906 BDT; revenue below target (115.9M vs 118.8M)","Revenue below target (98%)"],
+    ["Md. Feroz Ahmed","Senior Manager","01772100173",4,590.4,54027150,67834888,37.0,"ABC Real Estate Limited, National Development Engineers Ltd, Spectra Properties Ltd, International Classic Composite Ltd","Sales below target (1950 vs 2150); revenue below target (14 vs 15)","Sales below target (91%) · Revenue below target (93%)"],
+    ["Mr. Shaiful Alam","Senior Manager","01776293670",12,535,49254140,26069658,42.2,"Baridhara Diplomatic Enclave Club Limited, Mr. Shaiful Alam For General Customer, UDC Construction Ltd., ASDWA Fashion Limited, IPCO Hotels Limited, Panda Shoes Industry Ltd, Brig. General Md. Mizanur Rahman, LIZDA Holding Limited, STBD SUN Trading Co., M/S. MD. JAMIL IQBAL, Tamanna Faroque Theama, MS. IQBAL TRADERS (RAMIM Group)","Sales below target (1900 vs 2350); revenue below target (164.9M vs 205.6M)","Sales below target (81%) · Revenue below target (80%)"],
+    ["Md. Sirajul Islam","Assistant Manager","01712436510",8,246.43,19520530,11255127,16.9,"Akij Dairy Ltd., Akij Healthcare & Hygiene Ltd., Janata Jute Mills Limited, Akij Bashir Energy Limited, M/S Mayer Doa Iron Store- Narayanganj, Mr. Mosaraff Hossain (Deputy Manager - Finance), Akij Renewable Energy and Automobiles Ltd., Takaful Properties Limited","Claims sales target met/exceeded but lost 19,520,530 BDT",""],
+    ["Md. Shafiqur Rahman","Deputy Manager","—",4,75.2,6941480,14217626,31.2,"Paragon Poultry Limited, General Customer For Md.Shafiqur Rahman, Paragon Agro Ltd (Grand Parents), ACME TECHNOLOGIES LTD.","Sales below target (175.7 vs 300); revenue below target (14.0M vs 25.8M)","Sales below target (59%) · Revenue below target (54%)"],
+    ["Redwan Hossain Bablu","Deputy Manager","—",4,109.75,9974969,7803600,21.1,"Pixel Space Development Ltd., UTTARAN TRADERS, Fortress Realestate Limited, Monalisa Ceramics (BD) Ltd.","Sales below target (276 vs 400); revenue below target (24.7M vs 30M)","Sales below target (69%) · Revenue below target (82%)"],
+    ["Kishor Kumar Kar","Senior Territory Manager","01671681340",2,122.59,13352969,13204750,8.6,"EPS International (wastage) ctg, M/S Bablu Traders- Noakhali","Claims sales target met/exceeded but lost 13,352,969 BDT",""],
+    ["Atik Ishrak","Senior Officer","—",4,76.5,7135550,6059310,13.3,"Essential Clothing Ltd., Cube Holdings Ltd., MI Engineering, TURAG GARMENTS AND HOSIERY MILLS LTD","Claims sales target met/exceeded but lost 7,135,550 BDT; revenue below target (21.0M vs 27.0M)","Revenue below target (78%)"],
+    ["Md. Sariful Islam","Senior Territory Officer","—",3,70,6534750,5517100,6.3,"M/S Anik Motors, M/S Sarker Trading- Sirajgonj, Mobasshirah Trading Co. - Sirajganj","Claims sales target met/exceeded but lost 6,534,750 BDT","Retention overstated"],
+    ["Md Magfirul Amin","—","—",3,62.05,5787375,4219100,5.9,"M/S Alamgir Others -Laxmipur, M/S Zilani Traders - Laxmipur, M/S Ali & Brothers- Laxmipur","",""],
+    ["Md. Abu Taher","Senior Territory Officer","—",2,70,6496000,6287800,12.5,"M/S Nalta Traders -Kaligonj- Shatkhira, M/S Vai Vai Enterprise- Satkhira","Sales below target (84 vs 98); revenue below target (13 vs 15)","Sales below target (86%) · Revenue below target (85%)"],
+    ["Md. Maniruzzaman","—","—",1,76,7070000,7251750,4.5,"M/S Harun Mollah & Sons - Faridpur","",""],
+    ["Makbul Hosain","Senior Engineer","—",2,43.4,4082500,4609440,4.3,"M/S Kazi Traders- Jashore, M/S Dhaka Iron Store- Jashore","",""],
+    ["Md. Monzurul Islam","Senior Territory Officer","—",2,42.4,3920000,3835200,4.2,"M/S Mir Trading- Mymenshing, M/S Nazim Enterprise- Netrokona","Claims sales target met/exceeded but lost 3,920,000 BDT","Retention overstated"],
+    ["Refajur Rahman","Assistant Manager","01916241123",1,56,5252000,6815600,6.2,"M/S Allahar Dan Enterprise- Bagerhat","Sales below target (409 vs 450)","Sales below target (91%)"],
+    ["Md. Arif-Uzzaman","Territory Manager","—",2,39.5,3677750,2435900,3.8,"M/S JR Corporation - Moghbazar, Bangladesh Trading Corporation","Claims sales target met/exceeded but lost 3,677,750 BDT","Retention overstated"],
+    ["Redwan Bukhari","Territory Manager","—",2,42,3790000,1925180,3.8,"M/S Faruk & Mridha Brothers- Chandpur, M/S Modhuban Enterprise- Chandpur","Claims sales target met/exceeded but lost 3,790,000 BDT",""],
+    ["Rakibul Islam","—","—",2,28,2660000,2695100,3.6,"M/S Modina Shop- Potuakhali, M/S Mijan Enterprise- Patuakhali","",""],
+    ["Md. Sirajul Islam (Bogura)","Assistant Manager","—",2,28,2636200,2685400,4.3,"M/S Emdadul Haque- Bogura, M/S Moriom Enterprise- Bogura","Reports 99% retention (vs 100% target); sales below target (41 vs 42)","Sales below target (98%)"],
+    ["Md. Nasir Uddin","—","—",2,22.5,2105000,2038400,3.3,"M/S Baba Mayer Doa Enterprise- Tangail, M/S Abu Hanif- Tangail","",""],
+    ["Md. Khairul Bashar","Territory Manager","01963536706",2,30.6,2675600,1297280,3.3,"M/S Hussain Bhuiya Steel House - Kishorgonj, M/S Talukder Traders- Kishoreganj","Claims sales target met/exceeded but lost 2,675,600 BDT",""],
+    ["Md. Sabbir Hossain","Senior Territory Officer","—",2,16,1520000,1470500,26.7,"M/S Faruk Enterprise- Sherpur, M/S Bismillah Enterprise- Jamalpur","Sales below target (50 vs 95)","Sales below target (53%)"],
+    ["Md. Mosaddekur Rahman","Senior Territory Manager","—",2,12.61,1189320,775000,4.6,"M/S Esha Enterprise - Narayanganj, M/S Deen Enterprise Narayanganj","Reports 95% retention (vs 100% target); sales below target (98 vs 100)","Sales below target (98%)"],
+    ["Md. Shobuz Rana","Territory Manager","—",1,23.2,2194000,2336290,2.2,"M/S Rayhan Enterprise-Dhamrai","Claims sales target met/exceeded but lost 2,194,000 BDT","Retention overstated"],
+    ["Minhazul Alam","Senior Territory Manager","—",1,29.5,2741650,1185500,6.9,"M/S.Kalam And Brothers","Sales below target (113 vs 140)","Sales below target (81%)"],
+    ["Md. Abdul Momin","Territory Manager","—",1,26.3,2455510,1190290,34.1,"M/S Jamal Enterprise- Kustia","Sales below target (15 vs 42)","Sales below target (36%)"],
+    ["Taufiq Ahammed","Territory Officer","—",1,15,1414500,1627250,41.9,"M/S Anonna Steel Corparation - Gopalgonj","Sales below target (14 vs 70); revenue below target (3 vs 15)","Sales below target (20%) · Revenue below target (20%)"],
+    ["Md. Hossain Tarif","—","—",1,15,1380000,1380000,1.8,"M/S Naziba Enterprises- Bhola","",""],
+    ["Md. Babor Ali","Territory Sales Officer","—",1,14,1330000,1358700,3.0,"M/S Idris Trades- Naogaon","Reports 95% retention (vs 100% target); claims sales target met/exceeded but lost 1,330,000 BDT",""],
+    ["Md. Rakibul Islam","—","—",1,15,1410000,337500,1.6,"M/S Suma Traders- Lalmonirhat","",""]
   ];
   var GEO=[
     ["Corporate (Region)","Corporate (Area)","Shamim Mia (Corporate)"],
@@ -2471,18 +2471,18 @@ renderSku();
   ];
   var order=PPL.map(function(_,i){return i;});
   order.sort(function(a,b){ var x=GEO[a][0]+'|'+GEO[a][1]+'|'+GEO[a][2], y=GEO[b][0]+'|'+GEO[b][1]+'|'+GEO[b][2]; return x<y?-1:(x>y?1:0); });
-  function riskClass(r){ return r>=50?'t-pos':(r>=10?'t-warn':'t-neg'); }
+  function riskClass(r){ return r>25?'t-pos':(r>=10?'t-warn':'t-neg'); }
   var pr='<table><thead><tr><th>#</th><th>Officer</th><th>Designation</th><th>Mobile</th><th>Region</th><th>Area</th><th>Territory</th><th>Customers Lost</th><th>Sale Lost (MT)</th><th>Sale Lost (BDT)</th><th>Risk Score</th></tr></thead><tbody>';
   order.forEach(function(idx,i){
     var o=PPL[idx], g=GEO[idx];
-    pr+='<tr class="drill" onclick="peopleShow('+idx+')"'+(o[7]>=50?' style="background:rgba(255,92,122,.07)"':'')+'><td>'+(i+1)+'</td><td><b>'+o[0]+'</b></td><td>'+o[1]+'</td><td>'+o[2]+'</td><td>'+g[0]+'</td><td>'+g[1]+'</td><td>'+g[2]+'</td><td>'+o[3]+'</td><td>'+o[4]+'</td><td>৳'+o[5].toLocaleString("en-US")+'</td><td><span class="tag '+riskClass(o[7])+'">'+o[7]+'</span></td></tr>';
+    pr+='<tr class="drill" onclick="peopleShow('+idx+')"'+(o[7]>25?' style="background:rgba(255,92,122,.07)"':'')+'><td>'+(i+1)+'</td><td><b>'+o[0]+'</b></td><td>'+o[1]+'</td><td>'+o[2]+'</td><td>'+g[0]+'</td><td>'+g[1]+'</td><td>'+g[2]+'</td><td>'+o[3]+'</td><td>'+o[4]+'</td><td>৳'+o[5].toLocaleString("en-US")+'</td><td><span class="tag '+riskClass(o[7])+'">'+o[7]+'</span></td></tr>';
   });
   pr+='</tbody></table>';
   document.getElementById("peopleRank").innerHTML=pr;
 
   window.peopleShow=function(i){
     var o=PPL[i]; if(!o) return;
-    var hi=o[7]>=50;
+    var hi=o[7]>25;
     var h='<div class="card" style="margin-top:12px">';
     h+='<h3>'+o[0]+' <span style="font-weight:400;color:var(--muted)">— '+o[1]+'</span></h3>';
     h+='<div style="margin:4px 0 10px"><span class="tag t-mut">Phone: '+(o[2]||'—')+'</span> <span class="tag '+(hi?'t-pos':'t-neg')+'">Risk Score: '+o[7]+'</span></div>';
