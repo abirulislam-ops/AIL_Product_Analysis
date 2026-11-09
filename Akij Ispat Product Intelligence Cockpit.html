@@ -52,6 +52,9 @@
   .pos{color:var(--green)} .neg{color:var(--red)}
   .scroll{max-height:600px;overflow:auto;border-radius:10px;border:1px solid var(--line)}
   .toolbar{display:flex;gap:9px;align-items:center;margin-bottom:9px;flex-wrap:wrap}
+  .fbtn{background:var(--panel2);border:1px solid var(--line);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:13px}
+  .fbtn:hover{color:var(--tx)}
+  .fbtn.on{background:rgba(47,125,255,.15);border-color:var(--accent);color:var(--tx)}
   input[type=search],select{background:var(--panel2);border:1px solid var(--line);color:var(--tx);padding:7px 10px;border-radius:8px;font-size:14px;outline:none}
   input[type=search]:focus,select:focus{border-color:var(--accent)}
   input[type=search]{min-width:220px}
@@ -121,6 +124,7 @@
   <button data-t="area">Area</button>
   <button data-t="growth">Growth</button>
   <button data-t="promo">Promotion</button>
+  <button data-t="voc">Voice of Customer</button>
   <button data-t="people">People</button>
   <button data-t="dda">Direction · Decision · Action</button>
   <button data-t="w2p">Where to Play · Whom to Play · How to Win</button>
@@ -510,25 +514,54 @@
   <div class="dda-expl" id="w2pHowExpl"></div>
 </section>
 
-<!-- ============ PEOPLE ============ -->
-<section id="people">
-  <div class="guide"><span class="gl">What this is</span><p>Why Akij Ispat's dealers left (CRM call-back) and which sales officers own the lost customers — the people side of the recovery plan.</p><span class="gl">How to read it</span><p>Two blocks: <b>Customer analysis</b> (why dealers left + what brings them back) and <b>People analysis</b> (31 officers ranked by loss risk). Source: lost-dealer CRM call-back, Oct 2026.</p></div>
-  <div class="grid g5" id="peopleKpis" style="margin-bottom:12px"></div>
+<!-- ============ VOICE OF CUSTOMER ============ -->
+<section id="voc">
+  <div class="guide"><span class="gl">What this is</span><p>The voice of Akij Ispat's lost dealers &amp; corporate customers — who they are, where they are, and why they left (CRM call-back, Oct 2026).</p><span class="gl">How to read it</span><p>Filter the register by segment, then read the root-cause, call-status and win-back actions below.</p></div>
+  <div class="grid g5" id="vocKpis" style="margin-bottom:12px"></div>
 
-  <!-- 1 · CUSTOMER ANALYSIS -->
-  <div class="dda-title"><span class="num">1</span>Customer analysis — why dealers left</div>
+  <!-- 1 · DEALER & CUSTOMER REGISTER -->
+  <div class="dda-title"><span class="num">1</span>Dealer &amp; customer register — by segment</div>
   <div class="card">
-    <h3>Why dealers left — reason mentions</h3>
-    <div class="hint">From the responded dealers (Oct 2026 call-back). Price is the #1 churn driver.</div>
-    <div class="chart" id="peopleReason"></div>
+    <div class="toolbar">
+      <span style="color:var(--muted);font-size:13px">Segment:</span>
+      <button class="fbtn on" data-seg="all" onclick="vocFilter('all')">All (97)</button>
+      <button class="fbtn" data-seg="Dealer" onclick="vocFilter('Dealer')">Dealers (45)</button>
+      <button class="fbtn" data-seg="Corporate" onclick="vocFilter('Corporate')">Corporate (46)</button>
+      <button class="fbtn" data-seg="Sister Concern" onclick="vocFilter('Sister Concern')">Sister Concern (6)</button>
+      <input type="search" id="vocSearch" placeholder="Search customer…" oninput="vocSearch()" style="margin-left:auto">
+    </div>
+    <div class="scroll" id="vocTable"></div>
+    <div class="toolbar" id="vocPager" style="margin-top:8px;margin-bottom:0;justify-content:space-between"></div>
+    <div class="hint" id="vocCount" style="margin-top:4px;margin-bottom:0"></div>
   </div>
+
+  <!-- 2 · WHY THEY LEFT -->
+  <div class="dda-title"><span class="num">2</span>Why they left</div>
+  <div class="card">
+    <h3>Reason mentions</h3>
+    <div class="hint">From the responded dealers (Oct 2026 call-back). Price is the #1 churn driver.</div>
+    <div class="chart" id="vocReason"></div>
+  </div>
+
+  <!-- 3 · CALL STATUS -->
+  <div class="card" style="margin-top:12px">
+    <h3>Call status — response rate (89 calls)</h3>
+    <div class="scroll" id="vocCallStatus"></div>
+  </div>
+
+  <!-- 4 · WIN-BACK -->
   <div class="card" style="margin-top:12px">
     <h3>What brings them back + recommended actions</h3>
-    <div id="peopleActions"></div>
+    <div id="vocActions"></div>
   </div>
+</section>
 
-  <!-- 2 · PEOPLE ANALYSIS -->
-  <div class="dda-title"><span class="num">2</span>Sales Force Analysis</div>
+<!-- ============ PEOPLE ============ -->
+<section id="people">
+  <div class="guide"><span class="gl">What this is</span><p>Which sales officers own the lost customers — the people side of the recovery plan.</p><span class="gl">How to read it</span><p>31 officers ranked by loss risk, arranged by region, area &amp; territory. Click any officer for the full profile. Source: lost-dealer CRM + KPI vs Lost Analysis, Oct 2026.</p></div>
+  <div class="grid g5" id="peopleKpis" style="margin-bottom:12px"></div>
+
+  <div class="dda-title"><span class="num">1</span>Sales Force Analysis</div>
   <div class="card">
     <h3>Officers by region, area &amp; territory</h3>
     <div class="hint">91 lost customers traced to 31 officers, arranged by their demarcation. Click any officer for the full profile. 4 are high-risk (score ≥ 50).</div>
@@ -1146,7 +1179,7 @@ function skuSelector(selId, chartId, map, overallArr, labels, ytitle, opts){
 }
 
 /* ============ tabs + deep-link ============ */
-var TABS=["ov","price","margin","sku","mom","chg","pg","el","comp","ms","dealer","area","growth","promo","people","dda","w2p","mt"];
+var TABS=["ov","price","margin","sku","mom","chg","pg","el","comp","ms","dealer","area","growth","promo","voc","people","dda","w2p","mt"];
 function showTab(t){
   if(TABS.indexOf(t)<0) t="ov";
   TABS.forEach(function(id){
@@ -1814,7 +1847,8 @@ renderSku();
     '<li><b>S</b> — Recover share to 3.3%. <b>M</b> — +0.4 points from 2.92%. <b>A</b> — March 2026 already hit 3.49%. <b>T</b> — by FY26-27 year-end.</li>'+
     '<li><b>S</b> — Defend core price discipline — no panic discounting (the core is elastic, β −2 to −7). <b>M</b> — realised price held at mill rate ±1%.</li>'+
     '<li><b>S</b> — Shift mix to 8/32 mm &amp; B420 (9–14% NP) to offset the ~3% NP core. <b>M</b> — +5 points of revenue from these by Q3.</li>'+
-    '<li><b>S</b> — Renegotiate the \u2018Monthly\u2019 dealer commission (66% of pool, ~1.3% of sales). <b>M</b> — a 0.3-point cut ≈ +৳5 Cr/yr net profit.</li></ul>'+
+    '<li><b>S</b> — Renegotiate the \u2018Monthly\u2019 dealer commission (66% of pool, ~1.3% of sales). <b>M</b> — a 0.3-point cut ≈ +৳5 Cr/yr net profit.</li>'+
+    '<li><b>S</b> — Win back the 97 lost accounts (৳21.6 Cr last-month, ৳38 Cr Q4 exposure). <b>M</b> — re-contact the 52 never-reached (58%) first; price is the #1 stated reason to return. <b>A</b> — the CRM list already holds names, numbers and reasons. <b>R</b> — 68% of the value is 46 corporate accounts in Dhaka. <b>T</b> — a 90-day reactivation sprint.</li></ul>'+
     sh+'Game theory — how competitors respond</b><ul style="margin:4px 0 9px">'+
     '<li>Cut price → BSRM/AKS/GPH match (deeper pockets) → price war, no share gain, margin destroyed. <b>Do not.</b></li>'+
     '<li>Hold price + better delivery &amp; credit → competitors lose the service lever; Akij wins on reliability, no price war.</li>'+
@@ -1823,9 +1857,9 @@ renderSku();
     sh+'7P — where to focus</b><ul style="margin:4px 0 0">'+
     '<li><b>Product:</b> push 8/32 mm &amp; B420 (high margin); keep B500 core for volume.</li>'+
     '<li><b>Price:</b> hold the mill rate; pass scrap through selectively; no discounting the elastic core.</li>'+
-    '<li><b>Place:</b> defend Cumilla, Noakhali, Mirpur, Gazipur; deepen quarter-start coverage.</li>'+
+    '<li><b>Place:</b> defend Cumilla, Noakhali, Mirpur, Gazipur and deepen quarter-start coverage — while noting 68% of the lost-account value (৳14.6 Cr) sits with 46 corporate accounts in Dhaka, so pair the field dealers with a dedicated corporate re-engagement track.</li>'+
     '<li><b>Promotion:</b> outspent 3× in absolute terms (৳6.3 Cr vs BSRM/AKS ~৳20.5 Cr) but already leading on % of revenue (1.58%) — so fix reach, not just budget: shift outdoor→digital (45K vs AKS 496K followers; BSRM reaches 5× more online), add DSP/influencers, and convert our lowest-NSP edge into volume through demand-generation, not discounting.</li>'+
-    '<li><b>People:</b> 91 lost customers map to 31 officers — 4 are high-risk (score ≥50): Mahmudul Hasan (13), Shaiful Alam (12), Feroz Ahmed (4) &amp; Shamim Mia (3) hold ~63% of the lost sale value. Assign win-back ownership to these named officers and tie KPIs to recovered share, not volume alone.</li>'+
+    '<li><b>People:</b> 97 lost accounts (45 dealers, 46 corporate, 6 sister concern) map to 31 officers — but 52 (58%) were never even reached (call "did not receive") and only 16 were interviewed. 4 officers are high-risk (score ≥50): Mahmudul Hasan (13), Shaiful Alam (12), Feroz Ahmed (4) &amp; Shamim Mia (3). Assign win-back ownership to these named officers, re-dial the 52 silent accounts first, and tie KPIs to recovered accounts, not volume alone.</li>'+
     '<li><b>Process:</b> smooth the quarter-end push into steady monthly flow.</li>'+
     '<li><b>Physical evidence:</b> the published daily mill rate (Trade) builds trust vs competitors\u2019 opaque pricing.</li></ul>';
   var mm=[7,8,9,10];
@@ -2129,12 +2163,14 @@ renderSku();
     '<li>Overall share slipped <b>3.05% → 2.92%</b> (−0.13pp) from Q4 FY2025-26 (April-June) to Q1 FY 2026-27 (Jul-Sep) &amp; Oct.</li>'+
     '<li><b>Dhaka</b> is the biggest loss: 1.52% → 1.46%, <b>−৳71.94 Cr</b> (~92% of the total revenue loss).</li>'+
     '<li><b>Chattogram</b> is second: 1.01% → 0.96%, −৳4.23 Cr.</li>'+
+    '<li><b>By customer segment</b> (CRM, Oct 2026): the 97 lost accounts split 46 corporate (৳14.6 Cr last-month = 68% of value), 45 dealers (৳5.8 Cr) and 6 sister concern — the corporate book in Dhaka is the single biggest pocket to win back.</li>'+
     '</ul>';
   document.getElementById("w2pWhomExpl").innerHTML=
     '<b style="color:var(--gold)">Who took it</b><ul style="margin:4px 0 0">'+
     '<li>Our −0.13pp went to <b>RRM (+1.61pp)</b>, <b>Anwar Ispat (+0.87pp)</b> and <b>KSRM (+0.81pp)</b>.</li>'+
     '<li>These are the same three mills that under-cut us on trade schemes in the lost divisions.</li>'+
     '<li><b>GPH (−2.80pp)</b> lost more than we did — the competitive window is against the mid-tier mills (RRM / Anwar / KSRM), not the leaders BSRM / AKS.</li>'+
+    '<li><b>Why the customers left</b> (CRM interviews): price (6), product quality (5), field service (3) and project-completed / no demand (3) lead — and 52 of 89 called accounts (58%) were never actually reached.</li>'+
     '</ul>';
   document.getElementById("w2pHowExpl").innerHTML=
     '<b style="color:var(--gold)">SMART playbook</b><ul style="margin:4px 0 0">'+
@@ -2142,12 +2178,214 @@ renderSku();
     '<li><b>S</b> — Counter RRM in the divisions it took. <b>M</b> — match its trade scheme within 5%. <b>A</b> — schemes are our strongest lever. <b>T</b> — 30 days.</li>'+
     '<li><b>S</b> — Match KSRM &amp; Anwar dealer incentives in the divisions they took. <b>M</b> — dealer activation back to Q4 levels.</li>'+
     '<li><b>S</b> — Re-point the engineer-loyalty program (৳1.1 Cr budgeted) at the lost divisions. <b>M</b> — +10 active engineers per lost division.</li>'+
-    '<li><b>S</b> — Hold price (we are already the lowest NSP) — win on service, delivery and schemes, not further discounting.</li></ul>';
+    '<li><b>S</b> — Hold price (we are already the lowest NSP) — win on service, delivery and schemes, not further discounting.</li>'+
+    '<li><b>S</b> — Run a 90-day reactivation sprint on the 97 lost accounts: re-dial the 52 never-reached first, answer the price objection with the proof-based "12% stronger" value story (not a discount), and assign each corporate account an owner. <b>M</b> — recover ≥20 of the 97 by Q3.</li></ul>';
 
   syn("w2pRegionChart", [
     "Dhaka is ~92% of the revenue loss (৳71.94 Cr) — a single-division problem.",
     "Chattogram is the only other division above ৳1 Cr of loss.",
     "Defending Dhaka closes almost the whole gap."
+  ]);
+})();
+
+/* ============ VOICE OF CUSTOMER ============ */
+(function(){
+  // [name, segment, division, district, lastMonth, lastSalesVolume, q4TotalVolume]
+  var VOC=[
+    ["ABC Real Estate Limited","Corporate","Dhaka","Dhaka","May 2026",1840000,13692300],
+    ["ASDWA Fashion Limited","Corporate","Dhaka","Narsingdi","May 2026",2754000,5529000],
+    ["International Trading Services Limited","Corporate","Dhaka","Dhaka","June 2026",1001000,1001000],
+    ["UDC Construction Ltd.","Corporate","Dhaka","Dhaka","April 2026",482500,482500],
+    ["National Development Engineers Ltd","Corporate","Dhaka","Dhaka","June 2026",17845600,33888600],
+    ["Spectra Properties Ltd","Corporate","Dhaka","Dhaka","June 2026",1092000,5286850],
+    ["China Construction Seventh Engineering Division Corp. Ltd. (WP-10)","Corporate","Dhaka","Dhaka","June 2026",29737500,69375000],
+    ["M/S Nalta Traders -Kaligonj- Shatkhira","Dealer","Khulna","Satkhira","June 2026",1281000,3899000],
+    ["M/S Harun Mollah & Sons - Faridpur","Dealer","Dhaka","Faridpur","June 2026",2844500,7070000],
+    ["M/S JR Corporation - Moghbazar","Dealer","Dhaka","Dhaka","April 2026",1777000,1777000],
+    ["Mr. Shaiful Alam For General Customer","Corporate","Dhaka","Dhaka","April 2026",1650620,1650620],
+    ["Essential Clothing Ltd.","Corporate","Dhaka","Dhaka","April 2026",379200,379200],
+    ["Marnaz Lead (Wastage)","Dealer","Chattogram","Chattogram","June 2026",2118684,10592100],
+    ["M/S Faruk & Mridha Brothers- Chandpur","Dealer","Chattogram","Chandpur","May 2026",1395000,3125000],
+    ["M/S Zilani Traders - Laxmipur","Dealer","Chattogram","Lakshmipur","June 2026",87450,87450],
+    ["Interstoff Group - South East Textiles (Pvt) Limited","Corporate","Dhaka","Dhaka","June 2026",4732000,9382000],
+    ["Baridhara Diplomatic Enclave Club Limited","Corporate","Dhaka","Dhaka","April 2026",351870,351870],
+    ["M/S Esha Enterprise - Narayanganj","Dealer","Dhaka","Dhaka","June 2026",111320,111320],
+    ["M/S Hussain Bhuiya Steel House - Kishorgonj","Dealer","Dhaka","Kishoreganj","May 2026",373200,373200],
+    ["M/S Anik Motors","Dealer","Rajshahi","Sirajganj","June 2026",1288000,2604000],
+    ["M/S Faruk Enterprise- Sherpur","Dealer","Mymensingh","Sherpur","April 2026",950000,950000],
+    ["M/S Sarker Trading- Sirajgonj","Dealer","Rajshahi","Sirajganj","April 2026",1330000,1330000],
+    ["M/S Mir Trading- Mymenshing","Dealer","Mymensingh","Mymensingh","June 2026",1102000,2080000],
+    ["M/S Allahar Dan Enterprise- Bagerhat","Dealer","Khulna","Bagerhat","June 2026",1281000,5252000],
+    ["Asia Composite Mills Limited","Corporate","Dhaka","Dhaka","April 2026",935000,935000],
+    ["M/S Jamal Enterprise- Kustia","Dealer","Dhaka","Dhaka","June 2026",1196000,2455510],
+    ["M/S Modina Shop- Potuakhali","Dealer","Barishal","Patuakhali","April 2026",1330000,1330000],
+    ["Astha Feed Industries Ltd.","Corporate","Dhaka","Dhaka","May 2026",1875750,1875750],
+    ["Cube Holdings Ltd.","Corporate","Dhaka","Dhaka","May 2026",2598400,3724000],
+    ["M/S Suma Traders- Lalmonirhat","Dealer","Rangpur","Lalmonirhat","April 2026",1410000,1410000],
+    ["M/S Emdadul Haque- Bogura","Dealer","Rajshahi","Bogura","April 2026",1316000,1316000],
+    ["M/S Alamgir Others -Laxmipur","Dealer","Chattogram","Lakshmipur","June 2026",86925,86925],
+    ["Credence Housing Ltd.","Corporate","Dhaka","Dhaka","June 2026",1848300,11051400],
+    ["Concord Engineers & Construction Ltd.","Corporate","Dhaka","Dhaka","May 2026",1196030,2627706],
+    ["ACI Formulations Limited","Corporate","Dhaka","Dhaka","May 2026",784550,1446750],
+    ["Paragon Poultry Limited","Corporate","Dhaka","Dhaka","April 2026",1846000,1846000],
+    ["IPCO Hotels Limited","Corporate","Dhaka","Dhaka","June 2026",635600,635600],
+    ["General Customer For Md.Shafiqur Rahman","Corporate","Dhaka","Dhaka","June 2026",1198600,1198600],
+    ["Rancon Edison Developments Limited","Corporate","","","April 2026",2775000,2775000],
+    ["M/S Baba Mayer Doa Enterprise- Tangail","Dealer","","","June 2026",917500,1582500],
+    ["Paragon Agro Ltd (Grand Parents)","Corporate","","","April 2026",658000,658000],
+    ["M/S Deen Enterprise, Narayanganj","Dealer","","","May 2026",470000,1078000],
+    ["A.M INTERNATIONAL (WASTAGE)","Dealer","Dhaka","Gazipur","April 2026",5727974,5727974],
+    ["Panda Shoes Industry Ltd","Corporate","","","June 2026",21549500,26815300],
+    ["Akij Dairy Ltd.","Sister Concern","","","June 2026",5721500,5721500],
+    ["Brig. General Md. Mizanur Rahman","Corporate","","","May 2026",784550,784550],
+    ["LIZDA Holding Limited","Corporate","","","May 2026",416700,416700],
+    ["M/S S.S Enterprise- Narayangonj","Dealer","Dhaka","Narayanganj","April 2026",518440,518440],
+    ["M/S Mazumder Trade Center- Cumilla","Dealer","","","June 2026",1380000,2790000],
+    ["Akij Healthcare & Hygiene Ltd.","Sister Concern","","","April 2026",2150500,2150500],
+    ["Multi Line Industries Ltd.","Corporate","","","May 2026",4625000,4625000],
+    ["M/S Rayhan Enterprise-Dhamrai","Dealer","","","May 2026",465000,2194000],
+    ["M/S Nazim Enterprise- Netrokona","Dealer","","","June 2026",1840000,1840000],
+    ["International Classic Composite Ltd","Corporate","","","April 2026",1159400,1159400],
+    ["M/S.Kalam And Brothers","Dealer","","","June 2026",1321150,2741650],
+    ["Janata Jute Mills Limited","Sister Concern","Dhaka","Dhaka","May 2026",344750,344750],
+    ["STBD SUN Trading Co.","Corporate","Dhaka","Dhaka","April 2026",472500,472500],
+    ["Center For Zakat Management (CZM)","Corporate","Dhaka","Dhaka","June 2026",1196000,1196000],
+    ["Advanced Chemical Industries Ltd.","Corporate","","","April 2026",2120400,2120400],
+    ["M/S Vai Vai Enterprise- Satkhira","Dealer","Khulna","Satkhira","June 2026",1281000,2597000],
+    ["M/S Idris Trades- Naogaon","Dealer","","","April 2026",1330000,1330000],
+    ["Bangladesh Trading Corporation","Dealer","","","June 2026",960750,1900750],
+    ["M/S Hawlader Enterprise- Madaripur","Dealer","","","June 2026",1380000,5614500],
+    ["Akij Bashir Energy Limited","Sister Concern","","","April 2026",1402500,1402500],
+    ["MI Engineering","Corporate","","","May 2026",969150,1909150],
+    ["M/S Bismillah Enterprise- Jamalpur","Dealer","","","April 2026",570000,570000],
+    ["M/S Kazi Traders- Jashore","Dealer","","","April 2026",1273000,1273000],
+    ["ACME TECHNOLOGIES LTD.","Corporate","","","June 2026",1176500,3238880],
+    ["M/S Anonna Steel Corparation - Gopalgonj","Dealer","","","April 2026",1414500,1414500],
+    ["TURAG GARMENTS AND HOSIERY MILLS LTD","Corporate","","","April 2026",1123200,1123200],
+    ["EPS International (wastage) ctg","Dealer","Chattogram","Chattogram","June 2026",3488038,11403469],
+    ["Pixel Space Development Ltd.","Corporate","","","April 2026",513150,513150],
+    ["UTTARAN  TRADERS","Corporate","","","April 2026",1375632,1375632],
+    ["M/S Mijan Enterprise- Patuakhali","Dealer","","","April 2026",1330000,1330000],
+    ["M/S Abu Hanif- Tangail","Dealer","","","April 2026",522500,522500],
+    ["Crown Cement PLC","Corporate","","","April 2026",1390500,1390500],
+    ["M/S Bablu Traders- Noakhali","Dealer","","","June 2026",640500,1949500],
+    ["M/S. MD. JAMIL IQBAL","Corporate","","","April 2026",4782500,4782500],
+    ["PROPERTY DEVELOPMENT LTD.","Corporate","","","June 2026",2270000,2270000],
+    ["M/S Mayer Doa Enterprise -Noakhali","Dealer","","","May 2026",1395000,2630000],
+    ["Fortress Realestate Limited","Corporate","","","April 2026",2107500,2107500],
+    ["Monalisa Ceramics (BD) Ltd.","Corporate","","","April 2026",5978687,5978687],
+    ["M/S Naziba Enterprises- Bhola","Dealer","","","June 2026",1380000,1380000],
+    ["M/S Mayer Doa Iron Store- Narayanganj","Corporate","","","May 2026",1678720,7038720],
+    ["M/S Talukder Traders- Kishoreganj","Dealer","","","June 2026",780000,2302400],
+    ["Mobasshirah Trading Co. - Sirajganj","Dealer","","","June 2026",1284750,2600750],
+    ["M/S Ali & Brothers- Laxmipur","Dealer","","","June 2026",1372500,5613000],
+    ["M/S Modhuban Enterprise- Chandpur","Dealer","","","April 2026",665000,665000],
+    ["Tamanna Faroque Theama","Corporate","","","June 2026",2685000,5493000],
+    ["Mr.  Mosaraff Hossain (Deputy Manager – Finance)","Corporate","","","April 2026",370000,370000],
+    ["Akij Renewable Energy and Automobiles Ltd.","Sister Concern","","","April 2026",581560,581560],
+    ["Crown Food and Beverage PLC.","Corporate","","","April 2026",7137900,7137900],
+    ["Yunusco (BD) Limited","Corporate","","","April 2026",467500,467500],
+    ["M/S Dhaka Iron Store- Jashore","Dealer","","","May 2026",1399500,2809500],
+    ["M/S Moriom Enterprise- Bogura","Dealer","","","May 2026",1320200,1320200],
+    ["MS. IQBAL TRADERS (RAMIM Group)","Corporate","","","May 2026",1840000,1840000],
+    ["Takaful Properties Limited","Sister Concern","","","June 2026",1911000,1911000]
+  ];
+  function cr1(v){ return "৳ "+(v/1e7).toFixed(1)+" Cr"; }
+  var n={Corporate:0,Dealer:0,"Sister Concern":0}, lv={Corporate:0,Dealer:0,"Sister Concern":0}, q4={Corporate:0,Dealer:0,"Sister Concern":0};
+  VOC.forEach(function(r){ var s=r[1]; n[s]++; lv[s]+=r[5]; q4[s]+=r[6]; });
+  var totLv=lv.Corporate+lv.Dealer+lv["Sister Concern"], totQ4=q4.Corporate+q4.Dealer+q4["Sister Concern"];
+  document.getElementById("vocKpis").innerHTML=[
+    {l:"Total records",v:VOC.length,n:"CRM lost-dealer sheet",c:""},
+    {l:"Dealers (Trade)",v:n.Dealer,n:cr1(lv.Dealer)+" last-month",c:""},
+    {l:"Corporate",v:n.Corporate,n:cr1(lv.Corporate)+" last-month",c:""},
+    {l:"Sister Concern",v:n["Sister Concern"],n:cr1(lv["Sister Concern"])+" last-month",c:""},
+    {l:"Value at risk",v:cr1(totLv),n:cr1(totQ4)+" Q4 exposure",c:"down"}
+  ].map(function(x){ return '<div class="card kpi"><div class="lab">'+x.l+'</div><div class="val">'+x.v+'</div><div class="note '+(x.c||'')+'">'+x.n+'</div></div>'; }).join("");
+
+  function segPill(s){
+    var c=s==="Dealer"?{fg:"#f0b90b",bg:"rgba(240,185,11,.12)",bd:"rgba(240,185,11,.38)"}:s==="Corporate"?{fg:"#7fb0ff",bg:"rgba(47,125,255,.12)",bd:"rgba(47,125,255,.38)"}:{fg:"#a78bfa",bg:"rgba(167,139,250,.12)",bd:"rgba(167,139,250,.38)"};
+    return '<span class="tag" style="color:'+c.fg+';border-color:'+c.bd+';background:'+c.bg+'">'+s+'</span>';
+  }
+  window.vocSeg="all"; window.vocQ=""; window.vocPage=1;
+  var VOC_PER=10;
+  window.vocRender=function(){
+    var seg=window.vocSeg, q=(window.vocQ||"").toLowerCase();
+    var all=VOC.filter(function(r){
+      if(seg!=="all" && r[1]!==seg) return false;
+      if(q && r[0].toLowerCase().indexOf(q)<0) return false;
+      return true;
+    });
+    var pages=Math.max(1,Math.ceil(all.length/VOC_PER));
+    if(window.vocPage>pages) window.vocPage=pages;
+    if(window.vocPage<1) window.vocPage=1;
+    var start=(window.vocPage-1)*VOC_PER;
+    var rows=all.slice(start,start+VOC_PER);
+    var h='<table><thead><tr><th>#</th><th>Customer</th><th>Segment</th><th>Division</th><th>District</th><th>Last Month</th><th>Last-Month Sales</th><th>Q4 Exposure</th></tr></thead><tbody>';
+    rows.forEach(function(r,i){
+      h+='<tr><td>'+(start+i+1)+'</td><td style="text-align:left"><b>'+esc(r[0])+'</b></td><td>'+segPill(r[1])+'</td><td>'+(r[2]||"—")+'</td><td>'+(r[3]||"—")+'</td><td>'+r[4]+'</td><td>৳'+r[5].toLocaleString("en-US")+'</td><td>৳'+r[6].toLocaleString("en-US")+'</td></tr>';
+    });
+    h+='</tbody></table>';
+    document.getElementById("vocTable").innerHTML=h;
+    var sLv=0,sQ4=0; all.forEach(function(r){sLv+=r[5];sQ4+=r[6];});
+    document.getElementById("vocCount").innerHTML=all.length+" accounts · last-month sales ৳"+sLv.toLocaleString("en-US")+" · Q4 exposure ৳"+sQ4.toLocaleString("en-US");
+    var pg='<span style="color:var(--muted);font-size:13px">Showing '+(all.length?(start+1):0)+'–'+(start+rows.length)+' of '+all.length+'</span>';
+    pg+='<span style="display:flex;gap:6px;align-items:center">';
+    pg+='<button class="fbtn" '+(window.vocPage<=1?'disabled style="opacity:.4;cursor:default"':'')+' onclick="vocGo('+(window.vocPage-1)+')">‹ Prev</button>';
+    pg+='<span style="color:var(--tx);font-size:13px;padding:0 4px">Page '+window.vocPage+' of '+pages+'</span>';
+    pg+='<button class="fbtn" '+(window.vocPage>=pages?'disabled style="opacity:.4;cursor:default"':'')+' onclick="vocGo('+(window.vocPage+1)+')">Next ›</button>';
+    pg+='</span>';
+    document.getElementById("vocPager").innerHTML=pg;
+  };
+  window.vocGo=function(p){ window.vocPage=p; vocRender(); };
+  window.vocFilter=function(s){
+    window.vocSeg=s; window.vocPage=1;
+    [].forEach.call(document.querySelectorAll("#voc .fbtn"),function(b){ b.classList.toggle("on", b.getAttribute("data-seg")===s); });
+    vocRender();
+  };
+  window.vocSearch=function(){ window.vocQ=document.getElementById("vocSearch").value; window.vocPage=1; vocRender(); };
+  vocRender();
+
+  var reasons=[
+    {label:"Price",value:6},
+    {label:"Product Quality",value:5},
+    {label:"Sales / Field Service",value:3},
+    {label:"No Demand / Work",value:3},
+    {label:"Still Active (data error)",value:3},
+    {label:"Competitor / Price-switch",value:2},
+    {label:"Supply / Availability",value:1}
+  ];
+  barChart(document.getElementById("vocReason"), reasons, {fmt:String});
+
+  var cs=[
+    ["Did not receive",52,"58.4%"],
+    ["Received &amp; Successful",16,"18.0%"],
+    ["Busy",8,"9.0%"],
+    ["Received, not interested",6,"6.7%"],
+    ["Received but busy",4,"4.5%"],
+    ["Switched off",2,"2.2%"],
+    ["Wrong number",1,"1.1%"]
+  ];
+  var cst='<table><thead><tr><th>Status</th><th>Count</th><th>% of total</th></tr></thead><tbody>';
+  cs.forEach(function(r){ cst+='<tr><td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>'; });
+  cst+='<tr style="background:rgba(240,185,11,.06)"><td><b>Total</b></td><td><b>89</b></td><td>100%</td></tr>';
+  cst+='</tbody></table>';
+  document.getElementById("vocCallStatus").innerHTML=cst;
+
+  document.getElementById("vocActions").innerHTML=
+    '<p style="margin:0 0 8px"><b style="color:var(--gold)">What brings them back:</b> &ldquo;If the price is reduced, he is certainly willing to use Akij Ispat again.&rdquo;</p>'+
+    '<ul style="margin:0;padding-left:18px;line-height:1.6;color:#c9d7ea">'+
+    '<li><b>Price</b> — most common churn driver (6 mentions). Review price positioning vs BSRM/AKS.</li>'+
+    '<li><b>Quality</b> — rod quality complaints (5). Escalate to Production.</li>'+
+    '<li><b>Field service</b> — &ldquo;no representative / negligence&rdquo; (3). Reassign coverage.</li>'+
+    '<li><b>Demand</b> — project-driven, project completed (3). Re-engage on next project.</li>'+
+    '<li><b>Supply</b> — ensure the specific product lines dealers used (1).</li>'+
+    '<li><b>Data</b> — 3 customers said still active (data error). Reconcile the lost list.</li>'+
+    '</ul>';
+
+  syn("vocReason", [
+    "Price is the #1 churn driver (6 of 21 mentions), followed by product quality (5).",
+    "Field-service gaps and project-driven 'no demand' also surfaced.",
+    "3 customers are actually still active — a data error to reconcile."
   ]);
 })();
 
@@ -2163,28 +2401,6 @@ renderSku();
   document.getElementById("peopleKpis").innerHTML=kpis.map(function(x){
     return '<div class="card kpi"><div class="lab">'+x.l+'</div><div class="val">'+x.v+'</div><div class="note '+(x.c||'')+'">'+x.n+'</div></div>';
   }).join("");
-
-  var reasons=[
-    {label:"Price",value:6},
-    {label:"Product Quality",value:5},
-    {label:"Sales / Field Service",value:3},
-    {label:"No Demand / Work",value:3},
-    {label:"Still Active (data error)",value:3},
-    {label:"Competitor / Price-switch",value:2},
-    {label:"Supply / Availability",value:1}
-  ];
-  barChart(document.getElementById("peopleReason"), reasons, {fmt:String});
-
-  document.getElementById("peopleActions").innerHTML=
-    '<p style="margin:0 0 8px"><b style="color:var(--gold)">What brings them back:</b> &ldquo;If the price is reduced, he is certainly willing to use Akij Ispat again.&rdquo;</p>'+
-    '<ul style="margin:0;padding-left:18px;line-height:1.6;color:#c9d7ea">'+
-    '<li><b>Price</b> — most common churn driver (6 mentions). Review price positioning vs BSRM/AKS.</li>'+
-    '<li><b>Quality</b> — rod quality complaints (5). Escalate to Production.</li>'+
-    '<li><b>Field service</b> — &ldquo;no representative / negligence&rdquo; (3). Reassign coverage.</li>'+
-    '<li><b>Demand</b> — project-driven, project completed (3). Re-engage on next project.</li>'+
-    '<li><b>Supply</b> — ensure the specific product lines dealers used (1).</li>'+
-    '<li><b>Data</b> — 3 customers said still active (data error). Reconcile the lost list.</li>'+
-    '</ul>';
 
   // [name, designation, phone, custLost, saleLostMT, saleLostBDT, collLostBDT, risk, lostCustomerNames, evaluation, needToImprove]
   var PPL=[
@@ -2286,12 +2502,6 @@ renderSku();
     el.innerHTML=h;
     el.scrollIntoView({behavior:"smooth",block:"nearest"});
   };
-
-  syn("peopleReason", [
-    "Price is the #1 churn driver (6 of 21 mentions), followed by product quality (5).",
-    "Field-service gaps and project-driven 'no demand' also surfaced.",
-    "3 customers are actually still active — a data error to reconcile."
-  ]);
 })();
 
 /* ============ boot: deep link ============ */
